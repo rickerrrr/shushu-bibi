@@ -32,42 +32,42 @@
   --radius-sm: 10px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* 四季动态皮肤变量（默认夏季天空蓝） */
-  --season-bg1: #87CEEB;
-  --season-bg2: #5dade2;
-  --season-bg3: #3498db;
-  --season-accent: #3b82f6;
-  --season-accent2: #60a5fa;
+  /* 四季动态皮肤变量（默认夏季深蓝海洋） */
+  --season-bg1: #0c3d5c;
+  --season-bg2: #084c6e;
+  --season-bg3: #006994;
+  --season-accent: #0ea5e9;
+  --season-accent2: #38bdf8;
   --season-particle: '🫧';
-  --season-hero-grad: linear-gradient(160deg, #87CEEB 0%, #5dade2 40%, #3498db 70%, #2e86c1 100%);
-  --season-nav-grad: linear-gradient(135deg, rgba(135,206,235,0.97), rgba(93,173,226,0.98));
-  --season-card-glow: rgba(52,152,219,0.15);
+  --season-hero-grad: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%);
+  --season-nav-grad: linear-gradient(135deg, rgba(12,61,92,0.97), rgba(8,76,110,0.98));
+  --season-card-glow: rgba(0,105,148,0.25);
 }
 
-/* ==================== 夏季皮肤（天空蓝背景）==================== */
+/* ==================== 夏季皮肤（深蓝海洋背景）==================== */
 body.season-summer {
-  --season-bg1: #87CEEB;
-  --season-bg2: #5dade2;
-  --season-bg3: #3498db;
-  --season-accent: #2e86c1;
-  --season-accent2: #1b4f72;
-  --season-hero-grad: linear-gradient(160deg, #87CEEB 0%, #5dade2 40%, #3498db 70%, #2e86c1 100%);
-  --season-nav-grad: linear-gradient(135deg, rgba(135,206,235,0.97), rgba(93,173,226,0.98));
-  --season-card-glow: rgba(52,152,219,0.15);
-  --bg: #87CEEB;
-  --bg-card: rgba(255,255,255,0.95);
-  --text: #2c3e50;
-  --text-light: rgba(44,62,80,0.8);
-  --border: rgba(52,152,219,0.3);
-  --shadow: 0 2px 12px rgba(0,0,0,0.1);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,0.15);
+  --season-bg1: #0c3d5c;
+  --season-bg2: #084c6e;
+  --season-bg3: #006994;
+  --season-accent: #0ea5e9;
+  --season-accent2: #38bdf8;
+  --season-hero-grad: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%);
+  --season-nav-grad: linear-gradient(135deg, rgba(12,61,92,0.97), rgba(8,76,110,0.98));
+  --season-card-glow: rgba(0,105,148,0.25);
+  --bg: #0a1628;
+  --bg-card: rgba(14,30,50,0.85);
+  --text: #e8f4f8;
+  --text-light: rgba(232,244,248,0.75);
+  --border: rgba(14,165,233,0.3);
+  --shadow: 0 2px 12px rgba(0,105,148,0.2);
+  --shadow-lg: 0 8px 30px rgba(0,105,148,0.35);
 }
 
-/* 天空蓝背景（覆盖所有其他样式） */
+/* 深蓝海洋背景（覆盖所有其他样式） */
 body.season-summer {
-  background: linear-gradient(135deg, #87CEEB 0%, #5dade2 25%, #3498db 50%, #2e86c1 75%, #1b4f72 100%) !important;
+  background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 20%, #006994 45%, #0ea5e9 75%, #38bdf8 100%) !important;
   background-size: 200% 200% !important;
-  animation: none !important;
+  animation: deepOceanFlow 15s ease infinite !important;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -678,7 +678,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #87CEEB 0%, #5dade2 50%, #3498db 100%);
+  background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%);
   position: relative;
   overflow: hidden;
 }

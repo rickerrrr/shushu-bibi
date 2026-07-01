@@ -37,28 +37,37 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
     <style>
-        /* ========== 天空蓝背景 + 深色文字 ========== */
+        /* ========== 深蓝海洋主题（用户确认的正确颜色）========== */
         body {
-            background: linear-gradient(135deg, #87CEEB 0%, #a8d8ea 30%, #d4e9f7 60%, #ffffff 100%) !important;
+            background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 20%, #006994 45%, #0ea5e9 75%, #38bdf8 100%) !important;
             background-size: 200% 200% !important;
-            animation: none !important;
+            animation: oceanGradient 15s ease infinite !important;
             min-height: 100vh !important;
-            color: #1e293b !important;
+            color: #e8f4f8 !important;
         }
 
-        /* 确保登录页始终显示 - 天空蓝背景（非粉色！） */
+        /* 登录页 - 深蓝海洋渐变 */
         #login-page {
             display: flex !important;
             visibility: visible !important;
-            background: linear-gradient(135deg, #87CEEB 0%, #a8d8ea 30%, #bde0eb 60%, #e8f4f8 100%) !important;
+            background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%) !important;
         }
 
-        /* 确保主内容区域能够显示 */
-        #app.hidden {
+        /* 登录前隐藏主内容和导航栏 */
+        body:not(.logged-in) #app,
+        body:not(.logged-in) .bottom-nav,
+        body:not(.logged-in) .top-bar {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        /* 登录后显示内容 */
+        body.logged-in #app {
             display: block !important;
+            visibility: visible !important;
         }
         
-        /* 主要内容区域文字强制深色 */
+        /* 主要内容区域文字 */
         .main-section, .page-section,
         .section-header, section,
         h1, h2, h3, h4, h5, h6,
@@ -66,11 +75,11 @@ window.doLogin = window.doLogin || function(user) {
         .card-title, .card-text,
         .shushu-card, .bibi-card,
         .monthly-status, .status-value,
-        .love-words { color: #1e293b !important; }
+        .love-words { color: #e8f4f8 !important; }
 
-        /* 移除所有伪元素装饰 */
-        body::before, body::after {
-            display: none !important;
+        @keyframes oceanGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         /* 更多下拉菜单样式 */
