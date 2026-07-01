@@ -1,0 +1,40 @@
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# Cloudflare/Wrangler本地状态
+.wrangler/
+wrangler.toml
+
+# WorkBuddy工作区文件（不上传到公开仓库）
+.workbuddy/
+
+# 临时/调试文件
+*.bak
+dist/test.html
+dist/version.txt
+love-cloud-feasibility-report.html
+DEPLOYMENT_GUIDE.md
+WEBSOCKET_TEST_GUIDE.md
+
+# Python部署脚本（含敏感信息）
+*_fix*.py
+apply_*.py
+bind_*.py
+check_*.py
+clean_*.py
+configure_*.py
+decrypt_*.py
+deploy_*.py
+diagnose.py
+find_*.py
+fix_*.py
+final_plan.py
+gen_*.py
+
+# OS
+.DS_Store
+Thumbs.db
+js/config.js

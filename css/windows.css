@@ -1,0 +1,261 @@
+/* ==================== 窗口系统样式 ==================== */
+
+/* 桌面容器 */
+#desktop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* 窗口 */
+.window {
+  position: fixed;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  min-height: 200px;
+  pointer-events: all;
+  z-index: 10000;
+  overflow: hidden;
+  animation: windowOpen 0.3s ease-out;
+}
+
+@keyframes windowOpen {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 窗口标题栏 */
+.window-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  cursor: move;
+  user-select: none;
+  border-radius: 12px 12px 0 0;
+  min-height: 48px;
+}
+
+.window-title {
+  font-weight: 600;
+  font-size: 16px;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.window-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.window-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.window-btn.close:hover {
+  background: #ef4444;
+}
+
+.window-btn.refresh-btn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: rotate(90deg);
+  transition: transform 0.3s;
+}
+
+/* 窗口内容区 */
+.window-body {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  background: #f9fafb;
+}
+
+/* 窗口最小化状态 */
+.window.minimized {
+  display: none;
+}
+
+/* 窗口最大化状态 */
+.window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0;
+}
+
+.window.maximized .window-titlebar {
+  border-radius: 0;
+}
+
+/* 任务栏 */
+#taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 9998;
+  gap: 8px;
+}
+
+.taskbar-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.taskbar-btn:hover {
+  background: rgba(59,130,246,0.1);
+}
+
+.taskbar-btn.active {
+  background: rgba(59,130,246,0.2);
+  color: #3b82f6;
+}
+
+.taskbar-icon {
+  font-size: 20px;
+}
+
+/* 桌面图标 */
+#desktop-icons {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  pointer-events: all;
+  transition: all 0.2s;
+  width: 80px;
+}
+
+.desktop-icon:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.desktop-icon-emoji {
+  font-size: 48px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.desktop-icon-label {
+  font-size: 12px;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  text-align: center;
+  word-break: break-all;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .window {
+    width: 95vw !important;
+    height: 90vh !important;
+    top: 5vh !important;
+    left: 2.5vw !important;
+  }
+  
+  #desktop-icons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    top: 80px;
+    left: 10px;
+    right: 10px;
+  }
+  
+  .desktop-icon {
+    width: 60px;
+  }
+  
+  .desktop-icon-emoji {
+    font-size: 36px;
+  }
+}
+
+/* 窗口激活状态 */
+.window.active {
+  box-shadow: 0 10px 60px rgba(59,130,246,0.4);
+}
+
+/* 窗口拖拽时的样式 */
+.window.dragging {
+  opacity: 0.9;
+  cursor: moving;
+}
+
+/* 隐藏主内容（当窗口系统激活时） */
+body.window-mode .page-section {
+  display: none !important;
+}
+
+body.window-mode .bottom-nav {
+  display: none !important;
+}
+
+/* 显示窗口系统 */
+body.window-mode #desktop {
+  pointer-events: all;
+}
+
+body.window-mode #taskbar {
+  display: flex !important;
+}
