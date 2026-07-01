@@ -1,0 +1,140 @@
+<!-- 时光胶囊模块 v2.0 -->
+<section id="capsule-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">💊</span>
+    <h2>时光胶囊</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="capsule-container" style="padding:20px;">
+    <button onclick="showAddCapsuleModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      💊 投放时光胶囊
+    </button>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div onclick="renderCapsules('pending')" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);color:white;padding:16px;border-radius:16px;text-align:center;cursor:pointer;">
+        <div style="font-size:24px;">⏳</div>
+        <div style="font-size:12px;margin-top:4px;">等待开启</div>
+      </div>
+      <div onclick="renderCapsules('opened')" style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:16px;border-radius:16px;text-align:center;cursor:pointer;">
+        <div style="font-size:24px;">🎉</div>
+        <div style="font-size:12px;margin-top:4px;">已开启</div>
+      </div>
+    </div>
+
+    <div id="capsule-list"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var CAPSULES_KEY = 'couple_capsules';
+
+  function getCapsules() {
+    return JSON.parse(localStorage.getItem(CAPSULES_KEY) || '[]');
+  }
+
+  function saveCapsules(capsules) {
+    localStorage.setItem(CAPSULES_KEY, JSON.stringify(capsules));
+  }
+
+  window.showAddCapsuleModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3>💊 投放时光胶囊</h3>' +
+      '<textarea id="capsule-message" placeholder="写给未来的我们..." style="width:100%;height:120px;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin:10px 0;box-sizing:border-box;resize:vertical;"></textarea>' +
+      '<select id="capsule-type" style="width:100%;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin:10px 0;box-sizing:border-box;">' +
+      '  <option value="7days">⏰ 7天后开启</option>' +
+      '  <option value="30days">📅 30天后开启</option>' +
+      '  <option value="anniversary">💝 纪念日开启</option>' +
+      '  <option value="1year">🌟 一年后开启</option>' +
+      '</select>' +
+      '<button onclick="window.saveCapsule()" style="width:100%;padding:12px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">💊 投放</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveCapsule = function() {
+    var msg = document.getElementById('capsule-message').value.trim();
+    var type = document.getElementById('capsule-type').value;
+
+    if (!msg) { alert('请输入内容！'); return; }
+
+    var openDate = new Date();
+    switch(type) {
+      case '7days': openDate.setDate(openDate.getDate() + 7); break;
+      case '30days': openDate.setDate(openDate.getDate() + 30); break;
+      case 'anniversary': openDate = new Date(openDate.getFullYear() + 1, 5, 23); break; // 明年6月23日
+      case '1year': openDate.setFullYear(openDate.getFullYear() + 1); break;
+    }
+
+    var capsules = getCapsules();
+    capsules.push({
+      id: 'capsule_' + Date.now(),
+      message: msg,
+      type: type,
+      openDate: openDate.toISOString(),
+      opened: false,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveCapsules(capsules);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('💊 时光胶囊已投放！\n将在 ' + openDate.toLocaleDateString('zh-CN') + ' 开启');
+    renderCapsules('pending');
+  };
+
+  window.renderCapsules = function(filter) {
+    var capsules = getCapsules();
+    var list = document.getElementById('capsule-list');
+    if (!list) return;
+
+    var now = new Date();
+    var filtered = capsules.filter(function(c) {
+      if (filter === 'pending') return !c.opened && new Date(c.openDate) > now;
+      if (filter === 'opened') return c.opened || new Date(c.openDate) <= now;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">暂无胶囊</p>';
+      return;
+    }
+
+    var html = '';
+    filtered.forEach(function(c, i) {
+      var canOpen = !c.opened && new Date(c.openDate) <= now;
+      html +=
+        '<div style="background:' + (c.opened ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : 'linear-gradient(135deg,#fef3c7,#fde68a)') + ';border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid ' + (c.opened ? '#10b981' : '#f59e0b') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:20px;">' + (c.opened ? '🎉' : '⏳') + '</span>' +
+        '    <span style="font-size:11px;color:#666;">' + (canOpen ? '可开启！' : '开启时间: ' + new Date(c.openDate).toLocaleDateString('zh-CN')) + '</span>' +
+        '  </div>' +
+        (c.opened ?
+          '<div style="color:#444;font-size:14px;line-height:1.8;white-space:pre-wrap;">' + c.message.replace(/</g,'&lt;') + '</div>' :
+          (canOpen ?
+            '<button onclick="window.openCapsule(' + capsules.indexOf(c) + ')" style="width:100%;padding:10px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;cursor:pointer;font-size:14px;">🎉 开启胶囊</button>' :
+            '<div style="color:#999;font-size:13px;text-align:center;padding:10px;">⏳ 等待中...</div>'
+          )
+        ) +
+        '  <div style="font-size:11px;color:#999;margin-top:8px;">投放于: ' + c.createdAt + '</div>' +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+  };
+
+  window.openCapsule = function(idx) {
+    var capsules = getCapsules();
+    capsules[idx].opened = true;
+    saveCapsules(capsules);
+    alert('🎉 时光胶囊已开启！\n\n' + capsules[idx].message);
+    renderCapsules('opened');
+  };
+
+  console.log('[Capsule] ✅ 时光胶囊功能已加载');
+  renderCapsules('pending');
+
+})();
+</script>

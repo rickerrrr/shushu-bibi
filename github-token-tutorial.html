@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💕 GitHub Token 配置教程 | 鼠鼠和笔笔</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Microsoft YaHei', -apple-system, sans-serif;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #3b82f6 100%);
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* 背景装饰 */
+    body::before {
+      content: '💕';
+      position: fixed;
+      font-size: 100px;
+      top: 10%;
+      left: 5%;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    body::after {
+      content: '🍾';
+      position: fixed;
+      font-size: 80px;
+      bottom: 10%;
+      right: 5%;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite 2s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .header-icon {
+      font-size: 64px;
+      animation: heartbeat 1.5s ease-in-out infinite;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    h1 {
+      font-size: 36px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    
+    .subtitle {
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+    
+    .steps {
+      margin: 30px 0;
+    }
+    
+    .step-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-left: 4px solid #3b82f6;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .step-card:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(236, 72, 153, 0.2);
+    }
+    
+    .step-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .step-card:hover::before {
+      opacity: 1;
+    }
+    
+    .step-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    
+    .step-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1f2937;
+    }
+    
+    .step-content {
+      color: #4b5563;
+      line-height: 1.8;
+      padding-left: 56px;
+    }
+    
+    .step-content strong {
+      color: #3b82f6;
+    }
+    
+    .code-box {
+      background: #1f2937;
+      color: #10b981;
+      padding: 16px;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      margin: 12px 0;
+      word-break: break-all;
+      border: 2px solid #374151;
+      position: relative;
+    }
+    
+    .code-box::before {
+      content: '🔗';
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 16px;
+    }
+    
+    .warning-box {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-left: 4px solid #f59e0b;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      color: #92400e;
+    }
+    
+    .warning-box::before {
+      content: '⚠️ ';
+      font-weight: bold;
+    }
+    
+    .success-box {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      border-left: 4px solid #10b981;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      color: #065f46;
+    }
+    
+    .success-box::before {
+      content: '✅ ';
+      font-weight: bold;
+    }
+    
+    .emoji-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .emoji-list li {
+      padding: 8px 0;
+      font-size: 15px;
+    }
+    
+    .video-placeholder {
+      background: linear-gradient(135deg, #e0e7ff, #ede9fe);
+      border: 2px dashed #1d4ed8;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin: 16px 0;
+      color: #6d28d9;
+      font-size: 18px;
+    }
+    
+    .video-placeholder::before {
+      content: '🎬 ';
+      font-size: 48px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    
+    .completion-card {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+      padding: 32px;
+      border-radius: 20px;
+      text-align: center;
+      margin: 30px 0;
+      box-shadow: 0 8px 32px rgba(236, 72, 153, 0.4);
+    }
+    
+    .completion-card h2 {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    
+    .completion-card ul {
+      list-style: none;
+      text-align: left;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .completion-card li {
+      padding: 8px 0;
+      font-size: 16px;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid #e5e7eb;
+      color: #6b7280;
+    }
+    
+    .footer-emoji {
+      font-size: 32px;
+      margin: 16px 0;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .copy-btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 12px;
+      transition: all 0.3s;
+    }
+    
+    .copy-btn:hover {
+      background: #059669;
+      transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 24px; }
+      h1 { font-size: 28px; }
+      .step-content { padding-left: 0; }
+      .step-header { flex-direction: column; align-items: flex-start; }
+      .step-number { margin-bottom: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-icon">💕</div>
+      <h1>GitHub Token 配置教程</h1>
+      <p class="subtitle">
+        🍾 配置后，你们的漂流瓶可以互相看到啦！<br>
+        👫 不管用哪台电脑，都能收到对方的瓶子～
+      </p>
+    </div>
+
+    <!-- 重要提示：不需要自己建账号 -->
+    <div class="completion-card" style="margin-bottom: 30px; background: linear-gradient(135deg, #10b981, #059669);">
+      <h2>💡 重要提示</h2>
+      <p style="font-size: 18px; margin-bottom: 12px;">她<strong>不需要</strong>自己建GitHub账号！</p>
+      <p style="font-size: 16px;">你生成Token后发给她，她用同一个Token就行～</p>
+      <div style="background: rgba(255,255,255,0.2); padding: 16px; border-radius: 12px; margin-top: 16px; text-align: left;">
+        <p style="font-size: 15px; margin-bottom: 8px;">🔑 <strong>使用方法：</strong></p>
+        <p style="font-size: 14px; line-height: 1.8;">1. 你生成Token（ghp_开头那串）<br>2. 把Token发给她（微信/QQ都行）<br>3. 她打开网站，粘贴Token，保存<br>4. ✅ 完成！两人都能看到对方的瓶子了！</p>
+      </div>
+      <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; margin-top: 12px; font-size: 14px;">
+        🔒 <strong>安全说明：</strong>Token只有"gist"权限，不能访问其他数据，发给她完全没问题！
+      </div>
+    </div>
+
+    <!-- 步骤列表 -->
+    <div class="steps">
+      
+      <!-- 步骤1 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div class="step-title">🌐 打开GitHub Token设置页面</div>
+        </div>
+        <div class="step-content">
+          <p>用手机或电脑浏览器打开这个链接：</p>
+          <div class="code-box" id="url1">https://github.com/settings/tokens</div>
+          <button class="copy-btn" onclick="copyText('url1')">📋 复制链接</button>
+          <p>💡 如果没登录，会先让你登录GitHub账号</p>
+          <div class="video-placeholder">
+            打开GitHub Settings页面<br>
+            <small>📸 这里可以放截图</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤2 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div class="step-title">🎯 点击"Generate new token"</div>
+        </div>
+        <div class="step-content">
+          <p>点击 <strong>"Generate new token"</strong> 按钮</p>
+          <p>然后选择 <strong>"Generate new token (classic)"</strong></p>
+          <div class="video-placeholder">
+            点击 Generate new token 按钮<br>
+            <small>📸 这里可以放截图</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤3 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div class="step-title">📝 填写Token信息（照着填！）</div>
+        </div>
+        <div class="step-content">
+          <ul class="emoji-list">
+            <li>📝 <strong>Note（备注）：</strong> 随便写，比如 <code>shushu-bibi漂流瓶</code></li>
+            <li>📅 <strong>Expiration（过期时间）：</strong> 选择 <code>No expiration</code>（永不过期）</li>
+            <li>✅ <strong>Select scopes（权限）：</strong> 只勾选 <code>gist</code> ✅（其他不要勾！）</li>
+          </ul>
+          <div class="warning-box">
+            一定要勾选 <strong>gist</strong>！不勾的话Token不能用！
+          </div>
+          <div class="video-placeholder">
+            勾选 gist 权限<br>
+            <small>📸 这里可以放截图</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤4 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div class="step-title">🚀 点击"Generate token"生成</div>
+        </div>
+        <div class="step-content">
+          <p>拉到页面最下面，点击 <strong>绿色</strong> 的 <strong>"Generate token"</strong> 按钮</p>
+          <div class="video-placeholder">
+            点击绿色 Generate token 按钮<br>
+            <small>📸 这里可以放截图</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤5 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">5</div>
+          <div class="step-title">📋 复制Token（重要！！！）</div>
+        </div>
+        <div class="step-content">
+          <p>✅ 生成成功后，会看到一串以 <code>ghp_</code> 开头的字符串</p>
+          <div class="code-box" id="token-example">ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+          <div class="warning-box">
+            <strong>立即复制！</strong>这个页面只显示一次！<br>
+            关闭后就看不到了！如果没复制，只能重新生成一个！
+          </div>
+          <p>📋 点击复制按钮，或者手动选中全部文字复制</p>
+        </div>
+      </div>
+
+      <!-- 步骤6 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">6</div>
+          <div class="step-title">💕 在网站配置Token</div>
+        </div>
+        <div class="step-content">
+          <ul class="emoji-list">
+            <li>📱 打开 <strong>shushu-bibi.cn</strong></li>
+            <li>🔑 登录后，进入 <strong>🍾 漂流瓶</strong> 模块</li>
+            <li>⚠️ 会看到黄色提示：<strong>"未配置 GitHub Token"</strong></li>
+            <li>👆 点击 <strong>"立即配置"</strong> 按钮</li>
+            <li>📋 粘贴刚才复制的 <code>ghp_...</code> Token</li>
+            <li>💾 点击 <strong>"保存"</strong></li>
+          </ul>
+          <div class="success-box">
+            配置成功！黄色提示会消失，现在可以投瓶子了！
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 完成卡片 -->
+    <div class="completion-card">
+      <h2>🎉 配置完成！</h2>
+      <ul>
+        <li>✅ 现在你可以投瓶子了</li>
+        <li>✅ 你投的瓶子，男朋友能捞到</li>
+        <li>✅ 男朋友投的瓶子，你能捞到</li>
+        <li>✅ 你们的漂流瓶是实时同步的！</li>
+      </ul>
+    </div>
+
+    <!-- 故障排查 -->
+    <div class="step-card" style="border-left-color: #f59e0b;">
+      <div class="step-header">
+        <div class="step-number" style="background: #f59e0b;">?</div>
+        <div class="step-title">❓ 如果配置不成功</div>
+      </div>
+      <div class="step-content">
+        <ul class="emoji-list">
+          <li>1️⃣ 检查Token是否以 <code>ghp_</code> 开头</li>
+          <li>2️⃣ 检查生成Token时是否勾选了 <code>gist</code></li>
+          <li>3️⃣ 截图发给我，我帮你看看</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+      <p class="footer-emoji">💕 🐹 💕 🐱 💕</p>
+      <p>配置有问题随时问我哦～</p>
+      <p style="margin-top: 12px; font-size: 14px;">Made with ❤️ by 鼠鼠</p>
+    </div>
+  </div>
+
+  <script>
+    function copyText(elementId) {
+      var text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        alert('✅ 已复制到剪贴板！');
+      });
+    }
+  </script>
+</body>
+</html>

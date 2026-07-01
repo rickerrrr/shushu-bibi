@@ -1,0 +1,166 @@
+<!-- 情侣账本模块 v2.0 -->
+<section id="finance-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">💰</span>
+    <h2>情侣账本</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="finance-container" style="padding:20px;">
+    <!-- 统计卡片 -->
+    <div class="finance-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;">
+      <div class="stat-card" style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:16px;border-radius:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:bold;" id="finance-total">¥0</div>
+        <div style="font-size:12px;opacity:0.9;">本月总开销</div>
+      </div>
+      <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;padding:16px;border-radius:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:bold;" id="finance-avg">¥0</div>
+        <div style="font-size:12px;opacity:0.9;">人均花费</div>
+      </div>
+      <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;padding:16px;border-radius:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:bold;" id="finance-count">0</div>
+        <div style="font-size:12px;opacity:0.9;">账单数量</div>
+      </div>
+    </div>
+
+    <!-- 添加账单按钮 -->
+    <button onclick="showAddBillModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ➕ 记一笔
+    </button>
+
+    <!-- 账单列表 -->
+    <div id="finance-list" style="margin-top:20px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+// 情侣账本功能
+(function() {
+  'use strict';
+
+  var BILLS_KEY = 'couple_finance_bills';
+
+  // 获取所有账单
+  function getBills() {
+    return JSON.parse(localStorage.getItem(BILLS_KEY) || '[]');
+  }
+
+  // 保存账单
+  function saveBills(bills) {
+    localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
+  }
+
+  // 显示添加账单弹窗
+  window.showAddBillModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">📝 记一笔账</h3>' +
+      '<input type="text" id="bill-title" placeholder="备注（如：奶茶、电影票）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:10px;box-sizing:border-box;">' +
+      '<input type="number" id="bill-amount" placeholder="金额（元）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:10px;box-sizing:border-box;">' +
+      '<select id="bill-type" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:10px;box-sizing:border-box;">' +
+      '  <option value="food">🍕 餐饮</option>' +
+      '  <option value="movie">🎬 娱乐</option>' +
+      '  <option value="gift">🎁 礼物</option>' +
+      '  <option value="travel">✈️ 旅行</option>' +
+      '  <option value="other">📦 其他</option>' +
+      '</select>' +
+      '<select id="bill-mode" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:15px;box-sizing:border-box;">' +
+      '  <option value="aa">AA分摊</option>' +
+      '  <option value="treat">我请客</option>' +
+      '  <option value="other_treat">对方请客</option>' +
+      '</select>' +
+      '<button onclick="window.saveBill()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') {
+      showGlobalModal(html);
+    } else {
+      alert('请刷新页面！');
+    }
+  };
+
+  // 保存账单
+  window.saveBill = function() {
+    var title = document.getElementById('bill-title').value.trim();
+    var amount = parseFloat(document.getElementById('bill-amount').value);
+    var type = document.getElementById('bill-type').value;
+    var mode = document.getElementById('bill-mode').value;
+
+    if (!title || !amount) {
+      alert('请填写完整信息！');
+      return;
+    }
+
+    var bills = getBills();
+    bills.push({
+      id: 'bill_' + Date.now(),
+      title: title,
+      amount: amount,
+      type: type,
+      mode: mode,
+      payer: mode === 'treat' ? '我' : (mode === 'other_treat' ? '对方' : 'AA'),
+      date: new Date().toISOString(),
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveBills(bills);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 账单已保存！');
+    renderBills();
+  };
+
+  // 渲染账单列表
+  window.renderBills = function() {
+    var bills = getBills();
+    var listEl = document.getElementById('finance-list');
+    if (!listEl) return;
+
+    if (bills.length === 0) {
+      listEl.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">还没有账单记录～</p>';
+      return;
+    }
+
+    // 按日期倒序
+    bills.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    // 统计
+    var total = bills.reduce(function(sum, b) { return sum + b.amount; }, 0);
+    var avg = total / 2;
+
+    document.getElementById('finance-total').textContent = '¥' + total.toFixed(2);
+    document.getElementById('finance-avg').textContent = '¥' + avg.toFixed(2);
+    document.getElementById('finance-count').textContent = bills.length;
+
+    // 列表
+    var html = '';
+    bills.forEach(function(b) {
+      var typeIcons = { food: '🍕', movie: '🎬', gift: '🎁', travel: '✈️', other: '📦' };
+      html +=
+        '<div style="background:white;border-radius:16px;padding:16px;margin-bottom:10px;border-left:4px solid #3b82f6;box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '    <span style="font-size:24px;">' + (typeIcons[b.type] || '📦') + '</span>' +
+        '    <span style="font-size:18px;font-weight:bold;color:#3b82f6;">¥' + b.amount.toFixed(2) + '</span>' +
+        '  </div>' +
+        '  <div style="margin-top:8px;color:#444;font-size:14px;">' + b.title + '</div>' +
+        '  <div style="margin-top:6px;font-size:11px;color:#999;">' + b.createdAt + ' · ' + (b.mode === 'aa' ? 'AA分摊' : b.mode === 'treat' ? '我请客' : '对方请客') + '</div>' +
+        '</div>';
+    });
+
+    listEl.innerHTML = html;
+  };
+
+  console.log('[Finance] ✅ 情侣账本功能已加载');
+
+  // 页面加载后渲染
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      renderBills();
+    });
+  } else {
+    renderBills();
+  }
+
+})();
+</script>

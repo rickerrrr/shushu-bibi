@@ -1,0 +1,203 @@
+<!-- 小纸条模块 v2.0 - 替换漂流瓶 -->
+<section id="notes-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">📝</span>
+    <h2>小纸条</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="notes-container" style="padding:20px;">
+    <!-- 标签页切换 -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+      <button onclick="switchNotesTab('inbox')" id="notes-tab-inbox" style="flex:1;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;font-weight:600;cursor:pointer;">📥 收件箱</button>
+      <button onclick="switchNotesTab('outbox')" id="notes-tab-outbox" style="flex:1;padding:12px;border:2px solid #3b82f6;border-radius:12px;background:white;color:#3b82f6;font-weight:600;cursor:pointer;">📤 发件箱</button>
+    </div>
+
+    <!-- 写纸条按钮 -->
+    <button onclick="showAddNoteModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ✍️ 写小纸条
+    </button>
+
+    <!-- 内容区 -->
+    <div id="notes-content"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var NOTES_KEY = 'couple_notes';
+
+  function getNotes() {
+    return JSON.parse(localStorage.getItem(NOTES_KEY) || '[]');
+  }
+
+  function saveNotes(notes) {
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  }
+
+  var currentTab = 'inbox';
+
+  window.switchNotesTab = function(tab) {
+    currentTab = tab;
+    var inboxBtn = document.getElementById('notes-tab-inbox');
+    var outboxBtn = document.getElementById('notes-tab-outbox');
+
+    if (tab === 'inbox') {
+      inboxBtn.style.background = 'linear-gradient(135deg,#3b82f6,#ef4444)';
+      inboxBtn.style.color = 'white';
+      outboxBtn.style.background = 'white';
+      outboxBtn.style.color = '#3b82f6';
+    } else {
+      outboxBtn.style.background = 'linear-gradient(135deg,#3b82f6,#ef4444)';
+      outboxBtn.style.color = 'white';
+      inboxBtn.style.background = 'white';
+      inboxBtn.style.color = '#3b82f6';
+    }
+
+    renderNotes();
+  };
+
+  window.showAddNoteModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">✍️ 写小纸条</h3>' +
+      '<textarea id="note-content" placeholder="写下你想说的话..." style="width:100%;height:150px;padding:12px;border-radius:12px;border:2px solid #a78bfa;margin-bottom:12px;box-sizing:border-box;resize:vertical;font-size:14px;"></textarea>' +
+      '<div style="margin-bottom:12px;">' +
+      '  <label style="font-size:13px;color:#666;">选择表情：</label>' +
+      '  <div style="display:flex;gap:8px;margin-top:6px;">' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'💌\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">💌</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'😊\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">😊</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'🥰\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">🥰</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'🎁\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">🎁</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'💕\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">💕</button>' +
+      '  </div>' +
+      '</div>' +
+      '<input type="hidden" id="note-icon" value="💌">' +
+      '<button onclick="window.saveNote()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 发送</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') {
+      showGlobalModal(html);
+    } else {
+      alert('请刷新页面！');
+    }
+  };
+
+  window.saveNote = function() {
+    var content = document.getElementById('note-content').value.trim();
+    var icon = document.getElementById('note-icon').value;
+
+    if (!content) {
+      alert('请输入内容！');
+      return;
+    }
+
+    var notes = getNotes();
+    notes.push({
+      id: 'note_' + Date.now(),
+      content: content,
+      icon: icon,
+      from: '我',
+      to: '你',
+      read: false,
+      date: new Date().toISOString(),
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveNotes(notes);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 小纸条已发送！');
+    switchNotesTab('outbox');
+  };
+
+  window.renderNotes = function() {
+    var notes = getNotes();
+    var content = document.getElementById('notes-content');
+    if (!content) return;
+
+    var filtered = currentTab === 'inbox' ?
+      notes.filter(function(n) { return n.to === '我' || n.to === '你'; }) :
+      notes.filter(function(n) { return n.from === '我'; });
+
+    if (filtered.length === 0) {
+      content.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">' + (currentTab === 'inbox' ? '📭 收件箱为空' : '📭 发件箱为空') + '</p>';
+      return;
+    }
+
+    // 按时间倒序
+    filtered.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    var html = '';
+    filtered.forEach(function(n, i) {
+      var isUnread = currentTab === 'inbox' && !n.read;
+      html +=
+        '<div style="background:' + (isUnread ? 'linear-gradient(135deg,#fef3c7,#fde68a)' : 'white') + ';border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid ' + (isUnread ? '#f59e0b' : '#3b82f6') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:24px;">' + n.icon + '</span>' +
+        '    <span style="font-size:11px;color:#999;">' + n.createdAt + '</span>' +
+        '  </div>' +
+        '  <div style="color:#444;font-size:14px;line-height:1.8;white-space:pre-wrap;margin-bottom:8px;">' + n.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '    <span style="font-size:11px;color:#9ca3af;">' + (currentTab === 'inbox' ? '来自: ' + n.from : '发送给: ' + n.to) + '</span>' +
+        '    <div style="display:flex;gap:8px;">' +
+        '      <button onclick="window.editNote(' + notes.indexOf(n) + ')" style="background:none;border:none;font-size:16px;cursor:pointer;" title="编辑">✏️</button>' +
+        '      <button onclick="window.deleteNote(' + notes.indexOf(n) + ')" style="background:none;border:none;font-size:16px;cursor:pointer;" title="删除">🗑️</button>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+
+      // 标记为已读
+      if (isUnread) {
+        n.read = true;
+      }
+    });
+
+    saveNotes(notes);
+    content.innerHTML = html;
+  };
+
+  window.editNote = function(idx) {
+    var notes = getNotes();
+    var note = notes[idx];
+    if (!note) return;
+
+    var newContent = prompt('编辑小纸条：', note.content);
+    if (newContent !== null && newContent.trim()) {
+      note.content = newContent.trim();
+      saveNotes(notes);
+      renderNotes();
+    }
+  };
+
+  window.deleteNote = function(idx) {
+    if (!confirm('确定删除这条小纸条？')) return;
+    var notes = getNotes();
+    notes.splice(idx, 1);
+    saveNotes(notes);
+    renderNotes();
+  };
+
+  // 标记为已读
+  window.markAllRead = function() {
+    var notes = getNotes();
+    notes.forEach(function(n) {
+      if (n.to === '我') n.read = true;
+    });
+    saveNotes(notes);
+    renderNotes();
+    alert('✅ 已全部标记为已读');
+  };
+
+  console.log('[Notes] ✅ 小纸条功能已加载');
+
+  // 自动渲染
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      renderNotes();
+    });
+  } else {
+    setTimeout(renderNotes, 500);
+  }
+
+})();
+</script>

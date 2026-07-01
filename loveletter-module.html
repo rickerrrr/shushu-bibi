@@ -1,0 +1,165 @@
+<!-- 情书邮局模块 v2.0 -->
+<section id="loveletter-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">💌</span>
+    <h2>情书邮局</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="loveletter-container" style="padding:20px;">
+    <button onclick="showAddLoveLetterModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      💌 写情书
+    </button>
+
+    <div id="scheduled-letters" style="margin-bottom:20px;">
+      <h3 style="font-size:16px;color:#3b82f6;margin-bottom:12px;">📅 定时情书</h3>
+      <div id="scheduled-list"></div>
+    </div>
+
+    <div id="sent-letters">
+      <h3 style="font-size:16px;color:#3b82f6;margin-bottom:12px;">📤 已发送</h3>
+      <div id="sent-list"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var LETTERS_KEY = 'couple_loveletters';
+
+  function getLetters() {
+    return JSON.parse(localStorage.getItem(LETTERS_KEY) || '[]');
+  }
+
+  function saveLetters(letters) {
+    localStorage.setItem(LETTERS_KEY, JSON.stringify(letters));
+  }
+
+  window.showAddLoveLetterModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">💌 写情书</h3>' +
+      '<textarea id="letter-content" placeholder="写下你的情书..." style="width:100%;height:150px;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:12px;box-sizing:border-box;resize:vertical;font-size:14px;"></textarea>' +
+      '<div style="margin-bottom:12px;">' +
+      '  <label style="font-size:13px;color:#666;">定时发送（可选）：</label>' +
+      '  <input type="datetime-local" id="letter-schedule" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-top:6px;box-sizing:border-box;">' +
+      '</div>' +
+      '<div style="margin-bottom:15px;">' +
+      '  <label style="font-size:13px;color:#666;">选择背景：</label>' +
+      '  <div style="display:flex;gap:8px;margin-top:6px;">' +
+      '    <button onclick="document.getElementById(\'letter-bg\').value=\'blue\'" style="flex:1;padding:8px;border:2px solid #93c5fd;border-radius:8px;background:linear-gradient(135deg,#eff6ff,#dbeafe);cursor:pointer;font-size:12px;">💙 蓝色</button>' +
+      '    <button onclick="document.getElementById(\'letter-bg\').value=\'purple\'" style="flex:1;padding:8px;border:2px solid #a78bfa;border-radius:8px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);cursor:pointer;font-size:12px;">💜 紫色</button>' +
+      '    <button onclick="document.getElementById(\'letter-bg\').value=\'warm\'" style="flex:1;padding:8px;border:2px solid #fbbf24;border-radius:8px;background:linear-gradient(135deg,#fffbeb,#fef3c7);cursor:pointer;font-size:12px;">☀️ 温暖</button>' +
+      '  </div>' +
+      '</div>' +
+      '<input type="hidden" id="letter-bg" value="blue">' +
+      '<button onclick="window.saveLoveLetter()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 发送</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveLoveLetter = function() {
+    var content = document.getElementById('letter-content').value.trim();
+    var schedule = document.getElementById('letter-schedule').value;
+    var bg = document.getElementById('letter-bg').value;
+
+    if (!content) { alert('请输入情书内容！'); return; }
+
+    var letters = getLetters();
+    letters.push({
+      id: 'letter_' + Date.now(),
+      content: content,
+      bg: bg,
+      scheduledFor: schedule || null,
+      sent: !schedule,
+      schedule: schedule ? new Date(schedule).toLocaleString('zh-CN') : null,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveLetters(letters);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert(schedule ? '📅 定时情书已设置！\n将在 ' + new Date(schedule).toLocaleString('zh-CN') + ' 发送' : '💌 情书已发送！');
+    renderLoveLetters();
+  };
+
+  window.renderLoveLetters = function() {
+    var letters = getLetters();
+
+    // 渲染定时情书
+    var scheduledList = document.getElementById('scheduled-list');
+    var scheduled = letters.filter(function(l) { return l.scheduledFor && !l.sent; });
+
+    if (scheduledList) {
+      if (scheduled.length === 0) {
+        scheduledList.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:20px;">暂无定时情书</p>';
+      } else {
+        var html = '';
+        scheduled.forEach(function(l, i) {
+          html +=
+            '<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:12px;margin-bottom:8px;">' +
+            '  <div style="font-size:12px;color:#92400e;margin-bottom:6px;">📅 定时发送: ' + l.schedule + '</div>' +
+            '  <div style="color:#444;font-size:13px;line-height:1.6;">' + l.content.substring(0, 50) + (l.content.length > 50 ? '...' : '') + '</div>' +
+            '</div>';
+        });
+        scheduledList.innerHTML = html;
+      }
+    }
+
+    // 渲染已发送
+    var sentList = document.getElementById('sent-list');
+    var sent = letters.filter(function(l) { return l.sent; });
+
+    if (sentList) {
+      if (sent.length === 0) {
+        sentList.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:20px;">暂无已发送情书</p>';
+      } else {
+        var html = '';
+        sent.forEach(function(l) {
+          var bgColors = { blue: 'linear-gradient(135deg,#eff6ff,#dbeafe)', deep: 'linear-gradient(135deg,#dbeafe,#bfdbfe)', warm: 'linear-gradient(135deg,#fffbeb,#fef3c7)' };
+          html +=
+            '<div style="background:' + (bgColors[l.bg] || bgColors.blue) + ';border-radius:12px;padding:12px;margin-bottom:8px;border-left:3px solid #3b82f6;">' +
+            '  <div style="color:#444;font-size:13px;line-height:1.6;white-space:pre-wrap;">' + l.content.replace(/</g,'&lt;') + '</div>' +
+            '  <div style="font-size:11px;color:#999;margin-top:6px;">' + l.createdAt + '</div>' +
+            '</div>';
+        });
+        sentList.innerHTML = html;
+      }
+    }
+
+    // 检查定时情书
+    checkScheduledLetters();
+  };
+
+  function checkScheduledLetters() {
+    var letters = getLetters();
+    var now = new Date();
+    var updated = false;
+
+    letters.forEach(function(l) {
+      if (l.scheduledFor && !l.sent && new Date(l.scheduledFor) <= now) {
+        l.sent = true;
+        updated = true;
+        // 这里应该触发通知，但先用alert模拟
+        console.log('[LoveLetter] 定时情书已发送:', l.content);
+      }
+    });
+
+    if (updated) {
+      saveLetters(letters);
+    }
+  }
+
+  console.log('[LoveLetter] ✅ 情书邮局功能已加载');
+
+  // 每分钟检查一次定时情书
+  setInterval(checkScheduledLetters, 60000);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderLoveLetters);
+  } else {
+    setTimeout(renderLoveLetters, 500);
+  }
+
+})();
+</script>

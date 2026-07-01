@@ -1,0 +1,25 @@
+{
+  "name": "鼠鼠 & 笔笔 · 恋爱官网",
+  "short_name": "恋爱官网",
+  "description": "鼠鼠和笔笔的专属恋爱官网，记录往后每一天的相处、约会与成长",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eff6ff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["lifestyle", "love", "personal"],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

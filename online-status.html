@@ -1,0 +1,66 @@
+<!-- 在线状态指示灯 v2.0 -->
+<div id="online-status-indicator" style="position:fixed;top:10px;right:10px;z-index:9999;background:rgba(255,255,255,0.95);padding:10px 16px;border-radius:20px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;gap:8px;font-size:13px;">
+  <div id="status-dot" style="width:10px;height:10px;border-radius:50%;background:#10b981;animation:pulse 2s infinite;"></div>
+  <span id="status-text">在线</span>
+</div>
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+</style>
+
+<script>
+(function() {
+  var WS_URL = 'wss://shushu-bibi-status.herokuapp.com'; // 需要部署WebSocket服务器
+  var ws = null;
+  var reconnectTimer = null;
+
+  function updateStatus(online, userName) {
+    var dot = document.getElementById('status-dot');
+    var text = document.getElementById('status-text');
+
+    if (online) {
+      dot.style.background = '#10b981';
+      text.textContent = (userName || '对方') + ' 在线 🟢';
+      text.style.color = '#10b981';
+    } else {
+      dot.style.background = '#9ca3af';
+      text.textContent = '离线';
+      text.style.color = '#9ca3af';
+    }
+  }
+
+  function connectWebSocket() {
+    // 由于WebSocket服务器需要额外部署，这里先使用localStorage模拟
+    // 实际部署时需要：
+    // 1. 部署一个简单的WebSocket服务器（可用Heroku免费版）
+    // 2. 两人连接后实时显示在线状态
+
+    console.log('[OnlineStatus] 使用localStorage模拟在线状态');
+
+    // 模拟：设置自己在线
+    localStorage.setItem('partner_online', 'true');
+    localStorage.setItem('partner_last_seen', new Date().toISOString());
+
+    // 检查对方是否在线（通过last_seen时间判断）
+    setInterval(function() {
+      var lastSeen = localStorage.getItem('partner_last_seen');
+      if (lastSeen) {
+        var diff = new Date() - new Date(lastSeen);
+        if (diff < 30000) { // 30秒内
+          updateStatus(true, '🐱笔笔');
+        } else {
+          updateStatus(false);
+        }
+      }
+    }, 5000);
+
+    updateStatus(true, '🐱笔笔');
+  }
+
+  connectWebSocket();
+  console.log('[OnlineStatus] ✅ 在线状态指示灯已加载');
+})();
+</script>

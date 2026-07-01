@@ -1,0 +1,100 @@
+<!-- 恋爱日记模块 v2.0 -->
+<section id="diary-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">📔</span>
+    <h2>恋爱日记</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="diary-container" style="padding:20px;">
+    <button onclick="showAddDiaryModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ✍️ 写日记
+    </button>
+
+    <div id="diary-list" style="margin-top:20px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var DIARY_KEY = 'couple_diary';
+
+  function getDiary() {
+    return JSON.parse(localStorage.getItem(DIARY_KEY) || '[]');
+  }
+
+  function saveDiary(diary) {
+    localStorage.setItem(DIARY_KEY, JSON.stringify(diary));
+  }
+
+  window.showAddDiaryModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3>✍️ 写日记</h3>' +
+      '<textarea id="diary-content" placeholder="今天想对TA说什么..." style="width:100%;height:150px;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin:10px 0;box-sizing:border-box;resize:vertical;"></textarea>' +
+      '<input type="text" id="diary-mood" placeholder="心情（如：😊开心、😭感动）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin:10px 0;box-sizing:border-box;">' +
+      '<button onclick="window.saveDiaryEntry()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveDiaryEntry = function() {
+    var content = document.getElementById('diary-content').value.trim();
+    var mood = document.getElementById('diary-mood').value.trim();
+
+    if (!content) { alert('请输入日记内容！'); return; }
+
+    var diary = getDiary();
+    diary.push({
+      id: 'diary_' + Date.now(),
+      content: content,
+      mood: mood || '😊',
+      date: new Date().toISOString(),
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveDiary(diary);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 日记已保存！');
+    renderDiary();
+  };
+
+  window.renderDiary = function() {
+    var diary = getDiary();
+    var list = document.getElementById('diary-list');
+    if (!list) return;
+
+    if (diary.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">还没有日记～</p>';
+      return;
+    }
+
+    diary.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    var html = '';
+    diary.forEach(function(d, i) {
+      html +=
+        '<div style="background:linear-gradient(135deg,#fff5f7,#fff0f5);border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid #3b82f6;box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:20px;">' + d.mood + '</span>' +
+        '    <span style="font-size:11px;color:#999;">' + d.createdAt + '</span>' +
+        '  </div>' +
+        '  <div style="color:#444;font-size:14px;line-height:1.8;white-space:pre-wrap;">' + d.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+  };
+
+  console.log('[Diary] ✅ 恋爱日记功能已加载');
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderDiary);
+  } else {
+    renderDiary();
+  }
+})();
+</script>

@@ -1,0 +1,87 @@
+<!-- 成就系统 v2.0 -->
+<section id="achievements-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">🏆</span>
+    <h2>成就图鉴</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="achievements-container" style="padding:20px;">
+    <div id="achievements-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;grid-column:1/-1;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var ACHIEVEMENTS_KEY = 'couple_achievements';
+
+  var ALL_ACHIEVEMENTS = [
+    { id: 'first_bill', name: '记账新手', desc: '记录第一笔账单', icon: '💰', condition: function() { return JSON.parse(localStorage.getItem('couple_finance_bills') || '[]').length >= 1; } },
+    { id: 'first_wish', name: '许愿者', desc: '添加第一个愿望', icon: '🌟', condition: function() { return JSON.parse(localStorage.getItem('couple_wishes') || '[]').length >= 1; } },
+    { id: 'first_diary', name: '日记作者', desc: '写第一篇日记', icon: '📔', condition: function() { return JSON.parse(localStorage.getItem('couple_diary') || '[]').length >= 1; } },
+    { id: '10_bills', name: '记账达人', desc: '记录10笔账单', icon: '📊', condition: function() { return JSON.parse(localStorage.getItem('couple_finance_bills') || '[]').length >= 10; } },
+    { id: '5_wishes', name: '愿望收藏家', desc: '添加5个愿望', icon: '✨', condition: function() { return JSON.parse(localStorage.getItem('couple_wishes') || '[]').length >= 5; } },
+    { id: '10_diary', name: '日记大师', desc: '写10篇日记', icon: '📖', condition: function() { return JSON.parse(localStorage.getItem('couple_diary') || '[]').length >= 10; } },
+    { id: 'complete_wish', name: '愿望成真', desc: '完成第一个愿望', icon: '🎉', condition: function() { return JSON.parse(localStorage.getItem('couple_wishes') || '[]').some(function(w) { return w.completed; }); } },
+    { id: 'first_capsule', name: '时光信使', desc: '投放第一个时光胶囊', icon: '💊', condition: function() { return JSON.parse(localStorage.getItem('couple_capsules') || '[]').length >= 1; } },
+  ];
+
+  function getUnlocked() {
+    return JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY) || '[]');
+  }
+
+  function unlockAchievement(id) {
+    var unlocked = getUnlocked();
+    if (unlocked.indexOf(id) === -1) {
+      unlocked.push(id);
+      localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(unlocked));
+      return true;
+    }
+    return false;
+  }
+
+  function checkAchievements() {
+    ALL_ACHIEVEMENTS.forEach(function(a) {
+      if (a.condition() && unlockAchievement(a.id)) {
+        alert('🎉 解锁成就：' + a.icon + ' ' + a.name + '\n' + a.desc);
+      }
+    });
+  }
+
+  window.renderAchievements = function() {
+    var unlocked = getUnlocked();
+    var grid = document.getElementById('achievements-grid');
+    if (!grid) return;
+
+    var html = '';
+    ALL_ACHIEVEMENTS.forEach(function(a) {
+      var isUnlocked = unlocked.indexOf(a.id) !== -1;
+      html +=
+        '<div style="background:' + (isUnlocked ? 'linear-gradient(135deg,#fef3c7,#fde68a)' : '#f3f4f6') + ';border-radius:16px;padding:16px;text-align:center;border:2px solid ' + (isUnlocked ? '#f59e0b' : '#e5e7eb') + ';opacity:' + (isUnlocked ? '1' : '0.5') + ';">' +
+        '  <div style="font-size:40px;margin-bottom:8px;filter:' + (isUnlocked ? 'none' : 'grayscale(100%)') + ';">' + a.icon + '</div>' +
+        '  <div style="font-size:14px;font-weight:600;color:' + (isUnlocked ? '#92400e' : '#9ca3af') + ';">' + a.name + '</div>' +
+        '  <div style="font-size:11px;color:#9ca3af;margin-top:4px;">' + a.desc + '</div>' +
+        '  ' + (isUnlocked ? '<div style="margin-top:8px;font-size:11px;color:#10b981;">✅ 已解锁</div>' : '') +
+        '</div>';
+    });
+
+    grid.innerHTML = html;
+
+    // 检查并解锁新成就
+    checkAchievements();
+  };
+
+  console.log('[Achievements] ✅ 成就系统已加载');
+
+  // 每分钟检查一次成就
+  setInterval(checkAchievements, 60000);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderAchievements);
+  } else {
+    renderAchievements();
+  }
+})();
+</script>

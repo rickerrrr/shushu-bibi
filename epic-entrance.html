@@ -1,0 +1,172 @@
+<!-- 史诗纪念入口 v1.0 -->
+<section id="epic-entrance-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">🏆</span>
+    <h2>史诗纪念入口</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div style="padding:20px;">
+
+    <!-- 欢迎语 -->
+    <div style="text-align:center;padding:30px;background:linear-gradient(135deg,#eff6ff,#ede9fe);border-radius:20px;margin-bottom:30px;">
+      <p style="font-size:64px;margin-bottom:20px;">🏆</p>
+      <h3 style="font-size:24px;color:#3b82f6;margin-bottom:10px;">欢迎来到史诗纪念殿堂</h3>
+      <p style="color:#666;">这里存放着你们爱情最珍贵的永久纪念</p>
+    </div>
+
+    <!-- 四大王炸功能入口 -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:30px;">
+
+      <!-- 王炸1：永久典藏册 -->
+      <div onclick="LoveArchive.exportToPDF()" style="padding:24px;background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+        <p style="font-size:48px;margin-bottom:15px;">📕</p>
+        <h4 style="font-size:18px;color:#92400e;margin-bottom:10px;">爱情永久典藏册</h4>
+        <p style="font-size:14px;color:#78350f;">生成不可篡改的终身纪念册</p>
+        <button style="margin-top:15px;width:100%;padding:10px;background:#f59e0b;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">查看典藏册</button>
+      </div>
+
+      <!-- 王炸2：时间锚点 -->
+      <div onclick="alert('时间锚点已设定为2026-06-28\n所有内容已自动标记纪元')" style="padding:24px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+        <p style="font-size:48px;margin-bottom:15px;">⚓</p>
+        <h4 style="font-size:18px;color:#1e40af;margin-bottom:10px;">爱情时间锚点</h4>
+        <p style="font-size:14px;color:#1e3a8a;">2.0纪元永久坐标</p>
+        <button style="margin-top:15px;width:100%;padding:10px;background:#3b82f6;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">查看锚点</button>
+      </div>
+
+      <!-- 王炸3：长线胶囊 -->
+      <div onclick="showLongTermCapsuleModal()" style="padding:24px;background:linear-gradient(135deg,#dbeafe,#fbcfe8);border-radius:16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+        <p style="font-size:48px;margin-bottom:15px;">⏰</p>
+        <h4 style="font-size:18px;color:#831843;margin-bottom:10px;">长线时光胶囊馆</h4>
+        <p style="font-size:14px;color:#9d174d;">写给未来几年的彼此</p>
+        <button style="margin-top:15px;width:100%;padding:10px;background:#3b82f6;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">创建胶囊</button>
+      </div>
+
+      <!-- 王炸4：人生画卷 -->
+      <div onclick="LoveCanvas.open()" style="padding:24px;background:linear-gradient(135deg,#ede9fe,#ddd6fe);border-radius:16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+        <p style="font-size:48px;margin-bottom:15px;">🎨</p>
+        <h4 style="font-size:18px;color:#5b21b6;margin-bottom:10px;">爱情人生画卷</h4>
+        <p style="font-size:14px;color:#6d28d9;">可视化终身爱情编年史</p>
+        <button style="margin-top:15px;width:100%;padding:10px;background:#1d4ed8;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">展开画卷</button>
+      </div>
+
+    </div>
+
+    <!-- 完善功能入口 -->
+    <h3 style="margin:30px 0 20px;color:#4b5563;">✨ 其他史诗功能</h3>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax,280px,1fr));gap:20px;">
+
+      <!-- 爱情契约 -->
+      <div onclick="LoveContract.showContractModal()" style="padding:20px;background:white;border-radius:16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:2px solid #dbeafe;">
+        <p style="font-size:36px;margin-bottom:10px;">💍</p>
+        <h4 style="font-size:16px;color:#3b82f6;margin-bottom:8px;">爱情指纹契约</h4>
+        <p style="font-size:13px;color:#666;">签署终身不可修改的电子契约</p>
+      </div>
+
+      <!-- 年轮博物馆 -->
+      <div onclick="LoveDataMuseum.renderMuseum()" style="padding:20px;background:white;border-radius:16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:2px solid #dbeafe;">
+        <p style="font-size:36px;margin-bottom:10px;">🏛️</p>
+        <h4 style="font-size:16px;color:#3b82f6;margin-bottom:8px;">爱情年轮博物馆</h4>
+        <p style="font-size:13px;color:#666;">可视化汇总全部恋爱数据</p>
+      </div>
+
+      <!-- 快速互动 -->
+      <div onclick="showQuickActionPanel()" style="padding:20px;background:white;border-radius:16px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:2px solid #d1fae5;">
+        <p style="font-size:36px;margin-bottom:10px;">💕</p>
+        <h4 style="font-size:16px;color:#10b981;margin-bottom:8px;">快速互动动作</h4>
+        <p style="font-size:13px;color:#666;">发送虚拟拥抱、摸头、比心</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+// 长线胶囊创建弹窗
+function showLongTermCapsuleModal() {
+  var html = '<div style="padding:30px;">' +
+    '<h3 style="margin-bottom:20px;">⏰ 创建长线时光胶囊</h3>' +
+    '<div style="margin-bottom:15px;">' +
+    '  <label>选择解锁时间：</label>' +
+    '  <select id="ltc-unlock-time" style="width:100%;padding:10px;border:2px solid #e5e7eb;border-radius:8px;">' +
+    '    <option value="1">1年后</option>' +
+    '    <option value="3">3年后</option>' +
+    '    <option value="5">5年后</option>' +
+    '    <option value="10">10年后</option>' +
+    '    <option value="engagement">订婚日</option>' +
+    '    <option value="wedding">结婚纪念日</option>' +
+    '  </select>' +
+    '</div>' +
+    '<div style="margin-bottom:15px;">' +
+    '  <label>胶囊标题：</label>' +
+    '  <input type="text" id="ltc-title" placeholder="给未来的一封信" style="width:100%;padding:10px;border:2px solid #e5e7eb;border-radius:8px;box-sizing:border-box;">' +
+    '</div>' +
+    '<div style="margin-bottom:15px;">' +
+    '  <label>信件内容：</label>' +
+    '  <textarea id="ltc-content" placeholder="写下你想对未来的TA说的话..." style="width:100%;height:150px;padding:10px;border:2px solid #e5e7eb;border-radius:8px;resize:vertical;box-sizing:border-box;"></textarea>' +
+    '</div>' +
+    '<div style="margin-bottom:15px;">' +
+    '  <label>' +
+    '    <input type="checkbox" id="ltc-dual-sign"> 双人共同签署（需要两人都签名才能锁定）' +
+    '  </label>' +
+    '</div>' +
+    '<button onclick="createLongTermCapsule()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 创建胶囊（不可撤回）</button>' +
+    '</div>';
+
+  if (typeof showGlobalModal === 'function') {
+    showGlobalModal(html);
+  }
+}
+
+function createLongTermCapsule() {
+  var timeValue = document.getElementById('ltc-unlock-time').value;
+  var title = document.getElementById('ltc-title').value.trim();
+  var content = document.getElementById('ltc-content').value.trim();
+  var isDualSign = document.getElementById('ltc-dual-sign').checked;
+
+  if (!title || !content) {
+    alert('请填写完整信息！');
+    return;
+  }
+
+  var unlockDate;
+  if (timeValue === 'engagement' || timeValue === 'wedding') {
+    unlockDate = prompt('请输入具体日期（YYYY-MM-DD）：');
+  } else {
+    var years = parseInt(timeValue);
+    unlockDate = new Date();
+    unlockDate.setFullYear(unlockDate.getFullYear() + years);
+    unlockDate = unlockDate.toISOString().split('T')[0];
+  }
+
+  LongTermCapsule.createLongTermCapsule({
+    unlockDate: unlockDate,
+    unlockEvent: isNaN(timeValue) ? timeValue : null,
+    title: title,
+    content: content,
+    isDualSigned: isDualSign
+  });
+
+  if (typeof closeGlobalModal === 'function') closeGlobalModal();
+  alert('✅ 长线时光胶囊已创建！\n\n解锁日期：' + unlockDate + '\n\n创建后不可修改或删除！');
+}
+
+// 快速互动面板
+function showQuickActionPanel() {
+  var html = '<div style="padding:30px;text-align:center;">' +
+    '<h3 style="margin-bottom:30px;">💕 发送快速互动动作</h3>' +
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;">' +
+    '  <button onclick="sendQuickAction(\'hug\')" style="padding:20px;font-size:48px;background:#eff6ff;border:2px solid #93c5fd;border-radius:16px;cursor:pointer;">🤗<br><span style="font-size:14px;">拥抱</span></button>' +
+    '  <button onclick="sendQuickAction(\'pat\')" style="padding:20px;font-size:48px;background:#fef3c7;border:2px solid #fcd34d;border-radius:16px;cursor:pointer;">😊<br><span style="font-size:14px;">摸头</span></button>' +
+    '  <button onclick="sendQuickAction(\'heart\')" style="padding:20px;font-size:48px;background:#dbeafe;border:2px solid #93c5fd;border-radius:16px;cursor:pointer;">💕<br><span style="font-size:14px;">比心</span></button>' +
+    '  <button onclick="sendQuickAction(\'hold\')" style="padding:20px;font-size:48px;background:#dbeafe;border:2px solid #93c5fd;border-radius:16px;cursor:pointer;">🤝<br><span style="font-size:14px;">牵手</span></button>' +
+    '</div>' +
+    '</div>';
+
+  if (typeof showGlobalModal === 'function') {
+    showGlobalModal(html);
+  }
+}
+</script>

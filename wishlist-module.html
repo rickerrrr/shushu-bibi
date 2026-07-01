@@ -1,0 +1,119 @@
+<!-- 愿望清单模块 v2.0 -->
+<section id="wishlist-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">🌟</span>
+    <h2>愿望清单</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="wishlist-container" style="padding:20px;">
+    <button onclick="showAddWishModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ✨ 添加愿望
+    </button>
+
+    <div id="wishlist-grid" style="display:grid;gap:12px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var WISHES_KEY = 'couple_wishes';
+
+  function getWishes() {
+    return JSON.parse(localStorage.getItem(WISHES_KEY) || '[]');
+  }
+
+  function saveWishes(wishes) {
+    localStorage.setItem(WISHES_KEY, JSON.stringify(wishes));
+  }
+
+  window.showAddWishModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3>✨ 添加愿望</h3>' +
+      '<input type="text" id="wish-title" placeholder="愿望内容（如：一起看海）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #a78bfa;margin:10px 0;box-sizing:border-box;">' +
+      '<select id="wish-type" style="width:100%;padding:12px;border-radius:12px;border:2px solid #a78bfa;margin:10px 0;box-sizing:border-box;">' +
+      '  <option value="couple">💑 共同愿望</option>' +
+      '  <option value="mine">💭 我的心愿</option>' +
+      '  <option value="yours">💝 给你的惊喜</option>' +
+      '</select>' +
+      '<button onclick="window.saveWish()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveWish = function() {
+    var title = document.getElementById('wish-title').value.trim();
+    var type = document.getElementById('wish-type').value;
+
+    if (!title) { alert('请输入愿望内容！'); return; }
+
+    var wishes = getWishes();
+    wishes.push({
+      id: 'wish_' + Date.now(),
+      title: title,
+      type: type,
+      completed: false,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveWishes(wishes);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 愿望已添加！');
+    renderWishes();
+  };
+
+  window.renderWishes = function() {
+    var wishes = getWishes();
+    var grid = document.getElementById('wishlist-grid');
+    if (!grid) return;
+
+    if (wishes.length === 0) {
+      grid.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">还没有愿望～</p>';
+      return;
+    }
+
+    var html = '';
+    wishes.forEach(function(w, i) {
+      var typeIcons = { couple: '💑', mine: '💭', yours: '💝' };
+      html +=
+        '<div style="background:' + (w.completed ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : 'white') + ';border-radius:16px;padding:16px;border-left:4px solid ' + (w.completed ? '#10b981' : '#3b82f6') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);display:flex;align-items:center;gap:12px;">' +
+        '  <input type="checkbox" ' + (w.completed ? 'checked' : '') + ' onchange="window.toggleWish(' + i + ')" style="width:20px;height:20px;">' +
+        '  <div style="flex:1;">' +
+        '    <div style="font-size:16px;' + (w.completed ? 'text-decoration:line-through;color:#9ca3af;' : 'color:#444') + ';">' + (typeIcons[w.type] || '💭') + ' ' + w.title + '</div>' +
+        '    <div style="font-size:11px;color:#999;margin-top:4px;">' + w.createdAt + '</div>' +
+        '  </div>' +
+        '  <button onclick="window.deleteWish(' + i + ')" style="background:none;border:none;font-size:18px;cursor:pointer;">🗑️</button>' +
+        '</div>';
+    });
+
+    grid.innerHTML = html;
+  };
+
+  window.toggleWish = function(idx) {
+    var wishes = getWishes();
+    wishes[idx].completed = !wishes[idx].completed;
+    saveWishes(wishes);
+    renderWishes();
+  };
+
+  window.deleteWish = function(idx) {
+    if (!confirm('确定删除这个愿望？')) return;
+    var wishes = getWishes();
+    wishes.splice(idx, 1);
+    saveWishes(wishes);
+    renderWishes();
+  };
+
+  console.log('[Wishlist] ✅ 愿望清单功能已加载');
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderWishes);
+  } else {
+    renderWishes();
+  }
+})();
+</script>

@@ -1,0 +1,306 @@
+<!-- 里程碑时间轴 v2.0 -->
+<section class="section-card" id="milestone-section">
+  <div class="section-header">
+    <h2>🏆 里程碑时间轴</h2>
+    <button class="refresh-btn" onclick="renderMilestones()">🔄</button>
+  </div>
+
+  <div class="milestone-timeline" id="milestone-timeline">
+    <!-- 动态加载 -->
+  </div>
+
+  <div class="milestone-form" style="margin-top: 20px; padding: 20px; background: var(--card-bg); border-radius: var(--border-radius);">
+    <h3 style="margin-bottom: 15px;">✨ 添加里程碑</h3>
+    <input type="text" id="milestone-title" placeholder="里程碑标题（如：第一次约会）" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+    <input type="date" id="milestone-date" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+    <textarea id="milestone-desc" placeholder="里程碑描述..." style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px; min-height: 80px;"></textarea>
+    <input type="text" id="milestone-icon" placeholder="图标（如：💑）" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px;">
+    <button class="btn-primary" onclick="addMilestone()" style="width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--primary-color); color: white; font-size: 16px; cursor: pointer;">
+      ✅ 添加里程碑
+    </button>
+  </div>
+</section>
+
+<style>
+.milestone-timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.milestone-timeline::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+.milestone-item {
+  position: relative;
+  padding-left: 70px;
+  margin-bottom: 30px;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.milestone-dot {
+  position: absolute;
+  left: 20px;
+  top: 5px;
+  width: 25px;
+  height: 25px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.milestone-dot.achieved {
+  background: var(--success-color);
+}
+
+.milestone-dot.upcoming {
+  background: var(--warning-color);
+}
+
+.milestone-content {
+  background: var(--card-bg);
+  padding: 15px 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
+
+.milestone-date {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 5px;
+}
+
+.milestone-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.milestone-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.milestone-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-radius: 20px;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.milestone-badge.achieved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.milestone-badge.upcoming {
+  background: #fef3c7;
+  color: #92400e;
+}
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  // 默认里程碑数据
+  const DEFAULT_MILESTONES = [
+    {
+      id: 1,
+      title: '初识',
+      date: '2024-01-01',
+      desc: '我们第一次相遇的日子',
+      icon: '💑',
+      achieved: true
+    },
+    {
+      id: 2,
+      title: '第一次约会',
+      date: '2024-02-14',
+      desc: '我们的第一次正式约会',
+      icon: '🌹',
+      achieved: true
+    },
+    {
+      id: 3,
+      title: '告白日',
+      date: '2024-03-20',
+      desc: '我正式向你告白',
+      icon: '💝',
+      achieved: true
+    },
+    {
+      id: 4,
+      title: '恋爱官网1.0上线',
+      date: '2025-01-01',
+      desc: '我们的专属恋爱官网正式上线',
+      icon: '🎉',
+      achieved: true
+    },
+    {
+      id: 5,
+      title: '恋爱官网2.0升级',
+      date: new Date().toISOString().split('T')[0],
+      desc: '官网全面升级2.0版本',
+      icon: '🚀',
+      achieved: true
+    },
+    {
+      id: 6,
+      title: '100天纪念日',
+      date: '2024-06-01',
+      desc: '在一起100天',
+      icon: '💯',
+      achieved: false
+    },
+    {
+      id: 7,
+      title: '一周年纪念日',
+      date: '2025-03-20',
+      desc: '在一起一周年',
+      icon: '🎂',
+      achieved: false
+    }
+  ];
+
+  const STORAGE_KEY = 'love_milestones';
+
+  // 获取里程碑
+  function getMilestones() {
+    var data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+      return JSON.parse(data);
+    }
+    // 首次使用，保存默认数据
+    saveMilestones(DEFAULT_MILESTONES);
+    return DEFAULT_MILESTONES;
+  }
+
+  // 保存里程碑
+  function saveMilestones(milestones) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(milestones));
+  }
+
+  // 添加里程碑
+  window.addMilestone = function() {
+    var title = document.getElementById('milestone-title').value.trim();
+    var date = document.getElementById('milestone-date').value;
+    var desc = document.getElementById('milestone-desc').value.trim();
+    var icon = document.getElementById('milestone-icon').value.trim() || '⭐';
+
+    if (!title || !date) {
+      alert('请填写标题和日期！');
+      return;
+    }
+
+    var milestones = getMilestones();
+    var newId = milestones.length > 0 ? Math.max.apply(null, milestones.map(function(m) { return m.id; })) + 1 : 1;
+
+    milestones.push({
+      id: newId,
+      title: title,
+      date: date,
+      desc: desc,
+      icon: icon,
+      achieved: new Date(date) <= new Date()
+    });
+
+    saveMilestones(milestones);
+    renderMilestones();
+
+    // 清空表单
+    document.getElementById('milestone-title').value = '';
+    document.getElementById('milestone-date').value = '';
+    document.getElementById('milestone-desc').value = '';
+    document.getElementById('milestone-icon').value = '';
+
+    alert('✅ 里程碑已添加！');
+  };
+
+  // 删除里程碑
+  window.deleteMilestone = function(id) {
+    if (!confirm('确定删除这个里程碑？')) return;
+
+    var milestones = getMilestones();
+    milestones = milestones.filter(function(m) { return m.id !== id; });
+    saveMilestones(milestones);
+    renderMilestones();
+  };
+
+  // 渲染里程碑
+  window.renderMilestones = function() {
+    var milestones = getMilestones();
+    var container = document.getElementById('milestone-timeline');
+
+    if (!container) return;
+
+    // 按日期排序
+    milestones.sort(function(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    });
+
+    container.innerHTML = milestones.map(function(m) {
+      var achieved = m.achieved || new Date(m.date) <= new Date();
+      var badgeClass = achieved ? 'achieved' : 'upcoming';
+      var badgeText = achieved ? '✅ 已达成' : '⏳ 待达成';
+      var dotClass = achieved ? 'achieved' : 'upcoming';
+
+      return `
+        <div class="milestone-item">
+          <div class="milestone-dot ${dotClass}"></div>
+          <div class="milestone-content">
+            <div class="milestone-date">${m.date}</div>
+            <div class="milestone-title">
+              ${m.icon} ${m.title}
+            </div>
+            <div class="milestone-desc">${m.desc}</div>
+            <span class="milestone-badge ${badgeClass}">${badgeText}</span>
+            <button onclick="deleteMilestone(${m.id})" style="margin-top: 10px; padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">
+              删除
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  };
+
+  // 初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMilestones);
+  } else {
+    setTimeout(renderMilestones, 500);
+  }
+
+  console.log('[Milestone] ✅ 里程碑时间轴已加载');
+
+})();
+</script>

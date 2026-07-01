@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Worker v8 一键部署</title>
+<style>
+body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; background: #f0f4f8; }
+.box { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 20px; }
+h1 { color: #2563eb; font-size: 24px; margin-bottom: 5px; }
+.subtitle { color: #666; margin-bottom: 20px; }
+.step { background: #eff6ff; border-left: 4px solid #2563eb; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.step-num { display: inline-block; width: 28px; height: 28px; background: #2563eb; color: white; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 10px; font-size: 14px; }
+.code-box { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; overflow-x: auto; white-space: pre-wrap; max-height: 500px; overflow-y: auto; position: relative; }
+.copy-btn { position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.copy-btn:hover { background: #2563eb; }
+.warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+.success { background: #d1fae5; border-left: 4px solid #10b981; padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+.btn-primary { background: #2563eb; color: white; border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
+.btn-primary:hover { background: #1d4ed8; }
+</style>
+</head>
+<body>
+<div class="box">
+<h1>☁️ Cloudflare Worker v8 一键部署工具</h1>
+<p class="subtitle">完整实时同步版 — 支持所有功能实时化！</p>
+
+<div class="warning">
+⚠️ <b>重要：</b>请先确认你已经完成了以下步骤：<br>
+① 打开 Cloudflare Dashboard → Workers & Pages<br>
+② 找到你的 Worker 并点击 <b>Edit Code</b><br>
+③ 确认 KV 绑定正确（DATA_STORE + ONLINE_STATUS）
+</div>
+
+<div class="step">
+<span class="step-num">1</span> 点击下方按钮，复制完整的 Worker v8 代码
+</div>
+
+<button class="btn-primary" onclick="copyCode()">📋 一键复制全部代码（247行）</button>
+<p id="copy-status" style="color:#10b981;margin-top:8px;font-size:14px;"></p>
+
+<div class="step" style="margin-top:25px;">
+<span class="step-num">2</span> 去粘贴到 Cloudflare 编辑器
+</div>
+<p>① 全选旧代码（Ctrl+A）→ 删除<br>② 粘贴新代码（Ctrl+V）<br>③ 点击右上角 <b style="color:#2563eb">Save and Deploy</b></p>
+
+<div class="code-box" id="code-block"><button class="copy-btn" onclick="copyCode()">复制</button>/**
+ * Cloudflare Worker - 完整实时同步版 v8
+ * 支持：在线状态 + 聊天 + 所有数据同步
+ */
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    };
+
+    if (method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    // 在线状态
+    if (path === '/online' || path.startsWith('/online')) {
+      const ONLINE_KV = env.ONLINE_STATUS;
+      if (!ONLINE_KV) {
+        return new Response(JSON.stringify({ error: 'KV not bound' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'POST') {
+        const body = await request.json();
+        const user = body.user || 'unknown';
+        const timestamp = Date.now();
+        await ONLINE_KV.put(user, JSON.stringify({ online: true, lastSeen: timestamp }));
+        await ONLINE_KV.put(user + '_timeout', 'pending', { expirationTtl: 15 });
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'GET') {
+        const shushu = await ONLINE_KV.get('shushu');
+        const bibi = await ONLINE_KV.get('bibi');
+        const now = Date.now();
+        const timeout = 15000;
+        const shushuData = shushu ? JSON.parse(shushu) : null;
+        const bibiData = bibi ? JSON.parse(bibi) : null;
+        const result = {
+          shushu: shushuData && (now - shushuData.lastSeen < timeout),
+          bibi: bibiData && (now - bibiData.lastSeen < timeout),
+          shushuLastSeen: shushuData ? shushuData.lastSeen : null,
+          bibiLastSeen: bibiData ? bibiData.lastSeen : null,
+        };
+        return new Response(JSON.stringify(result), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // 聊天
+    if (path === '/chat') {
+      const DATA_KV = env.DATA_STORE;
+      if (!DATA_KV) {
+        return new Response(JSON.stringify({ error: 'KV not bound' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'GET') {
+        const messages = await DATA_KV.get('chat_messages');
+        const parsed = messages ? JSON.parse(messages) : [];
+        return new Response(JSON.stringify({ success: true, messages: parsed }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'POST') {
+        const body = await request.json();
+        const newMessage = body.message;
+        const messages = await DATA_KV.get('chat_messages');
+        const parsed = messages ? JSON.parse(messages) : [];
+        parsed.push(newMessage);
+        if (parsed.length > 100) {
+          parsed.splice(0, parsed.length - 100);
+        }
+        await DATA_KV.put('chat_messages', JSON.stringify(parsed));
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // 通用数据同步
+    if (path.startsWith('/data/')) {
+      const DATA_KV = env.DATA_STORE;
+      if (!DATA_KV) {
+        return new Response(JSON.stringify({ error: 'KV not bound' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      const key = path.replace('/data/', '').replace(/^\//, '');
+
+      if (method === 'GET') {
+        const data = await DATA_KV.get(key);
+        const parsed = data ? JSON.parse(data) : null;
+        return new Response(JSON.stringify({ success: true, data: parsed }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'POST') {
+        const body = await request.json();
+        const incomingData = body.data;
+        await DATA_KV.put(key, JSON.stringify(incomingData));
+        await DATA_KV.put(key + '_timestamp', String(body.timestamp || Date.now()));
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // 留言墙
+    if (path === '/messages') {
+      const DATA_KV = env.DATA_STORE;
+      if (!DATA_KV) {
+        return new Response(JSON.stringify({ error: 'KV not bound' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'GET') {
+        const messages = await DATA_KV.get('messages');
+        const parsed = messages ? JSON.parse(messages) : [];
+        return new Response(JSON.stringify({ success: true, messages: parsed }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'POST') {
+        const body = await request.json();
+        const newMessage = body.message;
+        const messages = await DATA_KV.get('messages');
+        const parsed = messages ? JSON.parse(messages) : [];
+        parsed.unshift(newMessage);
+        if (parsed.length > 200) {
+          parsed.splice(200);
+        }
+        await DATA_KV.put('messages', JSON.stringify(parsed));
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // 情书
+    if (path === '/love-letters') {
+      const DATA_KV = env.DATA_STORE;
+      if (!DATA_KV) {
+        return new Response(JSON.stringify({ error: 'KV not bound' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'GET') {
+        const letters = await DATA_KV.get('loveLetters');
+        const parsed = letters ? JSON.parse(letters) : [];
+        return new Response(JSON.stringify({ success: true, letters: parsed }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      if (method === 'POST') {
+        const body = await request.json();
+        const newLetter = body.letter;
+        const letters = await DATA_KV.get('loveLetters');
+        const parsed = letters ? JSON.parse(letters) : [];
+        parsed.unshift(newLetter);
+        await DATA_KV.put('loveLetters', JSON.stringify(parsed));
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // 健康检查
+    if (path === '/') {
+      return new Response(JSON.stringify({
+        status: 'ok',
+        version: 'v8',
+        features: ['online', 'chat', 'data-sync', 'messages', 'love-letters'],
+        timestamp: Date.now()
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    return new Response(JSON.stringify({ error: 'Not found' }), {
+      status: 404,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+};</div>
+
+<div class="success" id="done-msg" style="display:none;">
+✅ <b>部署完成！</b><br>
+现在去测试：<br>
+① 打开 https://shushu-bibi.cn<br>
+② 按 Ctrl+F5 强制刷新<br>
+③ 用两个浏览器分别登录鼠鼠和笔笔<br>
+④ 发消息测试！<br><br>
+<b style="color:#059669">像微信一样实时了！🎉</b>
+</div>
+</div>
+<script>
+function copyCode() {
+  const codeBlock = document.getElementById('code-block');
+  // 获取纯文本内容（去掉按钮等HTML元素）
+  const text = codeBlock.innerText;
+  
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-status').innerHTML = 
+      '✅ 已复制！共 ' + text.split('\n').length + ' 行代码，现在去 Cloudflare 粘贴吧！';
+    
+    document.getElementById('done-msg').style.display = 'block';
+  }).catch(err => {
+    document.getElementById('copy-status').innerHTML = 
+      '❌ 复制失败，请手动全选后按 Ctrl+C';
+  });
+}
+</script>
+</body>
+</html>

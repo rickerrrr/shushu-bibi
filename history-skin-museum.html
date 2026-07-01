@@ -1,0 +1,118 @@
+<!-- 历史皮肤博物馆 v2.0 -->
+<div id="history-skin-museum" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto;">
+  <div style="max-width: 800px; margin: 50px auto; background: white; border-radius: 20px; padding: 30px; position: relative;">
+    <button onclick="closeHistorySkins()" style="position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; border-radius: 50%; border: none; background: #ef4444; color: white; font-size: 18px; cursor: pointer;">✕</button>
+
+    <h2 style="text-align: center; font-size: 28px; margin-bottom: 10px;">🎨 历史皮肤博物馆</h2>
+    <p style="text-align: center; color: #6b7280; margin-bottom: 30px;">回顾所有经典皮肤，点击即可切换</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+
+      <!-- 四季皮肤 -->
+      <div class="history-skin-card" onclick="applyHistorySkin('spring')" style="background: linear-gradient(135deg, #dbeafe, #fbcfe8); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🌸</div>
+        <h3 style="margin: 10px 0 5px 0; color: #db2777;">春 · 樱花</h3>
+        <p style="font-size: 12px; color: #6b7280;">3-5月 · 樱花粉</p>
+      </div>
+
+      <div class="history-skin-card" onclick="applyHistorySkin('summer')" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🏖️</div>
+        <h3 style="margin: 10px 0 5px 0; color: #2563eb;">夏 · 海洋</h3>
+        <p style="font-size: 12px; color: #6b7280;">6-8月 · 大海蓝</p>
+      </div>
+
+      <div class="history-skin-card" onclick="applyHistorySkin('autumn')" style="background: linear-gradient(135deg, #fed7aa, #fdba74); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🍁</div>
+        <h3 style="margin: 10px 0 5px 0; color: #ea580c;">秋 · 枫叶</h3>
+        <p style="font-size: 12px; color: #6b7280;">9-11月 · 枫叶橙</p>
+      </div>
+
+      <div class="history-skin-card" onclick="applyHistorySkin('winter')" style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">❄️</div>
+        <h3 style="margin: 10px 0 5px 0; color: #4f46e5;">冬 · 冰雪</h3>
+        <p style="font-size: 12px; color: #6b7280;">12-2月 · 冰雪紫蓝</p>
+      </div>
+
+      <!-- 2.0主题 -->
+      <div class="history-skin-card" onclick="setTheme('blue')" style="background: linear-gradient(135deg, #dbeafe, #eff6ff); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🌊</div>
+        <h3 style="margin: 10px 0 5px 0; color: #3b82f6;">清新蓝色</h3>
+        <p style="font-size: 12px; color: #6b7280;">2.0默认主题</p>
+      </div>
+
+      <div class="history-skin-card" onclick="setTheme('minimal')" style="background: linear-gradient(135deg, #e0e7ff, #f5f3ff); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🍃</div>
+        <h3 style="margin: 10px 0 5px 0; color: #3b82f6;">简约治愈</h3>
+        <p style="font-size: 12px; color: #6b7280;">2.0新增主题</p>
+      </div>
+
+      <div class="history-skin-card" onclick="setTheme('dark')" style="background: linear-gradient(135deg, #1e1b4b, #312e81); padding: 20px; border-radius: 16px; cursor: pointer; transition: transform 0.3s; text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🌙</div>
+        <h3 style="margin: 10px 0 5px 0; color: #c4b5fd;">星光夜景</h3>
+        <p style="font-size: 12px; color: #a5b4fc;">2.0新增主题</p>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 12px; text-align: center;">
+      <p style="font-size: 14px; color: #6b7280;">💡 提示：点击任意皮肤卡片即可立即切换，选择会自动保存</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// 应用历史皮肤（四季皮肤）
+function applyHistorySkin(season) {
+  // 移除所有季节class
+  document.body.classList.remove('season-spring', 'season-summer', 'season-autumn', 'season-winter');
+
+  // 添加选中的季节class
+  document.body.classList.add('season-' + season);
+
+  // 保存到localStorage
+  localStorage.setItem('love_site_season_skin', season);
+
+  alert('✅ 已切换到' + getSeasonName(season) + '皮肤！');
+
+  closeHistorySkins();
+}
+
+// 获取季节名称
+function getSeasonName(season) {
+  var names = {
+    'spring': '春·樱花',
+    'summer': '夏·海洋',
+    'autumn': '秋·枫叶',
+    'winter': '冬·冰雪'
+  };
+  return names[season] || season;
+}
+
+// 关闭历史皮肤博物馆
+function closeHistorySkins() {
+  var museum = document.getElementById('history-skin-museum');
+  if (museum) {
+    museum.style.display = 'none';
+  }
+}
+
+// 打开历史皮肤博物馆
+function openHistorySkins() {
+  var museum = document.getElementById('history-skin-museum');
+  if (museum) {
+    museum.style.display = 'block';
+  }
+}
+
+// 暴露到全局
+window.openHistorySkins = openHistorySkins;
+window.closeHistorySkins = closeHistorySkins;
+
+// 初始化：检查是否应用了历史皮肤
+(function() {
+  var savedSeason = localStorage.getItem('love_site_season_skin');
+  if (savedSeason) {
+    document.body.classList.add('season-' + savedSeason);
+  }
+})();
+</script>

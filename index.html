@@ -1,0 +1,4079 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>鼠鼠 & 笔笔 · 恋爱官网</title>
+<meta name="theme-color" content="#3b82f6">
+<meta name="description" content="鼠鼠和笔笔的专属恋爱官网，记录往后每一天的相处、约会与成长">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css?v=10.0">
+    <link rel="stylesheet" href="css/windows.css?v=10.0">
+    <link rel="stylesheet" href="css/windows.css?v=10.0">
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        /* ========== 天空蓝背景 + 黑色文字（用户要求）========== */
+        body {
+            background: linear-gradient(135deg, #87CEEB 0%, #5dade2 25%, #3498db 50%, #2e86c1 75%, #1b4f72 100%) !important;
+            background-size: 200% 200% !important;
+            animation: none !important;
+            min-height: 100vh !important;
+            color: #0d1117 !important;
+        }
+        
+        /* 主要内容区域文字强制黑色/深色 */
+        .main-section, .page-section,
+        .section-header, section,
+        h1, h2, h3, h4, h5, h6,
+        p, span, li, label,
+        .card-title, .card-text,
+        .shushu-card, .bibi-card,
+        .monthly-status, .status-value,
+        .love-words { color: #0d1117 !important; }
+
+        /* 移除所有伪元素装饰 */
+        body::before, body::after {
+            display: none !important;
+        }
+
+        /* 更多下拉菜单样式 */
+        .more-menu-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .btn-more {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #374151;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+        }
+
+        .btn-more:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .more-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            min-width: 180px;
+            z-index: 1000;
+            padding: 8px 0;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .more-dropdown.show {
+            display: block;
+        }
+        
+        .more-item {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            text-align: left;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .more-item:hover {
+            background: #f5f5f5;
+            color: #ff6b95;
+        }
+        
+        .more-dropdown hr {
+            margin: 4px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 海洋背景 */
+        body {
+            background: linear-gradient(135deg, #87CEEB 0%, #5dade2 25%, #3498db 50%, #2e86c1 75%, #1b4f72 100%) !important;
+            background-attachment: fixed !important;
+        }
+        
+        /* 新模块默认折叠 */
+        #weather-section-pro,
+        /* ==================== 🚨 全局紫红色/粉色 暴力清除 ==================== */
+        /* 城市按钮 - 粉红→蓝 */
+        .city-dropdown-item, [class*="city"] button, [class*="city-item"],
+        #city-dropdown-list div, [onclick*="selectCity"] {
+            background: rgba(59,130,246,0.12) !important;
+            color: #1d4ed8 !important;
+            border: 1px solid rgba(59,130,246,0.25) !important;
+        }
+        .city-dropdown-item.active, [class*="city"].active {
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8) !important;
+            color: white !important;
+        }
+        .city-dropdown-item:hover {
+            background: rgba(59,130,246,0.25) !important;
+        }
+
+        /* 打卡按钮 - 粉红渐变→蓝色渐变 */
+        [onclick*="dailyCheckin"], [id*="checkin-btn"], .checkin-action-btn,
+        button[onclick*="Checkin"] {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+            box-shadow: 0 4px 15px rgba(59,130,246,0.35) !important;
+        }
+
+        /* 任务数字圆圈 - 粉色→蓝色 */
+        .ch-num, [class*="ch-num"], .task-num, .challenge-number,
+        [style*="background:rgba(59,130,246"][style*="border-radius:50%"],
+        [style*="background: rgba(59,130,246"][style*="border-radius: 50%"] {
+            background: rgba(59,130,246,0.15) !important;
+            color: #3b82f6 !important;
+        }
+
+        /* 已完成任务圆圈 */
+        .challenge-item.done .ch-num, .done [class*="num"] {
+            background: #3b82f6 !important;
+            color: white !important;
+        }
+
+        /* 任务列表行 - 粉色背景→透明 */
+        .challenge-item {
+            background: rgba(255,255,255,0.7) !important;
+            border-color: rgba(59,130,246,0.2) !important;
+        }
+        .challenge-item:hover {
+            background: rgba(59,130,246,0.08) !important;
+            border-color: rgba(59,130,246,0.4) !important;
+        }
+        .challenge-item.done {
+            background: rgba(59,130,246,0.06) !important;
+            border-color: rgba(59,130,246,0.25) !important;
+        }
+
+        /* 打卡卡片 */
+        .checkin-card, [class*="checkin-card"], [id*="checkin-card"] {
+            border-color: rgba(59,130,246,0.2) !important;
+        }
+
+        /* 通用：所有包含粉红色的内联背景 → 蓝色 */
+        [style*="#3b82f6"], [style*="#ef4444"], [style*="#60a5fa"],
+        [style*="rgb(236,72,153)"], [style*="rgb(244,63,94)"] {
+            color: #3b82f6 !important;
+        }
+
+        [style*="background:#3b82f6"], [style*="background: #3b82f6"],
+        [style*="background:#ef4444"], [style*="background: #ef4444"],
+        [style*="background:linear-gradient(135deg,#3b82f6"],
+        [style*="background: linear-gradient(135deg, #3b82f6"],
+        [style*="background:linear-gradient(135deg,#3b82f6,#ef4444"],
+        [style*="background: linear-gradient(135deg, #3b82f6, #ef4444"] {
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8) !important;
+        }
+
+        [style*="background:rgba(59,130,246)"], [style*="background: rgba(59,130,246)"] {
+            background: rgba(59,130,246,0.15) !important;
+        }
+
+        /* 边框粉色→蓝色 */
+        [style*="border-color:#3b82f6"], [style*="border-color: #3b82f6"],
+        [style*="border:2px solid #3b82f6"], [style*="border: 2px solid #3b82f6"] {
+            border-color: #3b82f6 !important;
+        }
+
+        /* 文字粉色→蓝色 */
+        [style*="color:#3b82f6"], [style*="color: #3b82f6"],
+        [style*="color:#ef4444"], [style*="color: #ef4444"] {
+            color: #3b82f6 !important;
+        }
+
+        /* 热力图粉色→蓝色 */
+        .heatmap-day[style*="#3b82f6"], .heatmap-day[style*="#93c5fd"],
+        .heatmap-day[style*="#dbeafe"] {
+            background: rgba(59,130,246,0.3) !important;
+            color: #1d4ed8 !important;
+        }
+        [style*="background:#93c5fd"] { background: rgba(59,130,246,0.4) !important; color: white !important; }
+        [style*="background:#1d4ed8"] { background: #1d4ed8 !important; color: white !important; }
+
+        /* 心情条粉色→蓝色 */
+        .mood-day-bar[style*="#3b82f6"], [style*="background:#3b82f6"][class*="mood"] {
+            background: #3b82f6 !important;
+        }
+        [style*="background:#dbeafe"][class*="mood"] {
+            background: rgba(59,130,246,0.15) !important;
+        }
+
+        /* 便签模块标签页按钮 */
+        [style*="background:linear-gradient(135deg,#3b82f6,#ef4444)"],
+        [onclick*="switchNoteTab"] {
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8) !important;
+        }
+        [style*="color:#3b82f6"][onclick*="switchNoteTab"] {
+            color: white !important;
+        }
+        [style*="background:white"][onclick*="switchNoteTab"] {
+            color: #3b82f6 !important;
+        }
+
+        /* 未读标记 */
+        [style*="background:#3b82f6"][style*="padding:4px"],
+        [style*="background: #3b82f6"][style*="color:white"] {
+            background: #3b82f6 !important;
+        }
+
+        /* 左边框粉色 */
+        [style*="border-left:4px solid #3b82f6"],
+        [style*="border-left: 4px solid #3b82f6"] {
+            border-left-color: #3b82f6 !important;
+        }
+
+        /* 添加按钮 + 号 */
+        [style*="background:linear-gradient(135deg,#3b82f6,#ef4444)"][innerHTML="+"] {
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8) !important;
+        }
+
+        /* 弹窗/模态框标题粉色文字 */
+        [style*="color:#3b82f6;font-size:24px"],
+        [style*="color: #3b82f6; font-size: 24px"],
+        [style*="text-align:center;color:#3b82f6"] {
+            color: #1d4ed8 !important;
+        }
+
+        /* 电子签名粉色 */
+        [style*="font-size:20px;color:#3b82f6"] {
+            color: #3b82f6 !important;
+        }
+
+        /* 数据数字粉色 */
+        [style*="font-size:36px;font-weight:bold;color:#3b82f6"],
+        [style*="color:#3b82f6"][style*="font-size:36px"] {
+            color: #1d4ed8 !important;
+        }
+
+        /* 契约/弹窗按钮 */
+        [onclick*="LoveContract.sign"],
+        [onclick*="closeGlobalModal"][style*="background:linear-gradient"] {
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8) !important;
+        }
+
+        /* 漂流瓶选中边框 */
+        [style*="border: 2px solid #3b82f6"],
+        [style*="border:2px solid #3b82f6"] {
+            border-color: #3b82f6 !important;
+        }
+
+        /* TA写的标签 */
+        [style*="background:#dbeafe;color:#3b82f6"],
+        [style*="background: #dbeafe; color: #3b82f6"] {
+            background: #dbeafe !important;
+            color: #1d4ed8 !important;
+        }
+
+        /* 图表线条和点 */
+        canvas { /* Canvas无法通过CSS控制，需要JS */ }
+
+        /* meta theme-color 也改掉（在head中） */
+
+        /* 已移除全局白底+蓝边框+圆角阴影强制覆盖 */
+
+        /* ========== 聊天室样式 ========== */
+
+        /* 入口按钮 */
+        .chatroom-entry { display: none !important; /* 已移至顶部导航栏，彻底隐藏 */
+            position: fixed;
+            right: 16px;
+            bottom: 50%;
+            transform: translateY(50%);
+            z-index: 900;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            user-select: none;
+        }
+        .chatroom-entry:hover {
+            transform: translateY(50%) scale(1.08);
+            box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
+        }
+        .chatroom-entry.hidden { transform: translateY(50%) scale(0); opacity: 0; pointer-events: none; }
+        .chatroom-entry-icon { font-size: 28px; }
+        .chatroom-entry-text { font-size: 11px; color: white; font-weight: 600; }
+        .chatroom-entry-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 20px;
+            height: 20px;
+            background: #ff4757;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            border: 2px solid white;
+        }
+        .chatroom-entry-pulse {
+            position: absolute;
+            inset: -4px;
+            border-radius: 20px;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+            animation: chatroom-pulse 2s ease-out infinite;
+        }
+        @keyframes chatroom-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+
+        /* 全屏覆盖层 */
+        .chatroom-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .chatroom-overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* 聊天面板 */
+        .chatroom-panel {
+            width: 380px;
+            max-width: 100vw;
+            height: 100vh;
+            background: #f0f0f2;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -4px 0 30px rgba(0,0,0,0.15);
+        }
+        .chatroom-overlay.active .chatroom-panel { transform: translateX(0); }
+        @keyframes slideInRight {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* 头部 */
+        .chatroom-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 56px;
+        }
+        .chatroom-header-left { display: flex; align-items: center; gap: 10px; }
+        .chatroom-back { font-size: 22px; cursor: pointer; opacity: 0.9; }
+        .chatroom-back:hover { opacity: 1; }
+        .chatroom-partner-info { display: flex; align-items: center; gap: 8px; }
+        .chatroom-partner-avatar { font-size: 32px; }
+        .chatroom-partner-name { font-size: 16px; font-weight: 700; }
+        .chatroom-partner-status { font-size: 11px; opacity: 0.9; }
+        .chatroom-more { font-size: 18px; cursor: pointer; opacity: 0.8; padding: 4px; }
+        .chatroom-more:hover { opacity: 1; }
+
+        /* 消息列表 */
+        .chatroom-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #f0f0f2;
+            scroll-behavior: smooth;
+        }
+        .chatroom-messages::-webkit-scrollbar { width: 4px; }
+        .chatroom-messages::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+        .chatroom-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            gap: 8px;
+        }
+        .chatroom-empty-icon { font-size: 48px; }
+        .chatroom-empty-sub { font-size: 13px; color: #bbb; }
+
+        /* 日期分割线 */
+        .chatroom-date-divider {
+            text-align: center;
+            padding: 8px 0;
+        }
+        .chatroom-date-divider span {
+            font-size: 11px;
+            color: #999;
+            background: #e8e8ea;
+            padding: 2px 12px;
+            border-radius: 10px;
+        }
+
+        /* 消息气泡 */
+        .chatroom-msg {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            max-width: 85%;
+            animation: msgSlideIn 0.25s ease-out;
+        }
+        @keyframes msgSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatroom-msg-mine { align-self: flex-end; flex-direction: row-reverse; }
+        .chatroom-msg-theirs { align-self: flex-start; }
+        .chatroom-msg-avatar { font-size: 32px; flex-shrink: 0; }
+        .chatroom-msg-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.45;
+            max-width: 100%;
+            word-break: break-word;
+            position: relative;
+        }
+        .chatroom-msg-mine .chatroom-msg-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chatroom-msg-theirs .chatroom-msg-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .chatroom-msg-text { white-space: pre-wrap; }
+        .chatroom-msg-meta {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-top: 2px;
+        }
+        .chatroom-msg-time { font-size: 10px; opacity: 0.7; }
+        .chatroom-msg-read { font-size: 10px; opacity: 0.6; }
+
+        /* 输入中 */
+        .chatroom-typing {
+            padding: 4px 20px;
+            font-size: 12px;
+            color: #999;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: #f0f0f2;
+        }
+        .chatroom-typing.active { display: flex; }
+        .typing-dots { display: flex; gap: 3px; }
+        .typing-dots span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #999;
+            animation: typingBounce 1.4s infinite;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%,60%,100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+
+        /* 输入栏 */
+        .chatroom-input-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: white;
+            border-top: 1px solid #e8e8ea;
+        }
+        .chatroom-emoji-btn {
+            width: 38px; height: 38px;
+            border: none;
+            background: #f0f0f2;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .chatroom-emoji-btn:hover { background: #e4e4e7; }
+        .chatroom-input {
+            flex: 1;
+            height: 38px;
+            padding: 0 14px;
+            border: none;
+            background: #f0f0f2;
+            border-radius: 19px;
+            font-size: 14px;
+            outline: none;
+        }
+        .chatroom-input:focus { background: #e8e8ea; }
+        .chatroom-send-btn {
+            width: 38px; height: 38px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        .chatroom-send-btn:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5); }
+        .chatroom-send-btn:active { transform: scale(0.95); }
+
+        /* 移动端适应 */
+        @media (max-width: 480px) {
+            .chatroom-panel { width: 100vw; }
+            .chatroom-entry { display: none; /* 已移至顶部导航栏 */ right: 8px; bottom: 45%; }
+        }
+
+    </style>
+    <!-- JS运行时暴力替换所有动态生成的粉红色 -->
+    <script>
+    (function() {
+      function replacePinkColors() {
+        var all = document.querySelectorAll('*');
+        for (var i = 0; i < all.length; i++) {
+          var el = all[i];
+          var s = el.style;
+          // 背景色
+          if (s.backgroundColor && (
+            s.backgroundColor.indexOf('236,72,153') > -1 ||
+            s.backgroundColor.indexOf('244,63,94') > -1 ||
+            s.backgroundColor === 'rgb(236, 72, 153)' ||
+            s.backgroundColor === '#3b82f6' ||
+            s.backgroundColor === '#ef4444' ||
+            s.backgroundColor === '#60a5fa'
+          )) {
+            if (el.tagName === 'BUTTON' || el.onclick || s.borderRadius) {
+              s.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+            } else {
+              s.backgroundColor = 'rgba(59,130,246,0.15)';
+            }
+          }
+          // 渐变背景
+          if (s.backgroundImage && s.backgroundImage.indexOf('ec4899') > -1) {
+            s.backgroundImage = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+          }
+          if (s.background && typeof s.background === 'string' && s.background.indexOf('ec4899') > -1 && s.background.indexOf('gradient') > -1) {
+            s.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+          }
+          // 文字颜色
+          if (s.color && (
+            s.color === 'rgb(236, 72, 153)' ||
+            s.color === '#3b82f6' ||
+            s.color === '#ef4444'
+          )) {
+            s.color = '#3b82f6';
+          }
+          // 边框颜色
+          if (s.borderColor && s.borderColor === 'rgb(236, 72, 153)') {
+            s.borderColor = '#3b82f6';
+          }
+          if (s.border && s.border.indexOf('ec4899') > -1) {
+            s.border = s.border.replace(/#3b82f6|#ef4444/g, '#3b82f6');
+          }
+        }
+      }
+      // 页面加载后立即执行一次
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', replacePinkColors);
+      } else {
+        replacePinkColors();
+      }
+      // 用MutationObserver监听后续动态生成的元素
+      var observer = new MutationObserver(function(mutations) {
+        var needsReplace = false;
+        for (var m = 0; m < mutations.length; m++) {
+          if (mutations[m].addedNodes.length > 0) {
+            needsReplace = true; break;
+          }
+        }
+        if (needsReplace) {
+          setTimeout(replacePinkColors, 10);
+        }
+      });
+      observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+      // 每2秒也扫描一次作为保险
+      setInterval(replacePinkColors, 2000);
+      window._blueReplacer = replacePinkColors;
+    })();
+    </script>
+</head>
+<body>
+<!-- 紧急缓存清理 + Service Worker 彻底修复 -->
+<script>
+(function forceClearCache() {
+  var APP_VER = '10.0';
+  console.log('%c [v9.3] 强制清理旧缓存 + SW修复...', 'color: cyan; font-weight: bold');
+
+  // Step 1: 检测版本 → 强制清缓存重载
+  var storedVer = localStorage.getItem('_app_ver');
+  if (storedVer && storedVer !== APP_VER) {
+    console.log('%c 检测到旧版本(' + storedVer + ') → 升级到 ' + APP_VER, 'color: red; font-weight: bold');
+    localStorage.setItem('_app_ver', APP_VER);
+    sessionStorage.clear();
+    // 彻底销毁所有缓存和 SW
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        return Promise.all(names.map(function(n) { return caches.delete(n); }));
+      });
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        return Promise.all(regs.map(function(r) { return r.unregister(); }));
+      }).then(function() {
+        console.log('[SW] 所有旧 SW 已注销，1秒后重载...');
+        setTimeout(function() { location.reload(true); }, 1000);
+      });
+      return; // 等待 SW 注销完成后重载
+    }
+    location.reload(true);
+    return;
+  }
+  localStorage.setItem('_app_ver', APP_VER);
+
+  // Step 2: 立即清除所有缓存（不等待）
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      names.forEach(function(name) {
+        caches.delete(name);
+        console.log('%c 删除缓存: ' + name, 'color: orange');
+      });
+    });
+  }
+
+  // Step 3: 先注销所有旧 SW，再注册新 SW
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      return Promise.all(regs.map(function(r) { return r.unregister(); }));
+    }).then(function() {
+      console.log('[SW] 旧 SW 已全部注销，1秒后注册新 SW v10.0...');
+      // 延迟注册，确保旧 SW 完全退出
+      setTimeout(function() {
+        navigator.serviceWorker.register('/sw.js?v=10.0')
+          .then(function(registration) {
+            console.log('[SW v10.0] 注册成功:', registration.scope);
+            registration.addEventListener('updatefound', function() {
+              console.log('[SW] 发现新版本，正在更新...');
+            });
+          })
+          .catch(function(error) {
+            console.log('[SW] 注册失败（非致命）:', error.message);
+          });
+      }, 1500);
+    }).catch(function(e) {
+      console.log('[SW] 注销失败，直接注册新 SW:', e.message);
+      setTimeout(function() {
+        navigator.serviceWorker.register('/sw.js?v=10.0')
+          .then(function(r) { console.log('[SW v10.0] 注册成功'); })
+          .catch(function() {});
+      }, 1500);
+    });
+  }
+
+  // Step 4: 离线/在线状态监听
+  window.addEventListener('online', function() {
+    console.log('[离线模式] 网络已连接');
+    var n = document.getElementById('offline-notice');
+    if (n) n.style.display = 'none';
+  });
+  window.addEventListener('offline', function() {
+    console.log('[离线模式] 网络已断开');
+    var n = document.getElementById('offline-notice');
+    if (!n) {
+      n = document.createElement('div');
+      n.id = 'offline-notice';
+      n.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#f59e0b;color:white;padding:8px;text-align:center;z-index:99999;font-size:14px;font-weight:600;';
+      n.innerHTML = '⚠️ 离线模式：无网络连接，部分功能可能受限';
+      document.body.appendChild(n);
+    }
+    n.style.display = 'block';
+  });
+
+  console.log('%c [v10.0] 缓存清理完成, APP_VER=' + APP_VER, 'color: lime; font-weight: bold');
+})();
+</script>
+
+<!-- ==================== 登录页 ==================== -->
+<div id="login-page" class="page active">
+  <div class="login-container">
+    <div class="login-heart">🐹💕🐱</div>
+    <h1>鼠鼠 & 笔笔</h1>
+    <p class="login-subtitle">专属恋爱官网 · 仅限二人访问</p>
+    <div class="login-form">
+      <p class="login-click-hint" id="login-click-hint">👇 点击头像，欢迎进入恋爱空间！</p>
+      <!-- 微信风格气泡框：提示文字和头像之间 -->
+      <div class="chat-bubble-wrapper" id="chat-bubble-wrapper">
+        <div class="chat-bubble" id="chat-bubble">
+          <div class="bubble-msg" id="bubble-msg"></div>
+          <div class="bubble-typing-dots" id="bubble-typing-dots">...</div>
+          <div class="bubble-arrow"></div>
+        </div>
+      </div>
+      <div class="login-avatars" id="login-avatars">
+        <div class="login-avatar" data-user="shushu" onclick="doLogin('shushu')">
+          <span class="avatar-face" id="face-shushu">🐹</span><p>鼠鼠</p>
+        </div>
+        <div class="login-avatar" data-user="bibi" onclick="doLogin('bibi')">
+          <span class="avatar-face" id="face-bibi">🐱</span><p>笔笔</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 登录动画覆盖层 ==================== -->
+<div id="love-animation" class="hidden">
+  <div class="love-anim-bg">
+    <div class="love-anim-hearts" id="love-anim-hearts"></div>
+    <div class="love-anim-stage">
+      <!-- 汤姆猫 (Tom) -->
+      <div class="anim-slot anim-slot-left" id="anim-shushu">
+        <svg viewBox="0 0 200 280" width="170" height="238">
+          <!-- 耳朵 -->
+          <polygon points="42,90 18,22 78,72" fill="#6B7B8D"/>
+          <polygon points="44,82 28,32 70,68" fill="#FFB8C6"/>
+          <polygon points="158,90 182,22 122,72" fill="#6B7B8D"/>
+          <polygon points="156,82 172,32 130,68" fill="#FFB8C6"/>
+          <!-- 头部 -->
+          <ellipse cx="100" cy="105" rx="62" ry="50" fill="#6B7B8D"/>
+          <!-- 白脸 -->
+          <ellipse cx="100" cy="118" rx="38" ry="32" fill="#F0EDE8"/>
+          <!-- 眼睛 -->
+          <ellipse cx="76" cy="100" rx="12" ry="14" fill="#FFF3B0"/>
+          <ellipse cx="124" cy="100" rx="12" ry="14" fill="#FFF3B0"/>
+          <ellipse cx="78" cy="100" rx="6" ry="12" fill="#2D4A22"/>
+          <ellipse cx="126" cy="100" rx="6" ry="12" fill="#2D4A22"/>
+          <ellipse cx="80" cy="94" rx="3" ry="3" fill="white"/>
+          <ellipse cx="128" cy="94" rx="3" ry="3" fill="white"/>
+          <!-- 眉毛 -->
+          <path d="M58 88 Q70 80 82 86" fill="none" stroke="#4A5A6B" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M118 86 Q130 80 142 88" fill="none" stroke="#4A5A6B" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 鼻子 -->
+          <ellipse cx="100" cy="118" rx="7" ry="5" fill="#FF6B8A"/>
+          <!-- 嘴巴 -->
+          <path d="M93 123 Q100 128 107 123" fill="none" stroke="#4A5A6B" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="100" y1="123" x2="100" y2="128" stroke="#4A5A6B" stroke-width="1.5"/>
+          <!-- 胡须 -->
+          <line x1="35" y1="115" x2="70" y2="118" stroke="#4A5A6B" stroke-width="1.2"/>
+          <line x1="33" y1="123" x2="68" y2="123" stroke="#4A5A6B" stroke-width="1.2"/>
+          <line x1="35" y1="131" x2="70" y2="128" stroke="#4A5A6B" stroke-width="1.2"/>
+          <line x1="165" y1="115" x2="130" y2="118" stroke="#4A5A6B" stroke-width="1.2"/>
+          <line x1="167" y1="123" x2="132" y2="123" stroke="#4A5A6B" stroke-width="1.2"/>
+          <line x1="165" y1="131" x2="130" y2="128" stroke="#4A5A6B" stroke-width="1.2"/>
+          <!-- 身体 -->
+          <ellipse cx="100" cy="195" rx="55" ry="65" fill="#6B7B8D"/>
+          <ellipse cx="100" cy="195" rx="38" ry="50" fill="#F0EDE8"/>
+          <!-- 手臂 -->
+          <path d="M40 175 Q15 200 25 220" fill="none" stroke="#6B7B8D" stroke-width="12" stroke-linecap="round"/>
+          <path d="M160 175 Q185 200 175 220" fill="none" stroke="#6B7B8D" stroke-width="12" stroke-linecap="round"/>
+          <!-- 脚 -->
+          <ellipse cx="65" cy="258" rx="22" ry="12" fill="#6B7B8D"/>
+          <ellipse cx="135" cy="258" rx="22" ry="12" fill="#6B7B8D"/>
+          <!-- 尾巴 -->
+          <path d="M105 252 Q140 280 160 260 Q180 240 165 225" fill="none" stroke="#6B7B8D" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+        <div class="anim-label">🐱 鼠鼠</div>
+      </div>
+
+      <!-- 杰瑞鼠 (Jerry) -->
+      <div class="anim-slot anim-slot-right" id="anim-bibi">
+        <svg viewBox="0 0 200 280" width="140" height="196">
+          <!-- 耳朵 -->
+          <ellipse cx="58" cy="62" rx="22" ry="26" fill="#C88A5B"/>
+          <ellipse cx="58" cy="62" rx="14" ry="18" fill="#F4C4A0"/>
+          <ellipse cx="142" cy="62" rx="22" ry="26" fill="#C88A5B"/>
+          <ellipse cx="142" cy="62" rx="14" ry="18" fill="#F4C4A0"/>
+          <!-- 头部 -->
+          <ellipse cx="100" cy="90" rx="48" ry="42" fill="#C88A5B"/>
+          <ellipse cx="100" cy="97" rx="36" ry="30" fill="#F4C4A0"/>
+          <!-- 眼睛 -->
+          <ellipse cx="78" cy="85" rx="11" ry="13" fill="white"/>
+          <ellipse cx="122" cy="85" rx="11" ry="13" fill="white"/>
+          <ellipse cx="80" cy="85" rx="6" ry="10" fill="#1A0A00"/>
+          <ellipse cx="124" cy="85" rx="6" ry="10" fill="#1A0A00"/>
+          <ellipse cx="82" cy="80" rx="2.5" ry="3" fill="white"/>
+          <ellipse cx="126" cy="80" rx="2.5" ry="3" fill="white"/>
+          <!-- 眉毛 -->
+          <path d="M60 72 Q72 68 82 74" fill="none" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round"/>
+          <path d="M118 74 Q128 68 140 72" fill="none" stroke="#8B5E3C" stroke-width="2" stroke-linecap="round"/>
+          <!-- 鼻子 -->
+          <ellipse cx="100" cy="95" rx="6" ry="4.5" fill="#FF6B8A"/>
+          <!-- 嘴巴 -->
+          <path d="M92 99 Q100 105 108 99" fill="none" stroke="#8B5E3C" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- 胡须 -->
+          <line x1="38" y1="92" x2="70" y2="95" stroke="#8B5E3C" stroke-width="1"/>
+          <line x1="36" y1="98" x2="68" y2="98" stroke="#8B5E3C" stroke-width="1"/>
+          <line x1="162" y1="92" x2="130" y2="95" stroke="#8B5E3C" stroke-width="1"/>
+          <line x1="164" y1="98" x2="132" y2="98" stroke="#8B5E3C" stroke-width="1"/>
+          <!-- 身体 -->
+          <ellipse cx="100" cy="165" rx="42" ry="52" fill="#C88A5B"/>
+          <ellipse cx="100" cy="165" rx="30" ry="40" fill="#F4C4A0"/>
+          <!-- 肚皮 -->
+          <ellipse cx="100" cy="175" rx="22" ry="30" fill="#FDE8DD"/>
+          <!-- 手臂 -->
+          <path d="M48 148 Q20 165 25 185" fill="none" stroke="#C88A5B" stroke-width="9" stroke-linecap="round"/>
+          <path d="M152 148 Q180 165 175 185" fill="none" stroke="#C88A5B" stroke-width="9" stroke-linecap="round"/>
+          <!-- 脚 -->
+          <ellipse cx="72" cy="218" rx="18" ry="10" fill="#C88A5B"/>
+          <ellipse cx="128" cy="218" rx="18" ry="10" fill="#C88A5B"/>
+          <!-- 尾巴 -->
+          <path d="M105 215 Q145 240 170 220 Q190 205 175 190" fill="none" stroke="#C88A5B" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <div class="anim-label">🐭 笔笔</div>
+      </div>
+    </div>
+    <div class="love-anim-fireworks" id="fullscreen-fireworks"></div>
+    <!-- 中央大爱心（CSS纯代码完美心形） -->
+    <div class="center-heart" id="center-heart">
+      <div class="heart-shape" id="heart-shape-el"></div>
+    </div>
+    <!-- 心形灰飞烟灭粒子 -->
+    <div class="heart-dust" id="heart-dust"></div>
+  </div>
+</div>
+
+<!-- ==================== 2.0上线情书（小而精致） ==================== -->
+<div id="v2-letter-overlay" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;animation:fadeIn 0.5s ease;">
+  <div style="max-width:500px;width:85%;background:white;border-radius:20px;padding:35px 30px;box-shadow:0 20px 60px rgba(0,0,0,0.4);position:relative;animation:slideUp 0.6s ease;max-height:80vh;overflow-y:auto;">
+    <!-- 关闭按钮（明显可见） -->
+    <button onclick="closeV2Letter()" style="position:absolute;top:15px;right:15px;width:35px;height:35px;border-radius:50%;border:2px solid #ff4444;background:white;font-size:18px;color:#ff4444;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;font-weight:bold;" onmouseover="this.style.background='#ff4444';this.style.color='white';" onmouseout="this.style.background='white';this.style.color='#ff4444';" title="关闭">✕</button>
+    
+    <!-- 标题 -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:50px;margin-bottom:10px;">💌</div>
+      <h2 style="color:#0d1117;font-size:24px;margin:0;font-weight:700;">致我最爱的鼠鼠</h2>
+      <p style="color:#666;margin-top:5px;font-size:13px;">—— 2.0 版本上线纪念</p>
+    </div>
+    
+    <!-- 信件内容 -->
+    <div style="color:#0d1117;font-size:14px;line-height:1.8;padding:0 5px;">
+      <p style="margin-bottom:15px;font-size:16px;color:#2e86c1;font-weight:600;">亲爱的鼠鼠：</p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;">今天，我们的恋爱官网 2.0 正式上线了！</p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;">但我想告诉你，这不仅仅是一个版本的更新，更是我对你满满的爱意的见证。从 1.0 到 2.0，从简单的页面到如今完整的功能，每一个按钮、每一行代码、每一个动画，都藏着我想对你说的话。</p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;">在这个网站上，你可以看到：</p>
+      
+      <p style="margin-left:2em;margin-bottom:10px;color:#2e86c1;font-size:13px;">
+        ✈️ 纸飞机 —— 带着我的思念飞向你<br>
+        💬 聊天室 —— 即使不在身边，也能随时对话<br>
+        🌤️ 天气联动 —— 关心你那边的阴晴冷暖<br>
+        🎁 礼物推荐 —— 想给你最好的惊喜<br>
+        🎮 情侣打卡 —— 一起完成我们的小目标<br>
+        📅 日历纪念 —— 记录每一个重要的日子
+      </p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;font-size:13px;">每一项功能，都是我想更靠近你一点点的方式。每一次点击，都是我们在数字世界里的甜蜜互动。</p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;font-size:13px;">有人说，程序员不懂浪漫。但我想证明，代码也可以很温柔。当我写下每一行代码的时候，脑海里想的都是你看到这些功能时开心的样子。</p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;font-size:13px;">2.0 不是终点，而是我们爱情数字化的新起点。未来还会有 3.0、4.0……每一个版本，都会记录我们爱情的新篇章。</p>
+      
+      <p style="text-indent:2em;margin-bottom:10px;font-size:16px;color:#e74c3c;font-weight:600;">鼠鼠，我爱你，不止在今天，而是在每一个我们相处的日子里。</p>
+      
+      <p style="text-align:right;margin-top:20px;color:#2e86c1;font-weight:600;font-size:14px;">
+        永远爱你的，<br>
+        笔笔 🐱
+      </p>
+      
+      <p style="text-align:right;color:#999;font-size:12px;">
+        2026年6月29日<br>
+        恋爱官网 2.0 上线之日
+      </p>
+    </div>
+    
+    <!-- 底部装饰 -->
+    <div style="text-align:center;margin-top:20px;font-size:25px;opacity:0.6;">
+      💕 💕 💕
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+
+<script>
+// 显示2.0情书
+function showV2Letter() {
+  var overlay = document.getElementById('v2-letter-overlay');
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+// 关闭2.0情书
+function closeV2Letter() {
+  var overlay = document.getElementById('v2-letter-overlay');
+  if (overlay) {
+    overlay.style.animation = 'fadeIn 0.5s ease reverse';
+    setTimeout(function() {
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      localStorage.setItem('v2_letter_seen', 'true');
+    }, 500);
+  }
+}
+
+// ===== 聊天室按钮内联 — 终极版：无论如何都能打开 =====
+(function() {
+  // 📋 启动诊断：记录所有关键模块的加载状态
+  setTimeout(function() {
+    var report = {
+      ChatRoom: typeof window.ChatRoom,
+      ChatRoomOpen: window.ChatRoom && typeof window.ChatRoom.open,
+      E2EE: typeof window.E2EE,
+      MemoryMirror: typeof window.MemoryMirror,
+      sendChatMessage: typeof window.sendChatMessage,
+      setData: typeof window.setData,
+      _realtimeSync: typeof window._realtimeSync,
+      currentUser: localStorage.getItem('current_user') || localStorage.getItem('currentUser'),
+    };
+    console.log('[🔍 Chatroom Diagnostics]', JSON.stringify(report));
+    if (!window.ChatRoom || typeof window.ChatRoom.open !== 'function') {
+      console.warn('[🔍 Diagnostics] ChatRoom module FAILED to initialize!');
+      console.warn('[🔍] Check above for errors during script loading');
+    }
+  }, 3000);
+
+    window.toggleChatRoom = function() {
+  // v11.0 clean — call ChatRoom module
+  if (window.ChatRoom && typeof window.ChatRoom.toggle === 'function') {
+    window.ChatRoom.toggle();
+    return;
+  }
+  if (window.ChatRoom && typeof window.ChatRoom.open === 'function') {
+    window.ChatRoom.open();
+    return;
+  }
+  console.warn('[toggleChatRoom] ChatRoom 模块未加载');
+};
+
+function state_panelOpen() {
+    var o = document.getElementById('chatroom-overlay');
+    return o && o.classList.contains('active');
+  }
+
+
+
+</script>
+
+<!-- ==================== 主应用 ==================== -->
+<div id="app" class="hidden">
+  
+  <!-- 顶部导航栏 -->
+  <header id="top-bar">
+    <div class="top-left">
+      <span class="love-counter" id="love-counter">💕 相恋 0 天</span>
+      <span class="found-date">🏰 官网成立：2026.06.23</span>
+      <button class="btn-guide" id="btn-export" onclick="exportAllData()" title="导出数据">📤</button>
+      <button class="btn-guide" id="btn-import" onclick="document.getElementById('import-file-input').click()" title="导入数据">📥</button>
+      <button class="btn-guide" id="btn-chatroom" onclick="toggleChatRoom();return false;" title="聊天室" style="cursor:pointer;touch-action:manipulation;">💬<span class="nav-badge" id="chatroom-nav-badge" style="display:none">0</span></button>
+    </div>
+    <div class="top-nicknames">
+      <span class="nick-shushu">🐹 鼠鼠</span>
+      <span class="nick-and">&amp;</span>
+      <span class="nick-bibi">🐱 笔笔</span>
+    </div>
+    <div class="top-right">
+      <!-- 双大圆球在线状态指示灯 — 绿色=在线，黑色=离线 -->
+      <div class="online-status-row" id="online-status-row">
+        <div class="user-status" data-bind-uid="shushu" title="鼠鼠在线状态">
+          <span class="nick-tag">🐹 鼠鼠</span>
+          <span class="big-status-circle" id="circle-shushu"></span>
+          <span class="circle-info" id="info-shushu">离线</span>
+        </div>
+        <div class="user-status" data-bind-uid="bibi" title="笔笔在线状态">
+          <span class="nick-tag">🐱 笔笔</span>
+          <span class="big-status-circle" id="circle-bibi"></span>
+          <span class="circle-info" id="info-bibi">离线</span>
+        </div>
+      </div>
+      <button class="btn-settings" onclick="showSettings()" title="设置">⚙️</button>
+      <button class="btn-logout" onclick="doLogout()">🚪</button>
+      <!-- 隐藏的文件输入（用于导入数据） -->
+      <input type="file" id="import-file-input" accept=".json" style="display: none;" onchange="importAllData(this.files[0])">
+    </div>
+  </header>
+  <!-- 聊天室按钮双重保障点击 -->
+  <script>
+  (function(){
+    var btn = document.getElementById('btn-chatroom');
+    if (btn) {
+      // 直接事件监听 — 绝不依赖 onclick 属性
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('[btn-chatroom] addEventListener 触发');
+        toggleChatRoom();
+      });
+      // 移动端触摸事件
+      btn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        console.log('[btn-chatroom] touchend 触发');
+        toggleChatRoom();
+      });
+      console.log('[btn-chatroom] 双重监听已绑定');
+    } else {
+      console.error('[btn-chatroom] 按钮不存在！');
+    }
+  })();
+  </script>
+
+  <!-- ====== AI工具箱面板 ====== -->
+  <div class="toolbox-overlay" id="toolbox-overlay" onclick="closeToolbox(event)"></div>
+  <div class="toolbox-panel" id="toolbox-panel">
+    <div class="toolbox-header">
+      <span>🛠️ AI 工具箱</span>
+      <button class="toolbox-close" onclick="closeToolbox()">✕</button>
+    </div>
+    <div class="toolbox-tabs" id="toolbox-tabs">
+      <button class="tb-tab active" data-tb="diagnostic" onclick="switchToolboxTab('diagnostic')">🔍 一键诊断</button>
+      <button class="tb-tab" data-tb="reset" onclick="switchToolboxTab('reset')">🏭 恢复出厂</button>
+      <button class="tb-tab" data-tb="nav" onclick="switchToolboxTab('nav')">🧭 快速导航</button>
+    </div>
+    <div class="toolbox-body">
+      <!-- 诊断页 -->
+      <div class="tb-content active" id="tb-diagnostic">
+        <button class="btn-diag-run" onclick="runDiagnostic()">🔍 开始诊断</button>
+        <div class="diag-result" id="diag-result"></div>
+      </div>
+      <!-- 恢复出厂页 -->
+      <div class="tb-content" id="tb-reset">
+        <div class="reset-warning">
+          <p>⚠️ <strong>危险操作！</strong>这将清除所有数据：</p>
+          <ul>
+            <li>📸 相册照片</li>
+            <li>💌 留言记录</li>
+            <li>💰 财务台账</li>
+            <li>📋 约会计划</li>
+            <li>⏳ 纪念日倒计时</li>
+            <li>🎫 兑换券和心愿单</li>
+            <li>…以及所有其他数据</li>
+          </ul>
+          <p>此操作<strong>不可撤销</strong>，执行前会再次确认。</p>
+        </div>
+        <button class="btn-reset-run" onclick="confirmFactoryReset()">🏭 恢复出厂设置</button>
+      </div>
+      <!-- 快速导航页 -->
+      <div class="tb-content" id="tb-nav">
+        <div class="quicknav-grid" id="quicknav-grid">
+              <button class="qnav-btn" onclick="quickJump('home')"><span class="qnav-emoji">🏠</span>首页大厅</button>
+              <button class="qnav-btn" onclick="quickJump('messages')"><span class="qnav-emoji">💌</span>留言墙</button>
+              <button class="qnav-btn" onclick="quickJump('albums')"><span class="qnav-emoji">📸</span>相册</button>
+              <button class="qnav-btn" onclick="quickJump('dates')"><span class="qnav-emoji">🎯</span>约会打卡</button>
+              <button class="qnav-btn" onclick="quickJump('finance')"><span class="qnav-emoji">💰</span>财务台账</button>
+              <button class="qnav-btn" onclick="quickJump('plans')"><span class="qnav-emoji">📋</span>约会计划</button>
+              <button class="qnav-btn" onclick="quickJump('countdowns')"><span class="qnav-emoji">⏳</span>纪念日</button>
+              <button class="qnav-btn" onclick="quickJump('conventions')"><span class="qnav-emoji">📜</span>情侣公约</button>
+              <button class="qnav-btn" onclick="quickJump('vouchers')"><span class="qnav-emoji">🎫</span>兑换券</button>
+              <button class="qnav-btn" onclick="quickJump('growth')"><span class="qnav-emoji">🌱</span>成长打卡</button>
+              <button class="qnav-btn" onclick="quickJump('daily-checkin')"><span class="qnav-emoji">✅</span>每日打卡</button>
+              <button class="qnav-btn" onclick="quickJump('emergency')"><span class="qnav-emoji">🆘</span>紧急救援包</button>
+              <button class="qnav-btn" onclick="quickJump('paperplane')"><span class="qnav-emoji">✈️</span>纸飞机</button>
+              <button class="qnav-btn" onclick="quickJump('yearly')"><span class="qnav-emoji">📅</span>年度总结</button>
+              <button class="qnav-btn" onclick="quickJump('mood')"><span class="qnav-emoji">🎭</span>情绪天气</button>
+              <button class="qnav-btn" onclick="quickJump('blindbox')"><span class="qnav-emoji">🎁</span>今日盲盒</button>
+              <button class="qnav-btn" onclick="quickJump('quiz')"><span class="qnav-emoji">❓</span>默契考验</button>
+              <button class="qnav-btn" onclick="quickJump('wishlist')"><span class="qnav-emoji">🌟</span>愿望清单</button>
+              <button class="qnav-btn" onclick="quickJump('fund-tree')"><span class="qnav-emoji">🌳</span>约会基金</button>
+              <button class="qnav-btn" onclick="quickJump('achievements')"><span class="qnav-emoji">🏅</span>成就勋章</button>
+              <button class="qnav-btn" onclick="quickJump('museum')"><span class="qnav-emoji">🏛️</span>丑照博物馆</button>
+              <button class="qnav-btn" onclick="quickJump('tarot')"><span class="qnav-emoji">🔮</span>塔罗占卜</button>
+              <button class="qnav-btn" onclick="quickJump('bagua')"><span class="qnav-emoji">☯️</span>八卦运势</button>
+              <button class="qnav-btn" onclick="quickJump('dice')"><span class="qnav-emoji">🎲</span>摇骰子</button>
+              <button class="qnav-btn" onclick="quickJump('awards')"><span class="qnav-emoji">🏆</span>年度颁奖</button>
+              <button class="qnav-btn" onclick="quickJump('mbti')"><span class="qnav-emoji">🧬</span>MBTI人格墙</button>
+              <button class="qnav-btn" onclick="quickJump('music-planet')"><span class="qnav-emoji">🎵</span>音乐星球</button>
+              <button class="qnav-btn" onclick="quickJump('wheel')"><span class="qnav-emoji">🎡</span>幸运转盘</button>
+              <button class="qnav-btn" onclick="quickJump('puzzle')"><span class="qnav-emoji">🧩</span>照片拼图</button>
+              <button class="qnav-btn" onclick="quickJump('footprint')"><span class="qnav-emoji">📍</span>足迹地图</button>
+              <button class="qnav-btn" onclick="quickJump('love-tree')"><span class="qnav-emoji">💞</span>爱情树</button>
+              <button class="qnav-btn" onclick="quickJump('challenge')"><span class="qnav-emoji">🔥</span>30天挑战</button>
+              <button class="qnav-btn" onclick="quickJump('love-letter')"><span class="qnav-emoji">💝</span>情书设计器</button>
+              <button class="qnav-btn" onclick="quickJump('games')"><span class="qnav-emoji">🎮</span>双人小游戏</button>
+              <button class="qnav-btn" onclick="quickJump('dashboard')"><span class="qnav-emoji">📊</span>数据仪表盘</button>
+              <button class="qnav-btn" onclick="quickJump('diary')"><span class="qnav-emoji">📝</span>恋爱日记本</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主内容区 -->
+  <main id="main-content">
+    
+    <!-- ====== 首页 ====== -->
+    <section id="page-home" class="page-section active">
+      <!-- 核心横幅 -->
+      <div class="hero-banner">
+        <div class="hero-inner">
+          <div class="hero-avatars">
+            <span class="hero-avatar">🐹</span>
+            <span class="hero-heart">💞</span>
+            <span class="hero-avatar">🐱</span>
+          </div>
+          <h1 class="hero-title">在 一 起 一 亿 年</h1>
+          <p class="hero-date">正式成立于 2026年6月23日</p>
+          <div class="hero-counter">
+            <div class="counter-block"><span id="hero-days">0</span><small>天</small></div>
+            <div class="counter-block"><span id="hero-hours">0</span><small>时</small></div>
+            <div class="counter-block"><span id="hero-mins">0</span><small>分</small></div>
+            <div class="counter-block"><span id="hero-secs">0</span><small>秒</small></div>
+          </div>
+          <p class="hero-caption">每一天，都值得被记录。</p>
+        </div>
+      </div>
+
+      <!-- 早晚安问候卡 -->
+      <div class="greeting-card" id="greeting-card">
+        <div class="greeting-inner">
+          <span class="greeting-icon" id="greeting-icon">☀️</span>
+          <div class="greeting-text-wrap">
+            <span class="greeting-title" id="greeting-title">下午好</span>
+            <span class="greeting-sub" id="greeting-sub">每一天都是最好的时光</span>
+          </div>
+          <span class="greeting-user" id="greeting-user">🐹 鼠鼠</span>
+        </div>
+      </div>
+
+      <!-- 恋爱里程碑 -->
+      <div class="milestone-banner" id="milestone-banner">
+        <div class="milestone-inner" id="milestone-inner">
+          <!-- JS动态生成 -->
+        </div>
+      </div>
+
+      <!-- 仪表盘：日历 + 天气 -->
+      <div class="dashboard-row" id="dashboard-row">
+        <div class="season-calendar-card" id="season-calendar-card">
+          <div class="calendar-header" id="cal-header">
+            <div class="cal-month-label" id="cal-month-label">2026年6月</div>
+            <span class="cal-season-badge" id="cal-season-badge">🏖️ 夏日皮肤</span>
+          </div>
+          <div class="calendar-body">
+            <div class="cal-weekdays">
+              <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+            </div>
+            <div class="cal-days" id="cal-days"></div>
+          </div>
+        </div>
+
+        <div class="weather-card" id="weather-card">
+          <div class="weather-header">
+            <span class="weather-city" id="weather-city" title="点击切换城市">📍 成都</span>
+            <span class="weather-update" id="weather-update"></span>
+            <!-- 城市下拉选择 -->
+            <div class="city-dropdown" id="city-dropdown">
+              <div class="city-dropdown-list" id="city-dropdown-list"></div>
+            </div>
+          </div>
+          <div class="weather-body">
+            <div class="weather-main">
+              <span class="weather-icon" id="weather-icon">☀️</span>
+              <span class="weather-temp" id="weather-temp">--°</span>
+            </div>
+            <div class="weather-details">
+              <div class="weather-detail">
+                <span class="wd-label">体感</span>
+                <span class="wd-value" id="weather-feels">--°</span>
+              </div>
+              <div class="weather-detail">
+                <span class="wd-label">湿度</span>
+                <span class="wd-value" id="weather-humidity">--%</span>
+              </div>
+              <div class="weather-detail">
+                <span class="wd-label">风速</span>
+                <span class="wd-value" id="weather-wind">-- km/h</span>
+              </div>
+            </div>
+            <div class="weather-desc" id="weather-desc">加载中...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 今日情话装饰卡片 -->
+      <div class="love-quote-card" id="love-quote-card">
+        <div class="quote-card-inner">
+          <div class="quote-heart-wrap">
+            <span class="quote-heart" id="quote-heart">💗</span>
+            <span class="quote-heart-pulse"></span>
+          </div>
+          <div class="quote-divider">
+            <span class="quote-dot"></span>
+            <span class="quote-line"></span>
+            <span class="quote-dot"></span>
+          </div>
+          <p class="quote-text" id="quote-text">你是我遇见的所有美好里的刚刚好。</p>
+          <p class="quote-author" id="quote-author">—— 写给你的第 1 封情书</p>
+          <div class="quote-season-badge" id="quote-season-badge">🌊 夏日恋曲</div>
+          <div class="quote-floating-hearts" id="quote-floating-hearts"></div>
+        </div>
+      </div>
+
+      <!-- 置顶公告 -->
+      <div class="sticky-announcement" id="sticky-announcement">
+        <div class="announcement-header">
+          <span class="announcement-icon">📜</span>
+          <strong>置顶公告：《情侣约会正式公约》</strong>
+          <span class="announcement-version">v1.0</span>
+          <button class="btn-ann-detail" onclick="showAnnouncement()">查看详情</button>
+        </div>
+        <p class="announcement-preview" id="announcement-preview">全站遵循《情侣约会正式公约》执行所有行程与财务结算，记录往后每一天的相处、约会与成长。</p>
+      </div>
+
+      <!-- 月度状态栏 -->
+      <div class="monthly-status">
+        <h3>📋 本月小目标 &amp; 相处感悟</h3>
+        <div class="status-cards">
+          <div class="status-card shushu-card">
+            <div class="status-card-header">🐹 鼠鼠本月</div>
+            <div class="status-card-body" id="monthly-shushu">学业顺利，每天都想笔笔 ❤️</div>
+            <div class="status-card-time" id="monthly-shushu-time">2026年6月</div>
+          </div>
+          <div class="status-card bibi-card">
+            <div class="status-card-header">🐱 笔笔本月</div>
+            <div class="status-card-body" id="monthly-bibi">坚持站桩健身，想和鼠鼠一起去旅行 ✨</div>
+            <div class="status-card-time" id="monthly-bibi-time">2026年6月</div>
+          </div>
+        </div>
+        <button class="btn-edit-monthly" onclick="editMonthlyStatus()">✏️ 更新本月状态</button>
+      </div>
+
+      <!-- 快捷导航 -->
+      <div class="quick-nav">
+        <h3>🚀 快捷导航</h3>
+        <div class="quick-nav-grid" id="quick-nav-grid">
+                <button class="quick-nav-item" onclick="switchPage('home')"><span class="nav-item-icon">🏠</span><span class="nav-item-label">首页大厅</span></button>
+                <button class="quick-nav-item" onclick="switchPage('messages')"><span class="nav-item-icon">💌</span><span class="nav-item-label">留言墙</span></button>
+                <button class="quick-nav-item" onclick="switchPage('albums')"><span class="nav-item-icon">📸</span><span class="nav-item-label">相册</span></button>
+                <button class="quick-nav-item" onclick="switchPage('dates')"><span class="nav-item-icon">🎯</span><span class="nav-item-label">约会打卡</span></button>
+                <button class="quick-nav-item" onclick="switchPage('finance')"><span class="nav-item-icon">💰</span><span class="nav-item-label">财务台账</span></button>
+                <button class="quick-nav-item" onclick="switchPage('plans')"><span class="nav-item-icon">📋</span><span class="nav-item-label">约会计划</span></button>
+                <button class="quick-nav-item" onclick="switchPage('countdowns')"><span class="nav-item-icon">⏳</span><span class="nav-item-label">纪念日</span></button>
+                <button class="quick-nav-item" onclick="switchPage('conventions')"><span class="nav-item-icon">📜</span><span class="nav-item-label">情侣公约</span></button>
+                <button class="quick-nav-item" onclick="switchPage('vouchers')"><span class="nav-item-icon">🎫</span><span class="nav-item-label">兑换券</span></button>
+                <button class="quick-nav-item" onclick="switchPage('growth')"><span class="nav-item-icon">🌱</span><span class="nav-item-label">成长打卡</span></button>
+                <button class="quick-nav-item" onclick="switchPage('daily-checkin')"><span class="nav-item-icon">✅</span><span class="nav-item-label">每日打卡</span></button>
+                <button class="quick-nav-item" onclick="switchPage('emergency')"><span class="nav-item-icon">🆘</span><span class="nav-item-label">紧急救援包</span></button>
+                <button class="quick-nav-item" onclick="switchPage('paperplane')"><span class="nav-item-icon">✈️</span><span class="nav-item-label">纸飞机</span></button>
+                <button class="quick-nav-item" onclick="switchPage('yearly')"><span class="nav-item-icon">📅</span><span class="nav-item-label">年度总结</span></button>
+                <button class="quick-nav-item" onclick="switchPage('mood')"><span class="nav-item-icon">🎭</span><span class="nav-item-label">情绪天气</span></button>
+                <button class="quick-nav-item" onclick="switchPage('blindbox')"><span class="nav-item-icon">🎁</span><span class="nav-item-label">今日盲盒</span></button>
+                <button class="quick-nav-item" onclick="switchPage('quiz')"><span class="nav-item-icon">❓</span><span class="nav-item-label">默契考验</span></button>
+                <button class="quick-nav-item" onclick="switchPage('wishlist')"><span class="nav-item-icon">🌟</span><span class="nav-item-label">愿望清单</span></button>
+                <button class="quick-nav-item" onclick="switchPage('fund-tree')"><span class="nav-item-icon">🌳</span><span class="nav-item-label">约会基金</span></button>
+                <button class="quick-nav-item" onclick="switchPage('achievements')"><span class="nav-item-icon">🏅</span><span class="nav-item-label">成就勋章</span></button>
+                <button class="quick-nav-item" onclick="switchPage('museum')"><span class="nav-item-icon">🏛️</span><span class="nav-item-label">丑照博物馆</span></button>
+                <button class="quick-nav-item" onclick="switchPage('tarot')"><span class="nav-item-icon">🔮</span><span class="nav-item-label">塔罗占卜</span></button>
+                <button class="quick-nav-item" onclick="switchPage('bagua')"><span class="nav-item-icon">☯️</span><span class="nav-item-label">八卦运势</span></button>
+                <button class="quick-nav-item" onclick="switchPage('dice')"><span class="nav-item-icon">🎲</span><span class="nav-item-label">摇骰子</span></button>
+                <button class="quick-nav-item" onclick="switchPage('awards')"><span class="nav-item-icon">🏆</span><span class="nav-item-label">年度颁奖</span></button>
+                <button class="quick-nav-item" onclick="switchPage('mbti')"><span class="nav-item-icon">🧬</span><span class="nav-item-label">MBTI人格墙</span></button>
+                <button class="quick-nav-item" onclick="switchPage('music-planet')"><span class="nav-item-icon">🎵</span><span class="nav-item-label">音乐星球</span></button>
+                <button class="quick-nav-item" onclick="switchPage('wheel')"><span class="nav-item-icon">🎡</span><span class="nav-item-label">幸运转盘</span></button>
+                <button class="quick-nav-item" onclick="switchPage('puzzle')"><span class="nav-item-icon">🧩</span><span class="nav-item-label">照片拼图</span></button>
+                <button class="quick-nav-item" onclick="switchPage('footprint')"><span class="nav-item-icon">📍</span><span class="nav-item-label">足迹地图</span></button>
+                <button class="quick-nav-item" onclick="switchPage('love-tree')"><span class="nav-item-icon">💞</span><span class="nav-item-label">爱情树</span></button>
+                <button class="quick-nav-item" onclick="switchPage('challenge')"><span class="nav-item-icon">🔥</span><span class="nav-item-label">30天挑战</span></button>
+                <button class="quick-nav-item" onclick="switchPage('love-letter')"><span class="nav-item-icon">💝</span><span class="nav-item-label">情书设计器</span></button>
+                <button class="quick-nav-item" onclick="switchPage('games')"><span class="nav-item-icon">🎮</span><span class="nav-item-label">双人小游戏</span></button>
+                <button class="quick-nav-item" onclick="switchPage('dashboard')"><span class="nav-item-icon">📊</span><span class="nav-item-label">数据仪表盘</span></button>
+                <button class="quick-nav-item" onclick="switchPage('diary')"><span class="nav-item-icon">📝</span><span class="nav-item-label">恋爱日记本</span></button>
+        </div>
+      </div>
+
+      <!-- 官宣文案 -->
+      <div class="official-statement">
+        <p>鼠鼠&笔笔专属恋爱官网，于2026年06月23日正式成立。</p>
+        <p>全站遵循《情侣约会正式公约》执行所有行程与财务结算，记录往后每一天的相处、约会与成长，永久留存二人所有美好回忆。</p>
+        <p class="statement-heart">💞</p>
+        <p style="font-size:10px;color:#e2e8f0;margin-top:6px;">v2.0 · 2026-06-28 · 大版本更新 · 全面优化升级</p>
+      </div>
+    </section>
+
+    <!-- ====== 板块1：私密留言墙 ====== -->
+    <section id="page-messages" class="page-section">
+      <div class="section-header">
+        <h2>💌 私密留言墙</h2>
+        <p>写给彼此的话，留到以后慢慢看</p>
+      </div>
+
+      <!-- 分类标签 -->
+      <div class="tab-bar">
+        <button class="tab active" data-tab="all" onclick="filterMessages('all')">全部</button>
+        <button class="tab" data-tab="confession" onclick="filterMessages('confession')">💕 告白留言</button>
+        <button class="tab" data-tab="daily" onclick="filterMessages('daily')">📝 日常碎碎念</button>
+        <button class="tab" data-tab="apology" onclick="filterMessages('apology')">🙏 致歉留言</button>
+        <button class="tab" data-tab="future" onclick="filterMessages('future')">⏰ 未来信件</button>
+      </div>
+
+      <!-- 搜索栏 -->
+      <div class="search-bar">
+        <input type="text" id="message-search" placeholder="🔍 搜索留言关键词..." oninput="searchMessages()">
+      </div>
+
+      <!-- 写留言区域 -->
+      <div class="message-composer">
+        <h3>✍️ 写留言</h3>
+        <select id="msg-category">
+          <option value="confession">💕 告白留言</option>
+          <option value="daily">📝 日常碎碎念</option>
+          <option value="apology">🙏 致歉留言</option>
+          <option value="future">⏰ 未来定时信件</option>
+        </select>
+        <div id="future-options" class="hidden">
+          <label>信件解锁时间：</label>
+          <select id="future-unlock">
+            <option value="7">一周后解锁</option>
+            <option value="30">一月后解锁</option>
+            <option value="365">周年后解锁</option>
+            <option value="custom">自定义日期</option>
+          </select>
+          <input type="date" id="future-custom-date" class="hidden">
+        </div>
+        <textarea id="msg-content" placeholder="写下你想说的话..." rows="4"></textarea>
+        <div class="composer-actions">
+          <div class="voice-recorder">
+            <button id="voice-btn" onclick="toggleVoiceRecord()">🎤 语音留言</button>
+            <span id="voice-status" class="hidden">🔴 录音中...</span>
+            <audio id="voice-preview" controls playsinline preload="metadata" class="hidden"></audio>
+          </div>
+          <div class="composer-right">
+            <select id="msg-author">
+              <option value="shushu">🐹 鼠鼠</option>
+              <option value="bibi">🐱 笔笔</option>
+            </select>
+            <button class="btn-primary" onclick="postMessage()">📨 发布留言</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 留言列表 -->
+      <div class="message-list" id="message-list">
+        <!-- JS 动态生成 -->
+      </div>
+    </section>
+
+    <!-- ====== 板块2：恋爱相册 ====== -->
+    <section id="page-albums" class="page-section">
+      <div class="section-header">
+        <h2>📸 恋爱相册</h2>
+        <p>每一帧都是我们的故事</p>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab active" data-tab="all-albums" onclick="filterAlbums('all')">全部相册</button>
+        <button class="tab" data-tab="daily-album" onclick="filterAlbums('daily')">📅 日常约会</button>
+        <button class="tab" data-tab="travel-album" onclick="filterAlbums('travel')">✈️ 旅行相册</button>
+        <button class="tab" data-tab="anniversary-album" onclick="filterAlbums('anniversary')">🎉 纪念日</button>
+        <button class="tab" data-tab="private-album" onclick="filterAlbums('private')">🔒 私密相册</button>
+      </div>
+
+      <div class="album-create">
+        <button class="btn-primary" onclick="showCreateAlbum()">➕ 创建新相册</button>
+        <button class="btn-secondary" onclick="generateYearReview()">📖 生成年度回顾</button>
+      </div>
+
+      <!-- 存储空间提示条 -->
+      <div class="storage-bar" id="storage-bar">
+        <div class="storage-info"><span>💾 存储空间</span><span id="storage-text">--</span></div>
+        <div class="storage-track"><div class="storage-fill" id="storage-fill"></div></div>
+      </div>
+
+      <div class="album-grid" id="album-grid">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <!-- 相册详情弹窗占位 -->
+      <div class="modal-overlay hidden" id="album-modal">
+        <div class="modal-content">
+          <span class="modal-close" onclick="closeAlbumModal()">&times;</span>
+          <div id="album-detail-content"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 板块3：未来约会项目打卡库 ====== -->
+    <section id="page-dates" class="page-section">
+      <div class="section-header">
+        <h2>🎯 未来约会项目打卡库</h2>
+        <p>想去的地方，一起打卡实现</p>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab active" data-tab="all-dates" onclick="filterDates('all')">全部</button>
+        <button class="tab" data-tab="short-date" onclick="filterDates('short')">🚗 单日短途</button>
+        <button class="tab" data-tab="long-date" onclick="filterDates('long')">🏨 2天1晚+</button>
+        <button class="tab" data-tab="special-date" onclick="filterDates('special')">🎁 全包特例</button>
+      </div>
+
+      <div class="date-create">
+        <button class="btn-primary" onclick="showCreateDate()">➕ 添加约会项目</button>
+      </div>
+
+      <div class="date-list" id="date-list">
+        <!-- JS 动态生成 -->
+      </div>
+    </section>
+
+    <!-- ====== 板块4：约会经济预算总台账 ====== -->
+    <section id="page-finance" class="page-section">
+      <div class="section-header">
+        <h2>💰 约会经济预算总台账</h2>
+        <p>清清楚楚谈恋爱，明明白白过日子</p>
+      </div>
+
+      <div class="finance-summary" id="finance-summary">
+        <!-- JS 动态生成摘要卡片 -->
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab active" data-tab="all-trans" onclick="filterTransactions('all')">全部账单</button>
+        <button class="tab" data-tab="shared-trans" onclick="filterTransactions('shared')">👥 公摊消费</button>
+        <button class="tab" data-tab="personal-trans" onclick="filterTransactions('personal')">👤 个人消费</button>
+        <button class="tab" data-tab="fund-trans" onclick="filterTransactions('fund')">🏦 小金库</button>
+      </div>
+
+      <div class="transaction-actions">
+        <button class="btn-primary" onclick="showCreateTransaction()">➕ 记录消费</button>
+        <button class="btn-primary" onclick="showFundTransaction()">🏦 小金库操作</button>
+        <button class="btn-secondary" onclick="showMonthlyReport()">📊 月度财务复盘</button>
+      </div>
+
+      <!-- 本月交通核算显示 -->
+      <div class="transport-summary" id="transport-summary">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <div class="transaction-list" id="transaction-list">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <!-- 月度报表弹窗 -->
+      <div class="modal-overlay hidden" id="report-modal">
+        <div class="modal-content report-modal">
+          <span class="modal-close" onclick="closeReportModal()">&times;</span>
+          <div id="report-content"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 板块5：标准化恋爱约会计划表 ====== -->
+    <section id="page-plans" class="page-section">
+      <div class="section-header">
+        <h2>📋 标准化恋爱约会计划表</h2>
+        <p>每次约会，有备而来</p>
+      </div>
+
+      <div class="plan-list" id="plan-list">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <div class="plan-create">
+        <button class="btn-primary" onclick="showCreatePlan()">➕ 新建约会计划</button>
+      </div>
+
+      <!-- 取消赔付规则 -->
+      <div class="cancel-rules-box">
+        <h3>📜 行程取消赔付规则</h3>
+        <div class="rule-item">🔹 提前3天以上取消：无需赔付</div>
+        <div class="rule-item">🔹 提前1-3天取消：赔付已预订费用的50%</div>
+        <div class="rule-item">🔹 当天取消：赔付已预订费用的100%</div>
+        <div class="rule-item">🔹 特殊不可抗力（生病/紧急事务）：双方协商，酌情减免</div>
+      </div>
+    </section>
+
+    <!-- ====== 板块6-1：纪念日倒计时专区 ====== -->
+    <section id="page-countdowns" class="page-section">
+      <div class="section-header">
+        <h2>⏳ 纪念日倒计时专区</h2>
+        <p>重要日子，一个都不错过</p>
+      </div>
+
+      <div class="countdown-grid" id="countdown-grid">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <div class="countdown-create">
+        <button class="btn-primary" onclick="showCreateCountdown()">➕ 添加纪念日</button>
+      </div>
+    </section>
+
+    <!-- ====== 板块6-2：情侣公约档案库 ====== -->
+    <section id="page-conventions" class="page-section">
+      <div class="section-header">
+        <h2>📜 情侣公约档案库</h2>
+        <p>每一条约定，都有据可查</p>
+      </div>
+
+      <div class="convention-timeline" id="convention-timeline">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <div class="convention-create">
+        <button class="btn-primary" onclick="showCreateConvention()">➕ 新增增补条款</button>
+      </div>
+    </section>
+
+    <!-- ====== 板块6-3：心愿兑换券仓库 ====== -->
+    <section id="page-vouchers" class="page-section">
+      <div class="section-header">
+        <h2>🎫 心愿兑换券仓库</h2>
+        <p>互相发放，随时核销</p>
+      </div>
+
+      <div class="voucher-create">
+        <button class="btn-primary" onclick="showCreateVoucher()">🎁 发放兑换券</button>
+      </div>
+
+      <div class="voucher-grid" id="voucher-grid">
+        <!-- JS 动态生成 -->
+      </div>
+    </section>
+
+    <!-- ====== 板块6-4：双人成长打卡区 ====== -->
+    <section id="page-growth" class="page-section">
+      <div class="section-header">
+        <h2>🌱 双人成长打卡区</h2>
+        <p>一起变得更好</p>
+      </div>
+
+      <div class="growth-dual">
+        <div class="growth-card shushu-card">
+          <div class="growth-card-header">🐹 鼠鼠的学业计划</div>
+          <div class="growth-streak">连续打卡 <span id="shushu-growth-streak">0</span> 天</div>
+          <div class="growth-calendar" id="shushu-growth-cal"></div>
+          <button class="btn-checkin" onclick="checkinGrowth('shushu')">✅ 今日打卡</button>
+        </div>
+        <div class="growth-card bibi-card">
+          <div class="growth-card-header">🐱 笔笔的站桩健身增重计划</div>
+          <div class="growth-streak">连续打卡 <span id="bibi-growth-streak">0</span> 天</div>
+          <div class="growth-calendar" id="bibi-growth-cal"></div>
+          <button class="btn-checkin" onclick="checkinGrowth('bibi')">✅ 今日打卡</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 板块6-5：异地日常打卡专区 ====== -->
+    <section id="page-daily-checkin" class="page-section">
+      <div class="section-header">
+        <h2>🌅 异地日常打卡专区</h2>
+        <p>即使相隔两地，爱不打烊</p>
+      </div>
+
+      <div class="daily-checkin-grid">
+        <div class="daily-card">
+          <h3>☀️ 早安打卡</h3>
+          <div class="daily-status" id="morning-status">今日未打卡</div>
+          <button class="btn-checkin" onclick="dailyCheckin('morning')">☀️ 早安</button>
+        </div>
+        <div class="daily-card">
+          <h3>🌙 晚安打卡</h3>
+          <div class="daily-status" id="night-status">今日未打卡</div>
+          <button class="btn-checkin" onclick="dailyCheckin('night')">🌙 晚安</button>
+        </div>
+        <div class="daily-card">
+          <h3>🍬 戒糖打卡</h3>
+          <div class="daily-status" id="nosugar-status">今日未打卡</div>
+          <button class="btn-checkin" onclick="dailyCheckin('nosugar')">🍬 戒糖</button>
+        </div>
+        <div class="daily-card">
+          <h3>🧊 戒冰打卡</h3>
+          <div class="daily-status" id="noice-status">今日未打卡</div>
+          <button class="btn-checkin" onclick="dailyCheckin('noice')">🧊 戒冰</button>
+        </div>
+      </div>
+
+      <div class="daily-streak-bar">
+        <div class="streak-item">☀️ 早安连续 <span id="morning-streak">0</span> 天</div>
+        <div class="streak-item">🌙 晚安连续 <span id="night-streak">0</span> 天</div>
+        <div class="streak-item">🍬 戒糖连续 <span id="nosugar-streak">0</span> 天</div>
+        <div class="streak-item">🧊 戒冰连续 <span id="noice-streak">0</span> 天</div>
+      </div>
+
+      <div class="unlock-rewards" id="unlock-rewards">
+        <h4>🎁 连续打卡福利留言</h4>
+        <div id="reward-messages"></div>
+      </div>
+    </section>
+
+    <!-- ====== 板块6-6：矛盾沟通应急预案 ====== -->
+    <section id="page-emergency" class="page-section">
+      <div class="section-header">
+        <h2>🆘 矛盾沟通应急预案</h2>
+        <p>吵架不可怕，怕的是不沟通</p>
+      </div>
+
+      <div class="emergency-protocol">
+        <div class="protocol-steps">
+          <div class="protocol-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>冷静期</h4>
+              <p>给彼此30分钟冷静时间，不做冲动决定，不说过激话语。</p>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>表达感受</h4>
+              <p>用"我感到..."句式表达自己的情绪，避免指责对方。</p>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>倾听对方</h4>
+              <p>不打断，不反驳，先完整听完对方的想法。</p>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>寻找共识</h4>
+              <p>找出双方都可以接受的解决方案。</p>
+            </div>
+          </div>
+          <div class="protocol-step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>和解仪式</h4>
+              <p>拥抱、道歉、使用"和解券"或做一件让对方开心的小事。</p>
+            </div>
+          </div>
+        </div>
+        <div class="emergency-timer">
+          <h3>⏱️ 冷静计时器</h3>
+          <div class="timer-display" id="cool-down-timer">30:00</div>
+          <button class="btn-primary" onclick="startCoolDown()">开始冷静</button>
+          <button class="btn-secondary" onclick="resetCoolDown()">重置</button>
+        </div>
+        <div class="emergency-note">
+          <textarea id="emergency-note" placeholder="记录这次矛盾的起因和解决过程..." rows="3"></textarea>
+          <button class="btn-primary" onclick="saveEmergencyNote()">📝 保存记录</button>
+        </div>
+        <div class="emergency-history" id="emergency-history">
+          <!-- JS 动态生成 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ✈️ 纸飞机 ====== -->
+    <section id="page-paperplane" class="page-section">
+      <div class="section-header">
+        <h2>✈️ 纸飞机</h2>
+        <p>折一只纸飞机，带着你的心里话，飞向TA 💌</p>
+      </div>
+
+      <div class="paperplane-container" style="padding: 20px;">
+        <!-- 发送纸飞机 -->
+        <div class="send-paperplane" style="margin-bottom: 30px; padding: 20px; background: var(--card-bg); border-radius: var(--border-radius); box-shadow: var(--card-shadow);">
+          <h3 style="margin-bottom: 15px; color: var(--text-color);">✈️ 折一只纸飞机</h3>
+          <textarea id="paperplane-msg" placeholder="写下你想说的话，纸飞机会带着你的心意飞到对方身边..." style="width: 100%; min-height: 100px; padding: 15px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 14px; resize: vertical; margin-bottom: 15px; background: var(--bg-color); color: var(--text-color);"></textarea>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button onclick="sendPaperPlane()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: transform 0.3s;">
+              ✈️ 放飞纸飞机
+            </button>
+            <span style="font-size: 12px; color: var(--text-light);">实时送达</span>
+          </div>
+        </div>
+
+        <!-- 接收到的纸飞机 -->
+        <div class="received-paperplanes">
+          <h3 style="margin-bottom: 15px; color: var(--text-color);">📬 收到的纸飞机</h3>
+          <div id="received-planes" style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="text-align: center; color: var(--text-light); padding: 30px;">
+              还没有收到纸飞机～
+            </div>
+          </div>
+        </div>
+
+        <!-- 已发送的纸飞机 -->
+        <div class="sent-paperplanes" style="margin-top: 30px;">
+          <h3 style="margin-bottom: 15px; color: var(--text-color);">📤 已放飞的纸飞机</h3>
+          <div id="sent-planes" style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="text-align: center; color: var(--text-light); padding: 30px;">
+              还没有放飞纸飞机～
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 📝 城市便利贴：想去的地方 ====== -->
+    <section id="page-adventure-map" class="page-section">
+      <div class="section-header">
+        <h2>📝 城市便利贴</h2>
+        <p>记录你们想去的地方，一个一个去打卡 ✨</p>
+      </div>
+
+      <!-- 添加按钮 -->
+      <div class="sticky-add-bar">
+        <button class="btn-primary sticky-add-btn" onclick="openStickyPicker()">
+          <span>＋</span> 添加想去的城市
+        </button>
+        <span class="sticky-count" id="sticky-count">共 0 张便利贴</span>
+      </div>
+
+      <!-- 便利贴网格 -->
+      <div class="sticky-grid" id="sticky-grid">
+        <div class="sticky-empty" id="sticky-empty">
+          <div class="sticky-empty-icon">📍</div>
+          <p>还没有便利贴哦～</p>
+          <p class="sticky-empty-hint">点击上方按钮，添加你们想去的城市吧！</p>
+        </div>
+      </div>
+
+      <!-- 添加城市弹窗 -->
+      <div class="sticky-picker-overlay hidden" id="sticky-picker-overlay" onclick="closeStickyPicker(event)">
+        <div class="sticky-picker-card" onclick="event.stopPropagation()">
+          <div class="sticky-picker-header">
+            <h3>🌍 选择想去的城市</h3>
+            <button class="sticky-picker-close" onclick="closeStickyPicker()">✕</button>
+          </div>
+          <div class="sticky-picker-body">
+            <!-- 国家选择 -->
+            <label class="sticky-picker-label">🏳️ 选择国家/地区</label>
+            <select class="sticky-picker-select" id="sticky-country-select" onchange="onStickyCountryChange()">
+              <option value="">-- 请选择国家 --</option>
+            </select>
+
+            <!-- 城市选择 -->
+            <label class="sticky-picker-label">🏙️ 选择城市</label>
+            <select class="sticky-picker-select" id="sticky-city-select" onchange="onStickyCityChange()">
+              <option value="">-- 请先选择国家 --</option>
+            </select>
+
+            <!-- 预览 -->
+            <div class="sticky-preview hidden" id="sticky-preview">
+              <div class="sticky-preview-card">
+                <span class="sticky-preview-emoji" id="sticky-preview-emoji">📍</span>
+                <div>
+                  <div class="sticky-preview-name" id="sticky-preview-name">城市名</div>
+                  <div class="sticky-preview-country" id="sticky-preview-country">国家</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-primary sticky-confirm-btn" id="sticky-confirm-btn" disabled onclick="addStickyNote()">
+              📌 贴上便利贴！
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 年度总结页面 ====== -->
+    <section id="page-yearly" class="page-section">
+      <div class="section-header">
+        <h2>📖 年度恋爱总结手册</h2>
+        <p>每一年，都值得回顾</p>
+      </div>
+      <div class="yearly-content" id="yearly-content">
+        <button class="btn-primary" onclick="generateYearlySummary()">🎊 生成本年度总结</button>
+        <div id="yearly-result"></div>
+      </div>
+    </section>
+
+    <!-- ====== 🎮 新板块：情绪天气台 ====== -->
+    <section id="page-mood" class="page-section">
+      <div class="section-header">
+        <h2>🌤️ 情绪天气台</h2>
+        <p>今天的彼此，是什么天气？</p>
+      </div>
+      <div class="mood-container">
+        <div class="mood-dual">
+          <div class="mood-card shushu-mood">
+            <div class="mood-avatar">🐹</div>
+            <h3>鼠鼠 今日情绪</h3>
+            <div class="mood-display" id="shushu-mood-display">☀️ 晴天</div>
+            <div class="mood-emoji-grid" id="shushu-mood-grid">
+              <button class="mood-btn" data-mood="sunny" onclick="setMood('shushu','sunny')">☀️<br>开心</button>
+              <button class="mood-btn" data-mood="cloudy" onclick="setMood('shushu','cloudy')">☁️<br>疲惫</button>
+              <button class="mood-btn" data-mood="love" onclick="setMood('shushu','love')">🥰<br>想贴贴</button>
+              <button class="mood-btn" data-mood="space" onclick="setMood('shushu','space')">🌙<br>需空间</button>
+              <button class="mood-btn" data-mood="storm" onclick="setMood('shushu','storm')">⛈️<br>烦躁</button>
+              <button class="mood-btn" data-mood="sick" onclick="setMood('shushu','sick')">🤒<br>不舒服</button>
+            </div>
+          </div>
+          <div class="mood-card bibi-mood">
+            <div class="mood-avatar">🐱</div>
+            <h3>笔笔 今日情绪</h3>
+            <div class="mood-display" id="bibi-mood-display">☀️ 晴天</div>
+            <div class="mood-emoji-grid" id="bibi-mood-grid">
+              <button class="mood-btn" data-mood="sunny" onclick="setMood('bibi','sunny')">☀️<br>开心</button>
+              <button class="mood-btn" data-mood="cloudy" onclick="setMood('bibi','cloudy')">☁️<br>疲惫</button>
+              <button class="mood-btn" data-mood="love" onclick="setMood('bibi','love')">🥰<br>想贴贴</button>
+              <button class="mood-btn" data-mood="space" onclick="setMood('bibi','space')">🌙<br>需空间</button>
+              <button class="mood-btn" data-mood="storm" onclick="setMood('bibi','storm')">⛈️<br>烦躁</button>
+              <button class="mood-btn" data-mood="sick" onclick="setMood('bibi','sick')">🤒<br>不舒服</button>
+            </div>
+          </div>
+        </div>
+        <div class="mood-weather-display" id="mood-weather-display">
+          <div class="mood-sky" id="mood-sky">☀️</div>
+          <p id="mood-weather-text">今天两个人都是大晴天呢！</p>
+        </div>
+        <div class="mood-history" id="mood-history">
+          <h4>📅 本周情绪记录</h4>
+          <div id="mood-week-chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🎮 盲盒日历/每日任务 ====== -->
+    <section id="page-blindbox" class="page-section">
+      <div class="section-header">
+        <h2>🎁 今日情侣盲盒</h2>
+        <p>每天刷新一个小惊喜任务</p>
+      </div>
+      <div class="blindbox-container">
+        <div class="blindbox-box" id="blindbox-box" onclick="openBlindbox()">
+          <div class="blindbox-3d">
+            <div class="blindbox-lid" id="blindbox-lid">🎁</div>
+            <div class="blindbox-body">?</div>
+          </div>
+          <p>点击开启今日盲盒</p>
+        </div>
+        <div class="blindbox-result hidden" id="blindbox-result">
+          <div class="blindbox-task-icon" id="blindbox-task-icon">🎯</div>
+          <h3 id="blindbox-task-title">今日任务</h3>
+          <p id="blindbox-task-desc">任务描述</p>
+          <div class="blindbox-task-reward">✨ 完成奖励：+50 EXP</div>
+          <button class="btn-primary" onclick="completeBlindbox()">✅ 完成任务</button>
+        </div>
+        <div class="blindbox-history" id="blindbox-history">
+          <h4>📋 任务历史</h4>
+          <div id="blindbox-task-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🧩 默契度大考验 ====== -->
+    <section id="page-quiz" class="page-section">
+      <div class="section-header">
+        <h2>🧩 默契度大考验</h2>
+        <p>测测你们有多了解对方</p>
+      </div>
+      <div class="quiz-container">
+        <div class="quiz-score-display" id="quiz-score-display">
+          <div class="quiz-score-circle">
+            <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="none" stroke="#333" stroke-width="8"/><circle cx="60" cy="60" r="54" fill="none" stroke="url(#quizGrad)" stroke-width="8" stroke-dasharray="339" stroke-dashoffset="339" id="quiz-score-ring" stroke-linecap="round" transform="rotate(-90 60 60)"/><defs><linearGradient id="quizGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs></svg>
+            <div class="quiz-score-text"><span id="quiz-percent">0</span><small>%</small></div>
+          </div>
+          <p id="quiz-level-text">来测测默契吧！</p>
+        </div>
+        <div class="quiz-question-card" id="quiz-question-card">
+          <div class="quiz-round">第 <span id="quiz-round-num">1</span>/5 题</div>
+          <h3 id="quiz-question">问题加载中...</h3>
+          <div class="quiz-options" id="quiz-options"></div>
+        </div>
+        <div class="quiz-select-user">
+          <p>当前答题者：</p>
+          <button class="quiz-user-btn active" data-user="shushu" onclick="setQuizUser('shushu')">🐹 鼠鼠</button>
+          <button class="quiz-user-btn" data-user="bibi" onclick="setQuizUser('bibi')">🐱 笔笔</button>
+        </div>
+        <button class="btn-primary" onclick="startQuiz()" id="quiz-start-btn">🎮 开始答题</button>
+      </div>
+    </section>
+
+    <!-- ====== ✅ 年度愿望清单 ====== -->
+    <section id="page-wishlist" class="page-section">
+      <div class="section-header">
+        <h2>📝 年度愿望清单</h2>
+        <p>这一年想一起做的100件小事</p>
+      </div>
+      <div class="wishlist-container">
+        <div class="wishlist-progress">
+          <div class="wishlist-progress-bar"><div class="wishlist-progress-fill" id="wishlist-progress-fill"></div></div>
+          <span>已完成 <b id="wishlist-done-count">0</b>/100</span>
+        </div>
+        <div class="wishlist-add">
+          <input type="text" id="wishlist-input" placeholder="写下想一起做的事...">
+          <button class="btn-primary" onclick="addWish()">➕ 添加</button>
+        </div>
+        <div class="wishlist-filter">
+          <button class="tab active" onclick="filterWishes('all')">全部</button>
+          <button class="tab" onclick="filterWishes('todo')">待完成</button>
+          <button class="tab" onclick="filterWishes('done')">已完成</button>
+        </div>
+        <div class="wishlist-grid" id="wishlist-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====== 💰 约会基金进度条+种树 ====== -->
+    <section id="page-fund-tree" class="page-section">
+      <div class="section-header">
+        <h2>🌳 小金库·种树计划</h2>
+        <p>省钱=浇水，攒够=开花结果</p>
+      </div>
+      <div class="fundtree-container">
+        <div class="fundtree-goal">
+          <h3>🎯 年度约会基金目标</h3>
+          <input type="number" id="fund-goal-input" placeholder="设定目标金额（如20000）" onchange="updateFundGoal()">
+          <span class="fund-goal-unit">元</span>
+        </div>
+        <div class="fundtree-progress">
+          <div class="fundtree-bar"><div class="fundtree-bar-fill" id="fundtree-bar-fill"></div></div>
+          <div class="fundtree-stats">
+            <span>已攒 <b id="fund-current">0</b> 元</span>
+            <span>目标 <b id="fund-target">20000</b> 元</span>
+            <span>进度 <b id="fund-percent">0%</b></span>
+          </div>
+        </div>
+        <div class="fundtree-tree" id="fundtree-tree">
+          <div class="tree-stage" id="tree-stage">🌱 种子</div>
+          <div class="tree-stage-desc" id="tree-stage-desc">开始浇水吧！</div>
+          <div class="tree-soil">
+            <div class="tree-trunk" id="tree-trunk"></div>
+            <div class="tree-leaves" id="tree-leaves"></div>
+            <div class="tree-fruits" id="tree-fruits"></div>
+          </div>
+        </div>
+        <div class="fundtree-add">
+          <input type="number" id="fund-add-input" placeholder="本次存入金额">
+          <input type="text" id="fund-add-note" placeholder="备注（如：省了奶茶钱）">
+          <button class="btn-primary" onclick="addFund()">💧 浇水存钱</button>
+        </div>
+        <div class="fundtree-calc">
+          <h4>🔢 等价交换计算器</h4>
+          <input type="number" id="calc-amount" placeholder="输入省下的钱">
+          <button class="btn-secondary" onclick="calcEquivalent()">💡 换算</button>
+          <div class="calc-result" id="calc-result"></div>
+        </div>
+        <div class="fundtree-history" id="fundtree-history">
+          <h4>📊 存钱记录</h4>
+          <div id="fundtree-records"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🏆 成就勋章墙 ====== -->
+    <section id="page-achievements" class="page-section">
+      <div class="section-header">
+        <h2>🏆 成就勋章墙</h2>
+        <p>一起解锁属于你们的荣耀</p>
+      </div>
+      <div class="achievements-container">
+        <div class="achievements-stats">
+          <span>已解锁 <b id="ach-unlocked">0</b>/<b id="ach-total">0</b></span>
+          <span>完成率 <b id="ach-percent">0%</b></span>
+        </div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====== 🤪 丑照/出糗博物馆 ====== -->
+    <section id="page-museum" class="page-section">
+      <div class="section-header">
+        <h2>🤪 丑照/出糗博物馆</h2>
+        <p>那些崩坏但可爱的瞬间</p>
+      </div>
+      <div class="museum-container">
+        <p class="museum-desc">🔒 专属你们俩的快乐源泉，别人看不懂，你们一看就笑疯</p>
+        <div class="museum-upload">
+          <input type="file" id="museum-photo-input" accept="image/*" multiple style="opacity:0;position:absolute;width:0.1px;height:0.1px" onchange="handleMuseumUpload(event)">
+          <button class="btn-primary" onclick="document.getElementById('museum-photo-input').click()">📸 上传糗照</button>
+        </div>
+        <div class="museum-grid" id="museum-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====== 🔮 梦境塔罗 ====== -->
+    <section id="page-tarot" class="page-section">
+      <div class="section-header">
+        <h2>🔮 梦境塔罗</h2>
+        <p>梦醒之后，抽一张塔罗牌，看看今日指引</p>
+      </div>
+      <div class="tarot-container">
+        <div class="tarot-table" id="tarot-table">
+          <div class="tarot-card-deck" id="tarot-deck">
+            <div class="tarot-card-back" onclick="drawTarot()">
+              <div class="tarot-back-design">🔮</div>
+              <p>点击抽牌</p>
+            </div>
+          </div>
+          <div class="tarot-result hidden" id="tarot-result">
+            <div class="tarot-card-display" id="tarot-card-display"></div>
+            <h3 id="tarot-card-name">牌名</h3>
+            <p class="tarot-position" id="tarot-position"></p>
+            <p class="tarot-meaning" id="tarot-meaning"></p>
+            <p class="tarot-advice" id="tarot-advice"></p>
+            <button class="btn-secondary" onclick="resetTarot()">🔄 再抽一张</button>
+          </div>
+        </div>
+        <div class="tarot-history" id="tarot-history">
+          <h4>📜 塔罗占卜历史</h4>
+          <div id="tarot-history-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ☯️ 八卦运势 ====== -->
+    <section id="page-bagua" class="page-section">
+      <div class="section-header">
+        <h2>☯️ 八卦运势</h2>
+        <p>摇一卦，知今日吉凶</p>
+      </div>
+      <div class="bagua-container">
+        <div class="bagua-compass" id="bagua-compass">
+          <div class="bagua-ring outer">
+            <span style="transform:rotate(0deg)">☰</span><span style="transform:rotate(45deg)">☱</span>
+            <span style="transform:rotate(90deg)">☲</span><span style="transform:rotate(135deg)">☳</span>
+            <span style="transform:rotate(180deg)">☴</span><span style="transform:rotate(225deg)">☵</span>
+            <span style="transform:rotate(270deg)">☶</span><span style="transform:rotate(315deg)">☷</span>
+          </div>
+          <div class="bagua-center" onclick="spinBagua()">
+            <div class="bagua-yinyang"></div>
+            <p>点击起卦</p>
+          </div>
+        </div>
+        <div class="bagua-result hidden" id="bagua-result">
+          <div class="bagua-hexagram" id="bagua-hexagram-display"></div>
+          <h3 id="bagua-name">卦名</h3>
+          <p id="bagua-desc">卦象描述</p>
+          <div class="bagua-details">
+            <div class="bagua-detail"><span>爱情运</span><span id="bagua-love">--</span></div>
+            <div class="bagua-detail"><span>事业运</span><span id="bagua-career">--</span></div>
+            <div class="bagua-detail"><span>健康运</span><span id="bagua-health">--</span></div>
+            <div class="bagua-detail"><span>财运</span><span id="bagua-wealth">--</span></div>
+          </div>
+          <button class="btn-secondary" onclick="resetBagua()">🔄 再摇一卦</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🎲 摇骰子 ====== -->
+    <section id="page-dice" class="page-section">
+      <div class="section-header">
+        <h2>🎲 心情骰子</h2>
+        <p>摇一摇，看看今天的运程</p>
+      </div>
+      <div class="dice-container">
+        <div class="dice-box" id="dice-box">
+          <div class="dice-cube" id="dice-cube">
+            <div class="dice-face front">🎲</div>
+            <div class="dice-face back">🎯</div>
+            <div class="dice-face right">🎪</div>
+            <div class="dice-face left">🎭</div>
+            <div class="dice-face top">🎨</div>
+            <div class="dice-face bottom">🎵</div>
+          </div>
+        </div>
+        <button class="btn-primary btn-dice" onclick="rollDice()">🎲 摇骰子</button>
+        <div class="dice-result hidden" id="dice-result">
+          <div class="dice-number" id="dice-number">1</div>
+          <h3 id="dice-fortune-title">今日运势</h3>
+          <p id="dice-fortune-desc">运势描述</p>
+          <div class="dice-stars" id="dice-stars"></div>
+        </div>
+        <div class="dice-history" id="dice-history">
+          <h4>📊 摇骰记录</h4>
+          <div id="dice-history-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🎉 年度颁奖典礼 ====== -->
+    <section id="page-awards" class="page-section">
+      <div class="section-header">
+        <h2>🏅 年度颁奖典礼</h2>
+        <p>爱情公司的年终总结</p>
+      </div>
+      <div class="awards-container">
+        <button class="btn-primary" onclick="generateAnnualReport()">📊 生成年度运营年报</button>
+        <div id="awards-result"></div>
+      </div>
+    </section>
+
+    <!-- ====== 🎡 幸运转盘 ====== -->
+    <section id="page-wheel" class="page-section">
+      <div class="section-header">
+        <h2>🎡 幸运转盘</h2>
+        <p>选择困难症？让命运来决定！</p>
+      </div>
+      <div class="wheel-container">
+        <div class="wheel-canvas-wrap">
+          <canvas id="wheel-canvas" width="320" height="320"></canvas>
+          <div class="wheel-pointer">🎯</div>
+        </div>
+        <div class="wheel-controls">
+          <div class="wheel-presets">
+            <button class="btn-secondary" onclick="setWheelPreset('food')">🍜 吃什么</button>
+            <button class="btn-secondary" onclick="setWheelPreset('place')">📍 去哪玩</button>
+            <button class="btn-secondary" onclick="setWheelPreset('punish')">😈 惩罚转盘</button>
+            <button class="btn-secondary" onclick="setWheelPreset('random')">🎲 随机</button>
+          </div>
+          <div class="wheel-custom">
+            <input type="text" id="wheel-custom-input" placeholder="自定义选项，用逗号分隔" onkeypress="if(event.key==='Enter')applyCustomWheel()">
+            <button class="btn-primary" onclick="applyCustomWheel()">✅ 自定义</button>
+          </div>
+          <button class="btn-spin" id="btn-spin-wheel" onclick="spinWheel()">🎡 开始旋转！</button>
+          <div class="wheel-result hidden" id="wheel-result"></div>
+        </div>
+        <div class="wheel-history">
+          <h4>📜 历史记录</h4>
+          <div id="wheel-history-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🧩 照片拼图 ====== -->
+    <section id="page-puzzle" class="page-section">
+      <div class="section-header">
+        <h2>🧩 照片拼图</h2>
+        <p>选一张相册照片，一起拼出来！</p>
+      </div>
+      <div class="puzzle-container">
+        <div class="puzzle-toolbar">
+          <select id="puzzle-difficulty" onchange="onPuzzleDifficultyChange()">
+            <option value="3">简单 3×3</option>
+            <option value="4" selected>普通 4×4</option>
+            <option value="5">困难 5×5</option>
+          </select>
+          <button class="btn-primary" onclick="startPuzzle()">🆕 开始新拼图</button>
+        </div>
+        <div class="puzzle-select-photo hidden" id="puzzle-photo-select">
+          <p>选择一张相册照片：</p>
+          <div class="puzzle-photo-grid" id="puzzle-photo-grid"></div>
+        </div>
+        <div class="puzzle-board hidden" id="puzzle-board-wrap">
+          <canvas id="puzzle-canvas"></canvas>
+          <div class="puzzle-info">
+            <span>⏱️ <b id="puzzle-time">00:00</b></span>
+            <span>步数：<b id="puzzle-moves">0</b></span>
+            <button class="btn-secondary" onclick="showPuzzlePreview()">👁️ 预览原图</button>
+          </div>
+        </div>
+        <div class="puzzle-complete hidden" id="puzzle-complete">
+          <div class="puzzle-fireworks">🎉🎊🎉</div>
+          <h3>恭喜完成拼图！</h3>
+          <p id="puzzle-complete-info"></p>
+          <button class="btn-primary" onclick="startPuzzle()">🔄 再来一局</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 📍 我们的足迹地图 ====== -->
+    <section id="page-footprint" class="page-section">
+      <div class="section-header">
+        <h2>📍 我们的足迹</h2>
+        <p>标记一起去过的地方，点亮中国地图</p>
+      </div>
+      <div class="footprint-container">
+        <div class="footprint-stats">
+          <div class="fp-stat"><span class="fp-stat-num" id="fp-city-count">0</span><span>座城市</span></div>
+          <div class="fp-stat"><span class="fp-stat-num" id="fp-province-count">0</span><span>个省份</span></div>
+          <div class="fp-stat"><span class="fp-stat-num" id="fp-total-km">0</span><span>公里（目标）</span></div>
+        </div>
+        <div class="footprint-map-wrap">
+          <div class="footprint-china-map" id="footprint-china-map">
+            <!-- SVG中国地图简化版，用CSS Grid模拟 -->
+          </div>
+        </div>
+        <div class="footprint-list-section">
+          <h3>📋 已打卡城市</h3>
+          <button class="btn-primary" onclick="openFootprintEditor()">➕ 添加足迹</button>
+          <div class="footprint-list" id="footprint-list"></div>
+        </div>
+        <div class="footprint-wishlist-section">
+          <h3>🎯 想去的地方</h3>
+          <button class="btn-secondary" onclick="openFootprintWishEditor()">➕ 添加愿望</button>
+          <div class="footprint-wishlist" id="footprint-wishlist"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 💞 爱情树 ====== -->
+    <section id="page-love-tree" class="page-section">
+      <div class="section-header">
+        <h2>💞 爱情树</h2>
+        <p>一起浇水，一起长大</p>
+      </div>
+      <div class="love-tree-container">
+        <div class="love-tree-display" id="love-tree-display">
+          <div class="love-tree-stage" id="love-tree-stage">🌱</div>
+          <div class="love-tree-name" id="love-tree-name">爱情的种子</div>
+          <div class="love-tree-progress">
+            <div class="love-tree-progress-bar" id="love-tree-progress-bar"></div>
+          </div>
+          <div class="love-tree-level" id="love-tree-level-text">Lv.1 种子期</div>
+        </div>
+        <div class="love-tree-actions">
+          <button class="btn-love-tree-water" id="btn-tree-water" onclick="waterLoveTree()">
+            💧 浇水（+1）
+          </button>
+          <button class="btn-secondary" onclick="viewLoveTreeLog()">📜 成长记录</button>
+        </div>
+        <div class="love-tree-info">
+          <h4>💡 如何让树长大？</h4>
+          <ul>
+            <li>💧 每天浇水 +1 成长值</li>
+            <li>💌 写留言 +2</li>
+            <li>📸 上传照片 +3</li>
+            <li>🎯 完成打卡 +5</li>
+            <li>📝 写日记 +4</li>
+          </ul>
+        </div>
+        <div class="love-tree-log hidden" id="love-tree-log"></div>
+      </div>
+    </section>
+
+    <!-- ====== 🎯 30天情侣挑战 ====== -->
+    <section id="page-challenge" class="page-section">
+      <div class="section-header">
+        <h2>🎯 30天情侣挑战</h2>
+        <p>一起完成30件小事，收获满满回忆</p>
+      </div>
+      <div class="challenge-container">
+        <div class="challenge-progress-bar">
+          <div class="challenge-progress-fill" id="challenge-progress-fill"></div>
+          <span class="challenge-progress-text" id="challenge-progress-text">0/30</span>
+        </div>
+        <div class="challenge-grid" id="challenge-grid"></div>
+        <div class="challenge-reward hidden" id="challenge-reward">
+          <h3>🏆 挑战完成！</h3>
+          <p>你们太棒了！30天情侣挑战全部完成！</p>
+          <div class="challenge-medal">🥇</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 💌 情书设计器 ====== -->
+    <section id="page-love-letter" class="page-section">
+      <div class="section-header">
+        <h2>💌 情书设计器</h2>
+        <p>写一封最美的情书，送给最爱的TA</p>
+      </div>
+      <div class="love-letter-container">
+        <div class="love-letter-editor">
+          <div class="love-letter-field">
+            <label>收信人</label>
+            <input type="text" id="letter-to" placeholder="笔笔" value="笔笔">
+          </div>
+          <div class="love-letter-field">
+            <label>模板</label>
+            <select id="letter-template" onchange="applyLetterTemplate()">
+              <option value="classic">💌 经典情书</option>
+              <option value="cute">🐱 可爱风</option>
+              <option value="poem">📜 诗词风</option>
+              <option value="modern">✨ 现代简约</option>
+            </select>
+          </div>
+          <div class="love-letter-field">
+            <label>正文</label>
+            <textarea id="letter-body" rows="8" placeholder="写下你想说的话..."></textarea>
+          </div>
+          <div class="love-letter-field">
+            <label>落款</label>
+            <input type="text" id="letter-from" placeholder="鼠鼠" value="鼠鼠">
+          </div>
+          <div class="love-letter-field">
+            <label>贴纸</label>
+            <div class="letter-stickers" id="letter-stickers">
+              <span class="sticker" onclick="addStickerToLetter('💕')">💕</span>
+              <span class="sticker" onclick="addStickerToLetter('🌹')">🌹</span>
+              <span class="sticker" onclick="addStickerToLetter('🐹')">🐹</span>
+              <span class="sticker" onclick="addStickerToLetter('🐱')">🐱</span>
+              <span class="sticker" onclick="addStickerToLetter('💖')">💖</span>
+              <span class="sticker" onclick="addStickerToLetter('🌟')">🌟</span>
+              <span class="sticker" onclick="addStickerToLetter('🎀')">🎀</span>
+              <span class="sticker" onclick="addStickerToLetter('😘')">😘</span>
+            </div>
+          </div>
+          <div class="love-letter-actions">
+            <button class="btn-primary" onclick="previewLoveLetter()">👁️ 预览</button>
+            <button class="btn-primary" onclick="saveLoveLetter()">💾 保存图片</button>
+          </div>
+        </div>
+        <div class="love-letter-preview hidden" id="love-letter-preview">
+          <div class="love-letter-paper" id="love-letter-paper">
+            <div class="letter-wax-seal">🔴</div>
+            <div class="letter-content" id="letter-content"></div>
+          </div>
+        </div>
+        <div class="love-letter-saved-list">
+          <h3>📁 已保存的情书</h3>
+          <div id="love-letter-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🎮 双人小游戏 ====== -->
+    <section id="page-games" class="page-section">
+      <div class="section-header">
+        <h2>🎮 双人小游戏</h2>
+        <p>异地也能一起玩的小游戏</p>
+      </div>
+      <div class="games-container">
+        <div class="games-menu">
+          <button class="game-menu-btn" onclick="startGame('tictactoe')">⭕ 井字棋</button>
+          <button class="game-menu-btn" onclick="startGame('gomoku')">⚫ 五子棋</button>
+          <button class="game-menu-btn" onclick="startGame('memory')">🃏 翻翻乐</button>
+        </div>
+        <div class="game-board hidden" id="game-board-wrap">
+          <div class="game-status" id="game-status">🐹 先手</div>
+          <canvas id="game-canvas"></canvas>
+          <div class="game-controls">
+            <button class="btn-secondary" onclick="resetGame()">🔄 重新开始</button>
+            <button class="btn-secondary" onclick="exitGame()">⬅️ 退出</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🧬 MBTI人格墙 ====== -->
+    <section id="page-mbti" class="page-section">
+      <div class="section-header">
+        <h2>🧬 MBTI 人格墙</h2>
+        <p>了解彼此，从性格密码开始</p>
+      </div>
+      <div class="mbti-container">
+        <div class="mbti-intro">
+          每个人格都是一颗独特的星星，当两颗星相遇，就是最美的星座。
+        </div>
+        <div class="mbti-dual">
+          <div class="mbti-card shushu-card" id="mbti-shushu-card">
+            <div class="mbti-card-header">
+              <span class="mbti-card-avatar">🐹</span>
+              <h3>鼠鼠的人格</h3>
+            </div>
+            <div class="mbti-type-display" id="shushu-mbti-display">
+              <div class="mbti-type-badge unset">未选择</div>
+              <p class="mbti-type-name" id="shushu-mbti-name">点击下方选择</p>
+              <p class="mbti-type-desc" id="shushu-mbti-desc"></p>
+              <div class="mbti-traits" id="shushu-mbti-traits"></div>
+            </div>
+          </div>
+          <div class="mbti-card bibi-card" id="mbti-bibi-card">
+            <div class="mbti-card-header">
+              <span class="mbti-card-avatar">🐱</span>
+              <h3>笔笔的人格</h3>
+            </div>
+            <div class="mbti-type-display" id="bibi-mbti-display">
+              <div class="mbti-type-badge unset">未选择</div>
+              <p class="mbti-type-name" id="bibi-mbti-name">点击下方选择</p>
+              <p class="mbti-type-desc" id="bibi-mbti-desc"></p>
+              <div class="mbti-traits" id="bibi-mbti-traits"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mbti-match" id="mbti-match" style="display:none">
+          <h3>💞 人格匹配度</h3>
+          <div class="mbti-match-score">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#333" stroke-width="6"/>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="url(#mbtiMatchGrad)" stroke-width="6" stroke-dasharray="339" stroke-dashoffset="339" id="mbti-match-ring" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+              <defs><linearGradient id="mbtiMatchGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs>
+            </svg>
+            <div class="mbti-match-text"><span id="mbti-match-pct">--</span><small>%</small></div>
+          </div>
+          <p class="mbti-match-desc" id="mbti-match-desc">选择双方人格后自动计算</p>
+          <div class="mbti-match-detail" id="mbti-match-detail"></div>
+        </div>
+        <div class="mbti-selector">
+          <h3>🎯 选择你的人格类型</h3>
+          <p id="mbti-select-hint">请先点击头像选择为谁设定人格</p>
+          <div class="mbti-select-btns">
+            <button class="mbti-select-user active" data-for="shushu" onclick="setMbtiTarget('shushu')">🐹 鼠鼠</button>
+            <button class="mbti-select-user" data-for="bibi" onclick="setMbtiTarget('bibi')">🐱 笔笔</button>
+          </div>
+          <div class="mbti-type-grid" id="mbti-type-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 🎵 音乐星球 ====== -->
+    <section id="page-music-planet" class="page-section">
+      <div class="section-header">
+        <h2>🎵 音乐星球</h2>
+        <p>在星际之间，聆听爱的频率</p>
+      </div>
+      <div class="music-planet-container">
+        <div class="music-cosmos" id="music-cosmos">
+          <canvas id="music-orbit-canvas"></canvas>
+          <div class="music-planet-glow" id="music-planet-glow"></div>
+          <div class="music-planet-core" id="music-planet-core">
+            <div class="music-planet-eq" id="music-planet-eq">
+              <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+              <div class="eq-bar"></div><div class="eq-bar"></div>
+            </div>
+          </div>
+          <div class="music-planet-rings">
+            <div class="music-ring r1"></div>
+            <div class="music-ring r2"></div>
+            <div class="music-ring r3"></div>
+          </div>
+        </div>
+        <div class="music-player-panel">
+          <div class="music-now-playing">
+            <div class="music-track-icon" id="music-track-icon">🌌</div>
+            <div class="music-track-info">
+              <h3 id="music-track-title">选择一首音乐开始</h3>
+              <p id="music-track-artist">点击下方歌单</p>
+            </div>
+          </div>
+          <div class="music-progress">
+            <div class="music-time" id="music-time-current">00:00</div>
+            <div class="music-progress-bar" id="music-progress-bar">
+              <div class="music-progress-fill" id="music-progress-fill"></div>
+              <div class="music-progress-thumb" id="music-progress-thumb"></div>
+            </div>
+            <div class="music-time" id="music-time-total">00:00</div>
+          </div>
+          <div class="music-controls">
+            <button class="music-ctrl-btn" onclick="musicPrev()" title="上一首">⏮️</button>
+            <button class="music-ctrl-btn music-ctrl-play" id="music-btn-play" onclick="musicTogglePlay()">▶️</button>
+            <button class="music-ctrl-btn" onclick="musicNext()" title="下一首">⏭️</button>
+            <button class="music-ctrl-btn" id="music-btn-download" onclick="musicDownload()" title="下载到桌面">💾</button>
+          </div>
+          <div class="music-extra-controls">
+            <div class="music-volume">
+              <span>🔈</span>
+              <input type="range" id="music-volume-slider" min="0" max="100" value="70" oninput="musicSetVolume(this.value)">
+              <span>🔊</span>
+            </div>
+            <div class="music-options">
+              <button class="music-opt-btn" id="music-btn-shuffle" onclick="musicToggleShuffle()">🔀 随机</button>
+              <button class="music-opt-btn" id="music-btn-repeat" onclick="musicToggleRepeat()">🔁 单曲循环</button>
+              <button class="music-opt-btn" id="music-btn-autoplay" onclick="musicToggleAutoplay()">🔄 自动播放</button>
+            </div>
+          </div>
+        </div>
+        <div class="music-playlist">
+          <h3>🎼 歌单 · 爱的频率</h3>
+          <div class="music-genre-tabs">
+            <button class="music-genre-tab active" onclick="musicFilterGenre('all')">全部</button>
+            <button class="music-genre-tab" onclick="musicFilterGenre('ambient')">🌌 星空氛围</button>
+            <button class="music-genre-tab" onclick="musicFilterGenre('piano')">🎹 舒缓钢琴</button>
+            <button class="music-genre-tab" onclick="musicFilterGenre('lofi')">☕ Lo-Fi 咖啡</button>
+            <button class="music-genre-tab" onclick="musicFilterGenre('nature')">🌿 自然之声</button>
+            <button class="music-genre-tab" onclick="musicFilterGenre('pop')">💫 元气流行</button>
+          </div>
+          <div class="music-track-list" id="music-track-list"></div>
+        </div>
+        <div class="music-upload-area">
+          <p>📁 也可以上传自己的音乐文件（MP3/WAV/OGG）</p>
+          <input type="file" id="music-upload-input" accept="audio/*" multiple style="display:none" onchange="handleMusicUpload(event)">
+          <button class="btn-secondary" onclick="document.getElementById('music-upload-input').click()">📤 上传音乐</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 板块XX：数据仪表盘 ====== -->
+    <section id="page-dashboard" class="page-section">
+      <div class="section-header">
+        <h2>📊 数据仪表盘</h2>
+        <p>一图看尽我们的恋爱生活</p>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-card">
+          <h3>💰 消费分类占比</h3>
+          <canvas id="dash-pie" width="300" height="300"></canvas>
+          <div class="dash-legend" id="dash-pie-legend"></div>
+        </div>
+        <div class="dash-card">
+          <h3>🔥 本月打卡热力图</h3>
+          <div class="dash-heatmap" id="dash-heatmap"></div>
+        </div>
+        <div class="dash-card">
+          <h3>💌 留言频率趋势（近30天）</h3>
+          <canvas id="dash-msg-chart" width="320" height="160"></canvas>
+        </div>
+        <div class="dash-card">
+          <h3>😊 心情变化曲线</h3>
+          <canvas id="dash-mood-chart" width="320" height="160"></canvas>
+        </div>
+        <div class="dash-card dash-summary">
+          <h3>📋 数据摘要</h3>
+          <div class="dash-stats" id="dash-stats"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== 板块YY：恋爱日记本 ====== -->
+    <section id="page-diary" class="page-section">
+      <div class="section-header">
+        <h2>📝 恋爱日记本</h2>
+        <p>记录每一个值得记住的瞬间</p>
+      </div>
+      <div class="diary-toolbar">
+        <button class="btn-primary" onclick="openDiaryEditor()">✏️ 写日记</button>
+        <input type="text" class="diary-search" id="diary-search" placeholder="🔍 搜索日记..." oninput="renderDiaryList()">
+      </div>
+      <div class="diary-list" id="diary-list"></div>
+    </section>
+
+  </main>
+
+  <!-- ====== 底部导航 ====== -->
+  <nav id="bottom-nav">
+    <button class="nav-item active" data-page="home" onclick="switchPage('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">首页</span>
+    </button>
+    <button class="nav-item" data-page="messages" onclick="switchPage('messages')">
+      <span class="nav-icon">💌</span>
+      <span class="nav-label">留言墙</span>
+    </button>
+    <button class="nav-item" data-page="albums" onclick="switchPage('albums')">
+      <span class="nav-icon">📸</span>
+      <span class="nav-label">相册</span>
+    </button>
+    <button class="nav-item" data-page="love-letter" onclick="switchPage('love-letter')">
+      <span class="nav-icon">💝</span>
+      <span class="nav-label">情书</span>
+    </button>
+    <button class="nav-item" data-page="epic" onclick="openEpicEntrance()">
+      <span class="nav-icon">🏆</span>
+      <span class="nav-label">史诗</span>
+    </button>
+    <button class="nav-item" data-page="finance" onclick="switchPage('finance')">
+      <span class="nav-icon">💰</span>
+      <span class="nav-label">台账</span>
+    </button>
+    <button class="nav-item" data-page="adventure-map" onclick="switchPage('adventure-map')">
+      <span class="nav-icon">📝</span>
+      <span class="nav-label">便利贴</span>
+    </button>
+    <button class="nav-item nav-more" onclick="toggleMoreMenu()">
+      <span class="nav-icon">📂</span>
+      <span class="nav-label">更多</span>
+    </button>
+  </nav>
+
+  <!-- 更多菜单弹出 -->
+  <div class="more-menu hidden" id="more-menu">
+    <button onclick="switchPage('plans'); toggleMoreMenu()">📋 约会计划表</button>
+    <button onclick="switchPage('countdowns'); toggleMoreMenu()">⏳ 纪念日倒计时</button>
+    <button onclick="switchPage('conventions'); toggleMoreMenu()">📜 公约档案库</button>
+    <button onclick="switchPage('vouchers'); toggleMoreMenu()">🎫 心愿兑换券</button>
+    <button onclick="switchPage('growth'); toggleMoreMenu()">🌱 成长打卡</button>
+    <button onclick="switchPage('daily-checkin'); toggleMoreMenu()">🌅 日常打卡</button>
+    <button onclick="switchPage('emergency'); toggleMoreMenu()">🆘 应急预案</button>
+    <button onclick="switchPage('yearly'); toggleMoreMenu()">📖 年度总结</button>
+    <hr>
+    <button onclick="switchPage('mood'); toggleMoreMenu()">🌤️ 情绪天气</button>
+    <button onclick="switchPage('blindbox'); toggleMoreMenu()">🎁 今日盲盒</button>
+    <button onclick="switchPage('quiz'); toggleMoreMenu()">🧩 默契考验</button>
+    <button onclick="switchPage('wishlist'); toggleMoreMenu()">✅ 愿望清单</button>
+    <button onclick="switchPage('fund-tree'); toggleMoreMenu()">💰 约会基金</button>
+    <button onclick="switchPage('achievements'); toggleMoreMenu()">🏆 成就勋章</button>
+    <button onclick="switchPage('museum'); toggleMoreMenu()">🤪 丑照博物馆</button>
+    <button onclick="switchPage('tarot'); toggleMoreMenu()">🔮 梦境塔罗</button>
+    <button onclick="switchPage('bagua'); toggleMoreMenu()">☯️ 八卦运势</button>
+    <button onclick="switchPage('dice'); toggleMoreMenu()">🎲 摇骰子</button>
+    <button onclick="switchPage('awards'); toggleMoreMenu()">🎉 年度颁奖</button>
+    <button onclick="switchPage('mbti'); toggleMoreMenu()">🧬 MBTI人格墙</button>
+    <button onclick="switchPage('music-planet'); toggleMoreMenu()">🎵 音乐星球</button>
+    <hr>
+    <button onclick="switchPage('wheel'); toggleMoreMenu()">🎡 幸运转盘</button>
+    <button onclick="switchPage('puzzle'); toggleMoreMenu()">🧩 照片拼图</button>
+    <button onclick="switchPage('footprint'); toggleMoreMenu()">📍 足迹地图</button>
+    <button onclick="switchPage('love-tree'); toggleMoreMenu()">💞 爱情树</button>
+    <button onclick="switchPage('challenge'); toggleMoreMenu()">🎯 30天挑战</button>
+    <button onclick="switchPage('love-letter'); toggleMoreMenu()">💌 情书设计器</button>
+    <button onclick="switchPage('games'); toggleMoreMenu()">🎮 双人小游戏</button>
+    <hr>
+    <button onclick="switchPage('dashboard'); toggleMoreMenu()">📊 数据仪表盘</button>
+    <button onclick="switchPage('diary'); toggleMoreMenu()">📝 恋爱日记本</button>
+  </div>
+
+  <!-- 公告弹窗 -->
+  <div class="modal-overlay hidden" id="announcement-modal">
+    <div class="modal-content announcement-modal">
+      <span class="modal-close" onclick="closeAnnouncementModal()">&times;</span>
+      <div id="announcement-content"></div>
+    </div>
+  </div>
+
+  <!-- 全局弹窗 -->
+  <div class="modal-overlay hidden" id="global-modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeGlobalModal()">&times;</span>
+      <div id="global-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- 照片上传隐藏控件 -->
+  <input type="file" id="photo-upload-input" accept="image/*" multiple style="position:absolute;width:0.1px;height:0.1px;opacity:0;overflow:hidden;z-index:-1" onchange="handlePhotoUpload(event)">
+
+  <!-- 全屏照片查看器 -->
+  <div class="photo-viewer hidden" id="photo-viewer">
+    <span class="photo-viewer-close" onclick="closePhotoViewer()">&times;</span>
+    <span class="photo-viewer-prev" onclick="photoViewerNav(-1)">&#10094;</span>
+    <span class="photo-viewer-next" onclick="photoViewerNav(1)">&#10095;</span>
+    <img id="photo-viewer-img" src="" alt="照片">
+    <div class="photo-viewer-actions">
+      <button class="btn-photo-delete" id="photo-viewer-delete" onclick="deleteCurrentPhoto()">🗑️ 删除</button>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- 📢 更新公告弹窗 -->
+<div class="changelog-overlay hidden" id="changelog-overlay" onclick="closeChangelog(event)">
+  <div class="changelog-modal">
+    <div class="changelog-header">
+      <h2>📢 更新公告</h2>
+      <button class="changelog-close" onclick="closeChangelog()">✕</button>
+    </div>
+    <div id="changelog-body">
+      <div class="cl-version">
+        <h3>🆕 v2.0 · 2026.06.28（大版本更新）</h3>
+        <ul>
+          <li class="cl-new">✅ 全面优化所有页面显示效果和CSS样式</li>
+          <li class="cl-new">✅ 修复按钮展开空白格子问题</li>
+          <li class="cl-new">✅ 优化游戏页面UI和交互（井字棋/五子棋/翻翻乐）</li>
+          <li class="cl-new">✅ 优化移动端显示效果和触控体验</li>
+          <li class="cl-new">✅ 添加更多动画效果提升用户体验</li>
+          <li class="cl-new">✅ 修复所有异常渲染问题</li>
+          <li class="cl-new">✅ 版本号全面升级到 v2.0</li>
+        </ul>
+      </div>
+      <div class="cl-version">
+        <h3>📦 v14 · 2026.06.25</h3>
+        <ul>
+          <li class="cl-new">✅ 新增 🎡 幸运转盘（决定神器！吃什么/去哪玩/惩罚转盘）</li>
+          <li class="cl-new">✅ 新增 🧩 照片拼图（选相册照片，3×3/4×4/5×5难度）</li>
+          <li class="cl-new">✅ 新增 📍 足迹地图（标记一起去过的城市，点亮地图）</li>
+          <li class="cl-new">✅ 新增 💞 爱情树（互动养成，从种子到开花）</li>
+          <li class="cl-new">✅ 新增 🎯 30天情侣挑战（30件小事打卡清单）</li>
+          <li class="cl-new">✅ 新增 💌 情书设计器（选模板+贴纸+保存图片）</li>
+          <li class="cl-new">✅ 新增 🎮 双人小游戏（井字棋/五子棋/翻翻乐）</li>
+        </ul>
+      </div>
+      <div class="cl-version">
+        <h3>📦 v13 · 2026.06.24</h3>
+        <ul>
+          <li class="cl-new">✅ 新增 📊 数据仪表盘（消费饼图+打卡热力图+消息折线）</li>
+          <li class="cl-new">✅ 新增 📝 恋爱日记本（时间线日记+心情+天气+搜索）</li>
+          <li class="cl-new">✅ 新增 ⏰ 纪念日通知（浏览器推送，提前1天提醒）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 四季粒子层 -->
+<div class="season-particles" id="season-particles"></div>
+
+<!-- 二十四节气全屏动画（位于body顶层，不受#app影响） -->
+<div id="solar-term-overlay" class="hidden">
+  <canvas id="solar-term-canvas"></canvas>
+  <div class="solar-term-stage">
+    <div class="solar-term-3d" id="solar-term-text">夏至</div>
+    <div class="solar-term-sub" id="solar-term-sub">Summer Solstice</div>
+    <div class="solar-term-desc" id="solar-term-desc">日长之至，万物繁茂</div>
+  </div>
+</div>
+
+<!-- Supabase SDK (开源BaaS，国内可访问，实时同步) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+// 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
+const _CB = '10.0';
+/* config.js removed - v5 auto-detects */
+document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/app-main-v9.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/realtime-sync-v6.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/app-modules-v15.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/memory-mirror-v10.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/v10-init.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
+</script>
+<!-- 情侣账本模块 v2.0 -->
+<section id="finance-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">💰</span>
+    <h2>情侣账本</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="finance-container" style="padding:20px;">
+    <!-- 统计卡片 -->
+    <div class="finance-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;">
+      <div class="stat-card" style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:16px;border-radius:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:bold;" id="finance-total">¥0</div>
+        <div style="font-size:12px;opacity:0.9;">本月总开销</div>
+      </div>
+      <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;padding:16px;border-radius:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:bold;" id="finance-avg">¥0</div>
+        <div style="font-size:12px;opacity:0.9;">人均花费</div>
+      </div>
+      <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;padding:16px;border-radius:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:bold;" id="finance-count">0</div>
+        <div style="font-size:12px;opacity:0.9;">账单数量</div>
+      </div>
+    </div>
+
+    <!-- 添加账单按钮 -->
+    <button onclick="showAddBillModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ➕ 记一笔
+    </button>
+
+    <!-- 账单列表 -->
+    <div id="finance-list" style="margin-top:20px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+// 情侣账本功能
+(function() {
+  'use strict';
+
+  var BILLS_KEY = 'couple_finance_bills';
+
+  // 获取所有账单
+  function getBills() {
+    return JSON.parse(localStorage.getItem(BILLS_KEY) || '[]');
+  }
+
+  // 保存账单
+  function saveBills(bills) {
+    localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
+  }
+
+  // 显示添加账单弹窗
+  window.showAddBillModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">📝 记一笔账</h3>' +
+      '<input type="text" id="bill-title" placeholder="备注（如：奶茶、电影票）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:10px;box-sizing:border-box;">' +
+      '<input type="number" id="bill-amount" placeholder="金额（元）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:10px;box-sizing:border-box;">' +
+      '<select id="bill-type" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:10px;box-sizing:border-box;">' +
+      '  <option value="food">🍕 餐饮</option>' +
+      '  <option value="movie">🎬 娱乐</option>' +
+      '  <option value="gift">🎁 礼物</option>' +
+      '  <option value="travel">✈️ 旅行</option>' +
+      '  <option value="other">📦 其他</option>' +
+      '</select>' +
+      '<select id="bill-mode" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:15px;box-sizing:border-box;">' +
+      '  <option value="aa">AA分摊</option>' +
+      '  <option value="treat">我请客</option>' +
+      '  <option value="other_treat">对方请客</option>' +
+      '</select>' +
+      '<button onclick="window.saveBill()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') {
+      showGlobalModal(html);
+    } else {
+      alert('请刷新页面！');
+    }
+  };
+
+  // 保存账单
+  window.saveBill = function() {
+    var title = document.getElementById('bill-title').value.trim();
+    var amount = parseFloat(document.getElementById('bill-amount').value);
+    var type = document.getElementById('bill-type').value;
+    var mode = document.getElementById('bill-mode').value;
+
+    if (!title || !amount) {
+      alert('请填写完整信息！');
+      return;
+    }
+
+    var bills = getBills();
+    bills.push({
+      id: 'bill_' + Date.now(),
+      title: title,
+      amount: amount,
+      type: type,
+      mode: mode,
+      payer: mode === 'treat' ? '我' : (mode === 'other_treat' ? '对方' : 'AA'),
+      date: new Date().toISOString(),
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveBills(bills);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 账单已保存！');
+    renderBills();
+  };
+
+  // 渲染账单列表
+  window.renderBills = function() {
+    var bills = getBills();
+    var listEl = document.getElementById('finance-list');
+    if (!listEl) return;
+
+    if (bills.length === 0) {
+      listEl.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">还没有账单记录～</p>';
+      return;
+    }
+
+    // 按日期倒序
+    bills.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    // 统计
+    var total = bills.reduce(function(sum, b) { return sum + b.amount; }, 0);
+    var avg = total / 2;
+
+    document.getElementById('finance-total').textContent = '¥' + total.toFixed(2);
+    document.getElementById('finance-avg').textContent = '¥' + avg.toFixed(2);
+    document.getElementById('finance-count').textContent = bills.length;
+
+    // 列表
+    var html = '';
+    bills.forEach(function(b) {
+      var typeIcons = { food: '🍕', movie: '🎬', gift: '🎁', travel: '✈️', other: '📦' };
+      html +=
+        '<div style="background:white;border-radius:16px;padding:16px;margin-bottom:10px;border-left:4px solid #3b82f6;box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '    <span style="font-size:24px;">' + (typeIcons[b.type] || '📦') + '</span>' +
+        '    <span style="font-size:18px;font-weight:bold;color:#3b82f6;">¥' + b.amount.toFixed(2) + '</span>' +
+        '  </div>' +
+        '  <div style="margin-top:8px;color:#444;font-size:14px;">' + b.title + '</div>' +
+        '  <div style="margin-top:6px;font-size:11px;color:#999;">' + b.createdAt + ' · ' + (b.mode === 'aa' ? 'AA分摊' : b.mode === 'treat' ? '我请客' : '对方请客') + '</div>' +
+        '</div>';
+    });
+
+    listEl.innerHTML = html;
+  };
+
+  console.log('[Finance] ✅ 情侣账本功能已加载');
+
+  // 页面加载后渲染
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      renderBills();
+    });
+  } else {
+    renderBills();
+  }
+
+})();
+</script>
+<!-- 愿望清单模块 v2.0 -->
+<section id="wishlist-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">🌟</span>
+    <h2>愿望清单</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="wishlist-container" style="padding:20px;">
+    <button onclick="showAddWishModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ✨ 添加愿望
+    </button>
+
+    <div id="wishlist-grid" style="display:grid;gap:12px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var WISHES_KEY = 'couple_wishes';
+
+  function getWishes() {
+    return JSON.parse(localStorage.getItem(WISHES_KEY) || '[]');
+  }
+
+  function saveWishes(wishes) {
+    localStorage.setItem(WISHES_KEY, JSON.stringify(wishes));
+  }
+
+  window.showAddWishModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3>✨ 添加愿望</h3>' +
+      '<input type="text" id="wish-title" placeholder="愿望内容（如：一起看海）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #a78bfa;margin:10px 0;box-sizing:border-box;">' +
+      '<select id="wish-type" style="width:100%;padding:12px;border-radius:12px;border:2px solid #a78bfa;margin:10px 0;box-sizing:border-box;">' +
+      '  <option value="couple">💑 共同愿望</option>' +
+      '  <option value="mine">💭 我的心愿</option>' +
+      '  <option value="yours">💝 给你的惊喜</option>' +
+      '</select>' +
+      '<button onclick="window.saveWish()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveWish = function() {
+    var title = document.getElementById('wish-title').value.trim();
+    var type = document.getElementById('wish-type').value;
+
+    if (!title) { alert('请输入愿望内容！'); return; }
+
+    var wishes = getWishes();
+    wishes.push({
+      id: 'wish_' + Date.now(),
+      title: title,
+      type: type,
+      completed: false,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveWishes(wishes);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 愿望已添加！');
+    renderWishes();
+  };
+
+  window.renderWishes = function() {
+    var wishes = getWishes();
+    var grid = document.getElementById('wishlist-grid');
+    if (!grid) return;
+
+    if (wishes.length === 0) {
+      grid.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">还没有愿望～</p>';
+      return;
+    }
+
+    var html = '';
+    wishes.forEach(function(w, i) {
+      var typeIcons = { couple: '💑', mine: '💭', yours: '💝' };
+      html +=
+        '<div style="background:' + (w.completed ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : 'white') + ';border-radius:16px;padding:16px;border-left:4px solid ' + (w.completed ? '#10b981' : '#3b82f6') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);display:flex;align-items:center;gap:12px;">' +
+        '  <input type="checkbox" ' + (w.completed ? 'checked' : '') + ' onchange="window.toggleWish(' + i + ')" style="width:20px;height:20px;">' +
+        '  <div style="flex:1;">' +
+        '    <div style="font-size:16px;' + (w.completed ? 'text-decoration:line-through;color:#9ca3af;' : 'color:#444') + ';">' + (typeIcons[w.type] || '💭') + ' ' + w.title + '</div>' +
+        '    <div style="font-size:11px;color:#999;margin-top:4px;">' + w.createdAt + '</div>' +
+        '  </div>' +
+        '  <button onclick="window.deleteWish(' + i + ')" style="background:none;border:none;font-size:18px;cursor:pointer;">🗑️</button>' +
+        '</div>';
+    });
+
+    grid.innerHTML = html;
+  };
+
+  window.toggleWish = function(idx) {
+    var wishes = getWishes();
+    wishes[idx].completed = !wishes[idx].completed;
+    saveWishes(wishes);
+    renderWishes();
+  };
+
+  window.deleteWish = function(idx) {
+    if (!confirm('确定删除这个愿望？')) return;
+    var wishes = getWishes();
+    wishes.splice(idx, 1);
+    saveWishes(wishes);
+    renderWishes();
+  };
+
+  console.log('[Wishlist] ✅ 愿望清单功能已加载');
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderWishes);
+  } else {
+    renderWishes();
+  }
+})();
+</script>
+<!-- 恋爱日记模块 v2.0 -->
+<section id="diary-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">📔</span>
+    <h2>恋爱日记</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="diary-container" style="padding:20px;">
+    <button onclick="showAddDiaryModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ✍️ 写日记
+    </button>
+
+    <div id="diary-list" style="margin-top:20px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var DIARY_KEY = 'couple_diary';
+
+  function getDiary() {
+    return JSON.parse(localStorage.getItem(DIARY_KEY) || '[]');
+  }
+
+  function saveDiary(diary) {
+    localStorage.setItem(DIARY_KEY, JSON.stringify(diary));
+  }
+
+  window.showAddDiaryModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3>✍️ 写日记</h3>' +
+      '<textarea id="diary-content" placeholder="今天想对TA说什么..." style="width:100%;height:150px;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin:10px 0;box-sizing:border-box;resize:vertical;"></textarea>' +
+      '<input type="text" id="diary-mood" placeholder="心情（如：😊开心、😭感动）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin:10px 0;box-sizing:border-box;">' +
+      '<button onclick="window.saveDiaryEntry()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveDiaryEntry = function() {
+    var content = document.getElementById('diary-content').value.trim();
+    var mood = document.getElementById('diary-mood').value.trim();
+
+    if (!content) { alert('请输入日记内容！'); return; }
+
+    var diary = getDiary();
+    diary.push({
+      id: 'diary_' + Date.now(),
+      content: content,
+      mood: mood || '😊',
+      date: new Date().toISOString(),
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveDiary(diary);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 日记已保存！');
+    renderDiary();
+  };
+
+  window.renderDiary = function() {
+    var diary = getDiary();
+    var list = document.getElementById('diary-list');
+    if (!list) return;
+
+    if (diary.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">还没有日记～</p>';
+      return;
+    }
+
+    diary.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    var html = '';
+    diary.forEach(function(d, i) {
+      html +=
+        '<div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid #3b82f6;box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:20px;">' + d.mood + '</span>' +
+        '    <span style="font-size:11px;color:#999;">' + d.createdAt + '</span>' +
+        '  </div>' +
+        '  <div style="color:#444;font-size:14px;line-height:1.8;white-space:pre-wrap;">' + d.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+  };
+
+  console.log('[Diary] ✅ 恋爱日记功能已加载');
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderDiary);
+  } else {
+    renderDiary();
+  }
+})();
+</script>
+<!-- 时光胶囊模块 v2.0 -->
+<section id="capsule-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">💊</span>
+    <h2>时光胶囊</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="capsule-container" style="padding:20px;">
+    <button onclick="showAddCapsuleModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      💊 投放时光胶囊
+    </button>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div onclick="renderCapsules('pending')" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);color:white;padding:16px;border-radius:16px;text-align:center;cursor:pointer;">
+        <div style="font-size:24px;">⏳</div>
+        <div style="font-size:12px;margin-top:4px;">等待开启</div>
+      </div>
+      <div onclick="renderCapsules('opened')" style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:16px;border-radius:16px;text-align:center;cursor:pointer;">
+        <div style="font-size:24px;">🎉</div>
+        <div style="font-size:12px;margin-top:4px;">已开启</div>
+      </div>
+    </div>
+
+    <div id="capsule-list"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var CAPSULES_KEY = 'couple_capsules';
+
+  function getCapsules() {
+    return JSON.parse(localStorage.getItem(CAPSULES_KEY) || '[]');
+  }
+
+  function saveCapsules(capsules) {
+    localStorage.setItem(CAPSULES_KEY, JSON.stringify(capsules));
+  }
+
+  window.showAddCapsuleModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3>💊 投放时光胶囊</h3>' +
+      '<textarea id="capsule-message" placeholder="写给未来的我们..." style="width:100%;height:120px;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin:10px 0;box-sizing:border-box;resize:vertical;"></textarea>' +
+      '<select id="capsule-type" style="width:100%;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin:10px 0;box-sizing:border-box;">' +
+      '  <option value="7days">⏰ 7天后开启</option>' +
+      '  <option value="30days">📅 30天后开启</option>' +
+      '  <option value="anniversary">💝 纪念日开启</option>' +
+      '  <option value="1year">🌟 一年后开启</option>' +
+      '</select>' +
+      '<button onclick="window.saveCapsule()" style="width:100%;padding:12px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">💊 投放</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveCapsule = function() {
+    var msg = document.getElementById('capsule-message').value.trim();
+    var type = document.getElementById('capsule-type').value;
+
+    if (!msg) { alert('请输入内容！'); return; }
+
+    var openDate = new Date();
+    switch(type) {
+      case '7days': openDate.setDate(openDate.getDate() + 7); break;
+      case '30days': openDate.setDate(openDate.getDate() + 30); break;
+      case 'anniversary': openDate = new Date(openDate.getFullYear() + 1, 5, 23); break; // 明年6月23日
+      case '1year': openDate.setFullYear(openDate.getFullYear() + 1); break;
+    }
+
+    var capsules = getCapsules();
+    capsules.push({
+      id: 'capsule_' + Date.now(),
+      message: msg,
+      type: type,
+      openDate: openDate.toISOString(),
+      opened: false,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveCapsules(capsules);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('💊 时光胶囊已投放！\n将在 ' + openDate.toLocaleDateString('zh-CN') + ' 开启');
+    renderCapsules('pending');
+  };
+
+  window.renderCapsules = function(filter) {
+    var capsules = getCapsules();
+    var list = document.getElementById('capsule-list');
+    if (!list) return;
+
+    var now = new Date();
+    var filtered = capsules.filter(function(c) {
+      if (filter === 'pending') return !c.opened && new Date(c.openDate) > now;
+      if (filter === 'opened') return c.opened || new Date(c.openDate) <= now;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">暂无胶囊</p>';
+      return;
+    }
+
+    var html = '';
+    filtered.forEach(function(c, i) {
+      var canOpen = !c.opened && new Date(c.openDate) <= now;
+      html +=
+        '<div style="background:' + (c.opened ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : 'linear-gradient(135deg,#dbeafe,#fde68a)') + ';border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid ' + (c.opened ? '#10b981' : '#f59e0b') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:20px;">' + (c.opened ? '🎉' : '⏳') + '</span>' +
+        '    <span style="font-size:11px;color:#666;">' + (canOpen ? '可开启！' : '开启时间: ' + new Date(c.openDate).toLocaleDateString('zh-CN')) + '</span>' +
+        '  </div>' +
+        (c.opened ?
+          '<div style="color:#444;font-size:14px;line-height:1.8;white-space:pre-wrap;">' + c.message.replace(/</g,'&lt;') + '</div>' :
+          (canOpen ?
+            '<button onclick="window.openCapsule(' + capsules.indexOf(c) + ')" style="width:100%;padding:10px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;cursor:pointer;font-size:14px;">🎉 开启胶囊</button>' :
+            '<div style="color:#999;font-size:13px;text-align:center;padding:10px;">⏳ 等待中...</div>'
+          )
+        ) +
+        '  <div style="font-size:11px;color:#999;margin-top:8px;">投放于: ' + c.createdAt + '</div>' +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+  };
+
+  window.openCapsule = function(idx) {
+    var capsules = getCapsules();
+    capsules[idx].opened = true;
+    saveCapsules(capsules);
+    alert('🎉 时光胶囊已开启！\n\n' + capsules[idx].message);
+    renderCapsules('opened');
+  };
+
+  console.log('[Capsule] ✅ 时光胶囊功能已加载');
+  renderCapsules('pending');
+
+})();
+</script>
+<!-- 双头像在线状态指示灯 v4.0 — 云端唯一真值 -->
+<div id="online-status-popup" style="display:none;position:fixed;top:60px;right:16px;z-index:10000;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);padding:16px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);min-width:220px;border:1px solid rgba(0,0,0,0.06);font-size:13px;">
+  <div style="text-align:center;">
+    <div id="os-popup-icon" style="font-size:40px;">💕</div>
+    <div id="os-popup-text" style="margin:4px 0;font-size:14px;color:#333;">等待对方上线...</div>
+    <div id="os-popup-detail" style="font-size:11px;color:#999;"></div>
+  </div>
+</div>
+
+<style>
+/* 双大圆球在线状态指示灯 — 实时 WebSocket 推送 + DO 三态 */
+.online-status-row { display:flex; align-items:center; gap:18px; margin-right:10px; }
+.user-status { display:flex; align-items:center; gap:6px; }
+.user-status .nick-tag { font-size:11px; font-weight:600; color:#555; white-space:nowrap; }
+.big-status-circle {
+  width:26px; height:26px; border-radius:50%; display:inline-block; flex-shrink:0;
+  background:#4a5565; /* 离线=深灰黑色 */
+  transition: background 0.4s, box-shadow 0.4s, transform 0.15s;
+  box-shadow: none;
+}
+/* 在线=绿色发光大圆球 */
+.big-status-circle.online {
+  background:#22c55e;
+  box-shadow: 0 0 12px rgba(34,197,94,0.7), 0 0 24px rgba(34,197,94,0.35), 0 0 40px rgba(34,197,94,0.15);
+  animation: bigCirclePulse 1.8s infinite ease-in-out;
+}
+/* 离线=黑色 */
+.big-status-circle.offline {
+  background:#4a5565;
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.3);
+  animation: none;
+}
+.circle-info { font-size:11px; color:#666; white-space:nowrap; line-height:1; min-width:68px; }
+
+/* 离开/DO休眠=黄色呼吸脉冲 */
+.big-status-circle.idle {
+  background:#f59e0b;
+  box-shadow: 0 0 10px rgba(245,158,11,0.6), 0 0 20px rgba(245,158,11,0.25);
+  animation: idleBreathe 1.5s infinite ease-in-out;
+}
+@keyframes idleBreathe {
+  0%, 100% { box-shadow: 0 0 10px rgba(245,158,11,0.6), 0 0 20px rgba(245,158,11,0.25); transform: scale(1); }
+  40% { box-shadow: 0 0 18px rgba(245,158,11,0.85), 0 0 32px rgba(245,158,11,0.4); transform: scale(1.06); }
+  80% { box-shadow: 0 0 6px rgba(245,158,11,0.3), 0 0 12px rgba(245,158,11,0.12); transform: scale(0.98); }
+}
+
+@keyframes bigCirclePulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(34,197,94,0.7), 0 0 24px rgba(34,197,94,0.35), 0 0 40px rgba(34,197,94,0.15); }
+  40% { box-shadow: 0 0 20px rgba(34,197,94,1), 0 0 38px rgba(34,197,94,0.55), 0 0 55px rgba(34,197,94,0.25); }
+  70% { box-shadow: 0 0 8px rgba(34,197,94,0.4), 0 0 16px rgba(34,197,94,0.2), 0 0 28px rgba(34,197,94,0.08); }
+}
+
+/* 伴侣上线闪烁 — 整个球 scale + 发光爆发 */
+@keyframes partnerFlash {
+  0% { transform: scale(1); opacity: 1; box-shadow: 0 0 12px rgba(34,197,94,0.7), 0 0 24px rgba(34,197,94,0.35); }
+  15% { transform: scale(1.3); opacity: 0.6; box-shadow: 0 0 28px rgba(34,197,94,1), 0 0 50px rgba(34,197,94,0.7); }
+  30% { transform: scale(1); opacity: 1; box-shadow: 0 0 12px rgba(34,197,94,0.7), 0 0 24px rgba(34,197,94,0.35); }
+  45% { transform: scale(1.3); opacity: 0.6; box-shadow: 0 0 28px rgba(34,197,94,1), 0 0 50px rgba(34,197,94,0.7); }
+  60% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.user-status.flash .big-status-circle { animation: partnerFlash 0.6s infinite ease-in-out !important; }
+</style>
+
+<script>
+// switchAccount & mini-avatars 已移除（顶栏仅保留在线状态指示灯）
+</script>
+
+
+
+<!-- 成就系统 v2.0 -->
+<section id="achievements-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">🏆</span>
+    <h2>成就图鉴</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="achievements-container" style="padding:20px;">
+    <div id="achievements-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;">
+      <p style="text-align:center;color:#9ca3af;padding:40px;grid-column:1/-1;">加载中...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var ACHIEVEMENTS_KEY = 'couple_achievements';
+
+  var ALL_ACHIEVEMENTS = [
+    { id: 'first_bill', name: '记账新手', desc: '记录第一笔账单', icon: '💰', condition: function() { return JSON.parse(localStorage.getItem('couple_finance_bills') || '[]').length >= 1; } },
+    { id: 'first_wish', name: '许愿者', desc: '添加第一个愿望', icon: '🌟', condition: function() { return JSON.parse(localStorage.getItem('couple_wishes') || '[]').length >= 1; } },
+    { id: 'first_diary', name: '日记作者', desc: '写第一篇日记', icon: '📔', condition: function() { return JSON.parse(localStorage.getItem('couple_diary') || '[]').length >= 1; } },
+    { id: '10_bills', name: '记账达人', desc: '记录10笔账单', icon: '📊', condition: function() { return JSON.parse(localStorage.getItem('couple_finance_bills') || '[]').length >= 10; } },
+    { id: '5_wishes', name: '愿望收藏家', desc: '添加5个愿望', icon: '✨', condition: function() { return JSON.parse(localStorage.getItem('couple_wishes') || '[]').length >= 5; } },
+    { id: '10_diary', name: '日记大师', desc: '写10篇日记', icon: '📖', condition: function() { return JSON.parse(localStorage.getItem('couple_diary') || '[]').length >= 10; } },
+    { id: 'complete_wish', name: '愿望成真', desc: '完成第一个愿望', icon: '🎉', condition: function() { return JSON.parse(localStorage.getItem('couple_wishes') || '[]').some(function(w) { return w.completed; }); } },
+    { id: 'first_capsule', name: '时光信使', desc: '投放第一个时光胶囊', icon: '💊', condition: function() { return JSON.parse(localStorage.getItem('couple_capsules') || '[]').length >= 1; } },
+  ];
+
+  function getUnlocked() {
+    return JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY) || '[]');
+  }
+
+  function unlockAchievement(id) {
+    var unlocked = getUnlocked();
+    if (unlocked.indexOf(id) === -1) {
+      unlocked.push(id);
+      localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(unlocked));
+      return true;
+    }
+    return false;
+  }
+
+  function checkAchievements() {
+    ALL_ACHIEVEMENTS.forEach(function(a) {
+      if (a.condition() && unlockAchievement(a.id)) {
+        alert('🎉 解锁成就：' + a.icon + ' ' + a.name + '\n' + a.desc);
+      }
+    });
+  }
+
+  window.renderAchievements = function() {
+    var unlocked = getUnlocked();
+    var grid = document.getElementById('achievements-grid');
+    if (!grid) return;
+
+    var html = '';
+    ALL_ACHIEVEMENTS.forEach(function(a) {
+      var isUnlocked = unlocked.indexOf(a.id) !== -1;
+      html +=
+        '<div style="background:' + (isUnlocked ? 'linear-gradient(135deg,#dbeafe,#fde68a)' : '#f3f4f6') + ';border-radius:16px;padding:16px;text-align:center;border:2px solid ' + (isUnlocked ? '#f59e0b' : '#e5e7eb') + ';opacity:' + (isUnlocked ? '1' : '0.5') + ';">' +
+        '  <div style="font-size:40px;margin-bottom:8px;filter:' + (isUnlocked ? 'none' : 'grayscale(100%)') + ';">' + a.icon + '</div>' +
+        '  <div style="font-size:14px;font-weight:600;color:' + (isUnlocked ? '#92400e' : '#9ca3af') + ';">' + a.name + '</div>' +
+        '  <div style="font-size:11px;color:#9ca3af;margin-top:4px;">' + a.desc + '</div>' +
+        '  ' + (isUnlocked ? '<div style="margin-top:8px;font-size:11px;color:#10b981;">✅ 已解锁</div>' : '') +
+        '</div>';
+    });
+
+    grid.innerHTML = html;
+
+    // 检查并解锁新成就
+    checkAchievements();
+  };
+
+  console.log('[Achievements] ✅ 成就系统已加载');
+
+  // 每分钟检查一次成就
+  setInterval(checkAchievements, 60000);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderAchievements);
+  } else {
+    renderAchievements();
+  }
+})();
+</script>
+<!-- 小纸条模块 v2.0 -->
+<section id="notes-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">📝</span>
+    <h2>小纸条</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="notes-container" style="padding:20px;">
+    <!-- 标签页切换 -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+      <button onclick="switchNotesTab('inbox')" id="notes-tab-inbox" style="flex:1;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;font-weight:600;cursor:pointer;">📥 收件箱</button>
+      <button onclick="switchNotesTab('outbox')" id="notes-tab-outbox" style="flex:1;padding:12px;border:2px solid #3b82f6;border-radius:12px;background:white;color:#3b82f6;font-weight:600;cursor:pointer;">📤 发件箱</button>
+    </div>
+
+    <!-- 写纸条按钮 -->
+    <button onclick="showAddNoteModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      ✍️ 写小纸条
+    </button>
+
+    <!-- 内容区 -->
+    <div id="notes-content"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var NOTES_KEY = 'couple_notes';
+
+  function getNotes() {
+    return JSON.parse(localStorage.getItem(NOTES_KEY) || '[]');
+  }
+
+  function saveNotes(notes) {
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  }
+
+  var currentTab = 'inbox';
+
+  window.switchNotesTab = function(tab) {
+    currentTab = tab;
+    var inboxBtn = document.getElementById('notes-tab-inbox');
+    var outboxBtn = document.getElementById('notes-tab-outbox');
+
+    if (tab === 'inbox') {
+      inboxBtn.style.background = 'linear-gradient(135deg,#3b82f6,#ef4444)';
+      inboxBtn.style.color = 'white';
+      outboxBtn.style.background = 'white';
+      outboxBtn.style.color = '#3b82f6';
+    } else {
+      outboxBtn.style.background = 'linear-gradient(135deg,#3b82f6,#ef4444)';
+      outboxBtn.style.color = 'white';
+      inboxBtn.style.background = 'white';
+      inboxBtn.style.color = '#3b82f6';
+    }
+
+    renderNotes();
+  };
+
+  window.showAddNoteModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">✍️ 写小纸条</h3>' +
+      '<textarea id="note-content" placeholder="写下你想说的话..." style="width:100%;height:150px;padding:12px;border-radius:12px;border:2px solid #a78bfa;margin-bottom:12px;box-sizing:border-box;resize:vertical;font-size:14px;"></textarea>' +
+      '<div style="margin-bottom:12px;">' +
+      '  <label style="font-size:13px;color:#666;">选择表情：</label>' +
+      '  <div style="display:flex;gap:8px;margin-top:6px;">' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'💌\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">💌</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'😊\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">😊</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'🥰\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">🥰</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'🎁\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">🎁</button>' +
+      '    <button onclick="document.getElementById(\'note-icon\').value=\'💕\'" style="font-size:24px;padding:8px;border:2px solid #e5e7eb;border-radius:8px;background:white;cursor:pointer;">💕</button>' +
+      '  </div>' +
+      '</div>' +
+      '<input type="hidden" id="note-icon" value="💌">' +
+      '<button onclick="window.saveNote()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 发送</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') {
+      showGlobalModal(html);
+    } else {
+      alert('请刷新页面！');
+    }
+  };
+
+  window.saveNote = function() {
+    var content = document.getElementById('note-content').value.trim();
+    var icon = document.getElementById('note-icon').value;
+
+    if (!content) {
+      alert('请输入内容！');
+      return;
+    }
+
+    var notes = getNotes();
+    notes.push({
+      id: 'note_' + Date.now(),
+      content: content,
+      icon: icon,
+      from: '我',
+      to: '你',
+      read: false,
+      date: new Date().toISOString(),
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveNotes(notes);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 小纸条已发送！');
+    switchNotesTab('outbox');
+  };
+
+  window.renderNotes = function() {
+    var notes = getNotes();
+    var content = document.getElementById('notes-content');
+    if (!content) return;
+
+    var filtered = currentTab === 'inbox' ?
+      notes.filter(function(n) { return n.to === '我' || n.to === '你'; }) :
+      notes.filter(function(n) { return n.from === '我'; });
+
+    if (filtered.length === 0) {
+      content.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">' + (currentTab === 'inbox' ? '📭 收件箱为空' : '📭 发件箱为空') + '</p>';
+      return;
+    }
+
+    // 按时间倒序
+    filtered.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+    var html = '';
+    filtered.forEach(function(n, i) {
+      var isUnread = currentTab === 'inbox' && !n.read;
+      html +=
+        '<div style="background:' + (isUnread ? 'linear-gradient(135deg,#dbeafe,#fde68a)' : 'white') + ';border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid ' + (isUnread ? '#f59e0b' : '#3b82f6') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:24px;">' + n.icon + '</span>' +
+        '    <span style="font-size:11px;color:#999;">' + n.createdAt + '</span>' +
+        '  </div>' +
+        '  <div style="color:#444;font-size:14px;line-height:1.8;white-space:pre-wrap;margin-bottom:8px;">' + n.content.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '    <span style="font-size:11px;color:#9ca3af;">' + (currentTab === 'inbox' ? '来自: ' + n.from : '发送给: ' + n.to) + '</span>' +
+        '    <div style="display:flex;gap:8px;">' +
+        '      <button onclick="window.editNote(' + notes.indexOf(n) + ')" style="background:none;border:none;font-size:16px;cursor:pointer;" title="编辑">✏️</button>' +
+        '      <button onclick="window.deleteNote(' + notes.indexOf(n) + ')" style="background:none;border:none;font-size:16px;cursor:pointer;" title="删除">🗑️</button>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+
+      // 标记为已读
+      if (isUnread) {
+        n.read = true;
+      }
+    });
+
+    saveNotes(notes);
+    content.innerHTML = html;
+  };
+
+  window.editNote = function(idx) {
+    var notes = getNotes();
+    var note = notes[idx];
+    if (!note) return;
+
+    var newContent = prompt('编辑小纸条：', note.content);
+    if (newContent !== null && newContent.trim()) {
+      note.content = newContent.trim();
+      saveNotes(notes);
+      renderNotes();
+    }
+  };
+
+  window.deleteNote = function(idx) {
+    if (!confirm('确定删除这条小纸条？')) return;
+    var notes = getNotes();
+    notes.splice(idx, 1);
+    saveNotes(notes);
+    renderNotes();
+  };
+
+  // 标记为已读
+  window.markAllRead = function() {
+    var notes = getNotes();
+    notes.forEach(function(n) {
+      if (n.to === '我') n.read = true;
+    });
+    saveNotes(notes);
+    renderNotes();
+    alert('✅ 已全部标记为已读');
+  };
+
+  console.log('[Notes] ✅ 小纸条功能已加载');
+
+  // 自动渲染
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      renderNotes();
+    });
+  } else {
+    setTimeout(renderNotes, 500);
+  }
+
+})();
+</script>
+<!-- 情书邮局模块 v2.0 -->
+<section id="loveletter-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">💌</span>
+    <h2>情书邮局</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="loveletter-container" style="padding:20px;">
+    <button onclick="showAddLoveLetterModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:20px;">
+      💌 写情书
+    </button>
+
+    <div id="scheduled-letters" style="margin-bottom:20px;">
+      <h3 style="font-size:16px;color:#3b82f6;margin-bottom:12px;">📅 定时情书</h3>
+      <div id="scheduled-list"></div>
+    </div>
+
+    <div id="sent-letters">
+      <h3 style="font-size:16px;color:#3b82f6;margin-bottom:12px;">📤 已发送</h3>
+      <div id="sent-list"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var LETTERS_KEY = 'couple_loveletters';
+
+  function getLetters() {
+    return JSON.parse(localStorage.getItem(LETTERS_KEY) || '[]');
+  }
+
+  function saveLetters(letters) {
+    localStorage.setItem(LETTERS_KEY, JSON.stringify(letters));
+  }
+
+  window.showAddLoveLetterModal = function() {
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">💌 写情书</h3>' +
+      '<textarea id="letter-content" placeholder="写下你的情书..." style="width:100%;height:150px;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-bottom:12px;box-sizing:border-box;resize:vertical;font-size:14px;"></textarea>' +
+      '<div style="margin-bottom:12px;">' +
+      '  <label style="font-size:13px;color:#666;">定时发送（可选）：</label>' +
+      '  <input type="datetime-local" id="letter-schedule" style="width:100%;padding:12px;border-radius:12px;border:2px solid #93c5fd;margin-top:6px;box-sizing:border-box;">' +
+      '</div>' +
+      '<div style="margin-bottom:15px;">' +
+      '  <label style="font-size:13px;color:#666;">选择背景：</label>' +
+      '  <div style="display:flex;gap:8px;margin-top:6px;">' +
+      '    <button onclick="document.getElementById(\'letter-bg\').value=\'blue\'" style="flex:1;padding:8px;border:2px solid #93c5fd;border-radius:8px;background:linear-gradient(135deg,#eff6ff,#dbeafe);cursor:pointer;font-size:12px;">💙 蓝色</button>' +
+      '    <button onclick="document.getElementById(\'letter-bg\').value=\'purple\'" style="flex:1;padding:8px;border:2px solid #a78bfa;border-radius:8px;background:linear-gradient(135deg,#eff6ff,#dbeafe);cursor:pointer;font-size:12px;">💜 紫色</button>' +
+      '    <button onclick="document.getElementById(\'letter-bg\').value=\'warm\'" style="flex:1;padding:8px;border:2px solid #fbbf24;border-radius:8px;background:linear-gradient(135deg,#eff6ff,#dbeafe);cursor:pointer;font-size:12px;">☀️ 温暖</button>' +
+      '  </div>' +
+      '</div>' +
+      '<input type="hidden" id="letter-bg" value="blue">' +
+      '<button onclick="window.saveModalLoveLetter()" style="width:100%;padding:12px;background:linear-gradient(135deg,#3b82f6,#ef4444);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 发送</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveModalLoveLetter = function() {
+    var content = document.getElementById('letter-content').value.trim();
+    var schedule = document.getElementById('letter-schedule').value;
+    var bg = document.getElementById('letter-bg').value;
+
+    if (!content) { alert('请输入情书内容！'); return; }
+
+    var letters = getLetters();
+    letters.push({
+      id: 'letter_' + Date.now(),
+      content: content,
+      bg: bg,
+      scheduledFor: schedule || null,
+      sent: !schedule,
+      schedule: schedule ? new Date(schedule).toLocaleString('zh-CN') : null,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveLetters(letters);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert(schedule ? '📅 定时情书已设置！\n将在 ' + new Date(schedule).toLocaleString('zh-CN') + ' 发送' : '💌 情书已发送！');
+    renderLoveLetters();
+  };
+
+  window.renderLoveLetters = function() {
+    var letters = getLetters();
+
+    // 渲染定时情书
+    var scheduledList = document.getElementById('scheduled-list');
+    var scheduled = letters.filter(function(l) { return l.scheduledFor && !l.sent; });
+
+    if (scheduledList) {
+      if (scheduled.length === 0) {
+        scheduledList.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:20px;">暂无定时情书</p>';
+      } else {
+        var html = '';
+        scheduled.forEach(function(l, i) {
+          html +=
+            '<div style="background:linear-gradient(135deg,#dbeafe,#fde68a);border-radius:12px;padding:12px;margin-bottom:8px;">' +
+            '  <div style="font-size:12px;color:#92400e;margin-bottom:6px;">📅 定时发送: ' + l.schedule + '</div>' +
+            '  <div style="color:#444;font-size:13px;line-height:1.6;">' + l.content.substring(0, 50) + (l.content.length > 50 ? '...' : '') + '</div>' +
+            '</div>';
+        });
+        scheduledList.innerHTML = html;
+      }
+    }
+
+    // 渲染已发送
+    var sentList = document.getElementById('sent-list');
+    var sent = letters.filter(function(l) { return l.sent; });
+
+    if (sentList) {
+      if (sent.length === 0) {
+        sentList.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:20px;">暂无已发送情书</p>';
+      } else {
+        var html = '';
+        sent.forEach(function(l) {
+          var bgColors = { blue: 'linear-gradient(135deg,#eff6ff,#dbeafe)', deep: 'linear-gradient(135deg,#eff6ff,#dbeafe)', warm: 'linear-gradient(135deg,#eff6ff,#dbeafe)' };
+          html +=
+            '<div style="background:' + (bgColors[l.bg] || bgColors.blue) + ';border-radius:12px;padding:12px;margin-bottom:8px;border-left:3px solid #3b82f6;">' +
+            '  <div style="color:#444;font-size:13px;line-height:1.6;white-space:pre-wrap;">' + l.content.replace(/</g,'&lt;') + '</div>' +
+            '  <div style="font-size:11px;color:#999;margin-top:6px;">' + l.createdAt + '</div>' +
+            '</div>';
+        });
+        sentList.innerHTML = html;
+      }
+    }
+
+    // 检查定时情书
+    checkScheduledLetters();
+  };
+
+  function checkScheduledLetters() {
+    var letters = getLetters();
+    var now = new Date();
+    var updated = false;
+
+    letters.forEach(function(l) {
+      if (l.scheduledFor && !l.sent && new Date(l.scheduledFor) <= now) {
+        l.sent = true;
+        updated = true;
+        // 这里应该触发通知，但先用alert模拟
+        console.log('[LoveLetter] 定时情书已发送:', l.content);
+      }
+    });
+
+    if (updated) {
+      saveLetters(letters);
+    }
+  }
+
+  console.log('[LoveLetter] ✅ 情书邮局功能已加载');
+
+  // 每分钟检查一次定时情书
+  setInterval(checkScheduledLetters, 60000);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderLoveLetters);
+  } else {
+    setTimeout(renderLoveLetters, 500);
+  }
+
+})();
+</script>
+<!-- 约会企划库模块 v2.0 -->
+<section id="dateplan-section" class="main-section hidden">
+  <div class="section-header">
+    <span class="section-icon">📅</span>
+    <h2>约会企划库</h2>
+    <button style="float:right;background:transparent;border:none;font-size:20px;cursor:pointer;" onclick="location.reload()">🔄</button>
+  </div>
+
+  <div class="dateplan-container" style="padding:20px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <button onclick="showAddDatePlanModal('todo')" style="padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:16px;font-size:14px;font-weight:600;cursor:pointer;">
+        📋 待打卡清单
+      </button>
+      <button onclick="showAddDatePlanModal('done')" style="padding:14px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white;border:none;border-radius:16px;font-size:14px;font-weight:600;cursor:pointer;">
+        ✅ 已完成存档
+      </button>
+    </div>
+
+    <div id="dateplan-list"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var DATEPLANS_KEY = 'couple_dateplans';
+
+  function getDatePlans() {
+    return JSON.parse(localStorage.getItem(DATEPLANS_KEY) || '[]');
+  }
+
+  function saveDatePlans(plans) {
+    localStorage.setItem(DATEPLANS_KEY, JSON.stringify(plans));
+  }
+
+  var currentFilter = 'todo';
+
+  window.showAddDatePlanModal = function(type) {
+    currentFilter = type || 'todo';
+    var html =
+      '<div style="padding:20px;">' +
+      '<h3 style="margin-bottom:15px;">📅 添加约会计划</h3>' +
+      '<input type="text" id="plan-title" placeholder="计划名称（如：看电影）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin-bottom:10px;box-sizing:border-box;">' +
+      '<textarea id="plan-desc" placeholder="详细描述..." style="width:100%;height:80px;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin-bottom:10px;box-sizing:border-box;resize:vertical;"></textarea>' +
+      '<input type="text" id="plan-budget" placeholder="预算（元）" style="width:100%;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin-bottom:10px;box-sizing:border-box;">' +
+      '<select id="plan-category" style="width:100%;padding:12px;border-radius:12px;border:2px solid #6ee7b7;margin-bottom:15px;box-sizing:border-box;">' +
+      '  <option value="food">🍕 美食</option>' +
+      '  <option value="movie">🎬 电影</option>' +
+      '  <option value="travel">✈️ 旅行</option>' +
+      '  <option value="shopping">🛍️ 购物</option>' +
+      '  <option value="other">📦 其他</option>' +
+      '</select>' +
+      '<button onclick="window.saveDatePlan()" style="width:100%;padding:12px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;font-size:16px;cursor:pointer;">✅ 保存</button>' +
+      '</div>';
+
+    if (typeof showGlobalModal === 'function') showGlobalModal(html);
+  };
+
+  window.saveDatePlan = function() {
+    var title = document.getElementById('plan-title').value.trim();
+    var desc = document.getElementById('plan-desc').value.trim();
+    var budget = document.getElementById('plan-budget').value;
+    var category = document.getElementById('plan-category').value;
+
+    if (!title) { alert('请输入计划名称！'); return; }
+
+    var plans = getDatePlans();
+    plans.push({
+      id: 'plan_' + Date.now(),
+      title: title,
+      desc: desc,
+      budget: budget ? parseFloat(budget) : 0,
+      category: category,
+      completed: false,
+      createdAt: new Date().toLocaleString('zh-CN')
+    });
+
+    saveDatePlans(plans);
+    if (typeof closeGlobalModal === 'function') closeGlobalModal();
+    alert('✅ 约会计划已添加！');
+    renderDatePlans();
+  };
+
+  window.renderDatePlans = function() {
+    var plans = getDatePlans();
+    var list = document.getElementById('dateplan-list');
+    if (!list) return;
+
+    var filtered = plans.filter(function(p) { return currentFilter === 'all' || (currentFilter === 'todo' && !p.completed) || (currentFilter === 'done' && p.completed); });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px;">' + (currentFilter === 'todo' ? '暂无待打卡计划' : '暂无已完成计划') + '</p>';
+      return;
+    }
+
+    var html = '';
+    filtered.forEach(function(p, i) {
+      var catIcons = { food: '🍕', movie: '🎬', travel: '✈️', shopping: '🛍️', other: '📦' };
+      html +=
+        '<div style="background:' + (p.completed ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : 'white') + ';border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid ' + (p.completed ? '#10b981' : '#10b981') + ';box-shadow:0 2px 8px rgba(0,0,0,0.1);">' +
+        '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '    <span style="font-size:20px;">' + (catIcons[p.category] || '📦') + '</span>' +
+        '    <span style="font-size:11px;color:#999;">' + p.createdAt + '</span>' +
+        '  </div>' +
+        '  <div style="font-size:16px;font-weight:600;color:#444;margin-bottom:6px;">' + p.title + '</div>' +
+        (p.desc ? '  <div style="font-size:13px;color:#666;margin-bottom:6px;">' + p.desc + '</div>' : '') +
+        (p.budget ? '  <div style="font-size:12px;color:#10b981;margin-bottom:8px;">💰 预算: ¥' + p.budget + '</div>' : '') +
+        '  <div style="display:flex;gap:8px;">' +
+        '    <button onclick="window.toggleDatePlan(' + plans.indexOf(p) + ')" style="flex:1;padding:8px;border:none;border-radius:8px;background:' + (p.completed ? '#e5e7eb' : '#10b981') + ';color:' + (p.completed ? '#666' : 'white') + ';cursor:pointer;font-size:13px;">' + (p.completed ? '↩️ 重置' : '✅ 完成') + '</button>' +
+        '    <button onclick="window.deleteDatePlan(' + plans.indexOf(p) + ')" style="padding:8px 12px;border:none;border-radius:8px;background:#fee2e2;color:#ef4444;cursor:pointer;font-size:13px;">🗑️</button>' +
+        '  </div>' +
+        '</div>';
+    });
+
+    list.innerHTML = html;
+  };
+
+  window.toggleDatePlan = function(idx) {
+    var plans = getDatePlans();
+    plans[idx].completed = !plans[idx].completed;
+    if (plans[idx].completed) {
+      plans[idx].completedAt = new Date().toLocaleString('zh-CN');
+    }
+    saveDatePlans(plans);
+    renderDatePlans();
+  };
+
+  window.deleteDatePlan = function(idx) {
+    if (!confirm('确定删除这个计划？')) return;
+    var plans = getDatePlans();
+    plans.splice(idx, 1);
+    saveDatePlans(plans);
+    renderDatePlans();
+  };
+
+  console.log('[DatePlan] ✅ 约会企划库功能已加载');
+  renderDatePlans();
+
+})();
+</script>
+<script src="js/theme-switcher.js?v=3.0"></script>
+<script src="js/milestone-v2.js?v=3.0"></script>
+<script src="js/epic-features-v1.js?v=8.4"></script>
+<script src="js/enhanced-features-v1.js?v=3.0"></script>
+<!-- 欢迎系统已永久禁用 - 不再显示任何弹窗 -->
+<!-- <script src="js/welcome-system-v1.js?v=3.0"></script> -->
+<!-- 简洁欢迎弹窗：只显示一次，5秒自动关闭，有关闭按钮 -->
+<script src="js/simple-welcome-v1.js?v=3.0"></script>
+<!-- 新手引导：4步引导，可手动触发，只显示一次 -->
+<script src="js/quick-guide-v1.js?v=3.0"></script>
+<script src="js/realtime-chat-v3.js?v=7.3"></script>
+<script src="js/chatroom-v1.js?v=11.0"></script>
+<script src="js/e2ee-v1.js?v=10.0"></script>
+<script src="js/cloud-sync-v1.js?v=10.0"></script>
+<script src="js/weather-module-pro-v2.js?v=3.0"></script>
+<script src="js/gift-recommendation-pro-v2.js?v=3.0"></script>
+<script src="js/couple-game-pro-v2.js?v=8.4"></script>
+<script src="js/voice-recorder-pro-v2.js?v=3.0"></script>
+<script src="js/notification-system-v1.js?v=10.0"></script>
+<!-- 情侣电影院已移除（无法放映电影） -->
+<script>
+// 更多菜单功能 - 同时支持顶部下拉菜单和底部上拉菜单
+function toggleMoreMenu() {
+    // 顶部下拉菜单
+    const dropdown = document.getElementById('more-dropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+    // 底部上拉菜单
+    const menu = document.getElementById('more-menu');
+    if (menu) {
+        menu.classList.toggle('hidden');
+        menu.classList.toggle('show');
+    }
+}
+
+// 点击页面其他地方关闭下拉菜单
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('more-dropdown');
+    const btn = document.querySelector('.btn-more');
+    if (dropdown && !dropdown.contains(event.target) && btn && !btn.contains(event.target)) {
+        dropdown.classList.remove('show');
+    }
+});
+
+// 滚动到指定section并显示
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.add('show');
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+    // 关闭下拉菜单
+    const dropdown = document.getElementById('more-dropdown');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+    }
+    // 关闭上拉菜单
+    const menu = document.getElementById('more-menu');
+    if (menu) {
+        menu.classList.add('hidden');
+        menu.classList.remove('show');
+    }
+}
+
+// 打开史诗纪念殿堂
+
+// 史诗纪念殿堂入口（函数在 js/epic-features-v1.js 中定义）
+
+// 历史皮肤按钮（已禁用 - 皮肤选择面板已移除）
+function openHistorySkins() {
+    alert('💙 海洋动态背景已启用\n\n当前背景：动态蓝色海洋主题 🌊\n\n背景会随时间缓慢流动变化~');
+}
+
+// 初始化并显示天气模块
+function initAndShowWeather() {
+    if (window.initWeatherModuleProManual) {
+        window.initWeatherModuleProManual();
+    }
+    setTimeout(() => { scrollToSection('weather-section-pro'); }, 100);
+}
+
+// 初始化并显示礼物推荐
+function initAndShowGift() {
+    if (window.initGiftRecommendationProManual) {
+        window.initGiftRecommendationProManual();
+    }
+    setTimeout(() => { scrollToSection('gift-recommendation-section'); }, 100);
+}
+
+// 初始化并显示情侣打卡
+function initAndShowGame() {
+    if (window.initCoupleGameProManual) {
+        window.initCoupleGameProManual();
+    }
+    setTimeout(() => { scrollToSection('couple-game-section'); }, 100);
+}
+
+// ===== 数据导出/导入功能（解决本地存储不同步问题）=====
+function exportAllData() {
+    try {
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            data[key] = localStorage.getItem(key);
+        }
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `恋爱官网数据备份-${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('✅ 数据导出成功！\n\n文件名：' + a.download + '\n\n请把此文件发给你女朋友，让她点击"📥 导入数据"按钮选择此文件。');
+    } catch(err) {
+        alert('❌ 导出失败：' + err.message);
+    }
+}
+
+function importAllData(file) {
+    if (!file) return;
+    if (!confirm('导入数据会覆盖当前电脑上的所有数据！\n\n确定要继续吗？')) {
+        document.getElementById('import-file-input').value = '';
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            let count = 0;
+            for (const key in data) {
+                localStorage.setItem(key, data[key]);
+                count++;
+            }
+            alert('✅ 数据导入成功！\n\n共导入 ' + count + ' 条数据。\n页面将自动刷新...');
+            setTimeout(() => { location.reload(); }, 1000);
+        } catch(err) {
+            alert('❌ 导入失败：文件格式错误\n\n请确保选择正确的 JSON 备份文件。');
+        }
+        document.getElementById('import-file-input').value = '';
+    };
+    reader.onerror = function() {
+        alert('❌ 读取文件失败，请重试。');
+        document.getElementById('import-file-input').value = '';
+    };
+    reader.readAsText(file);
+}
+</script>
+</body>
+</html>
