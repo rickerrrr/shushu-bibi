@@ -697,53 +697,111 @@ body {
 .hidden { display: none !important; }
 
 /* ==================== 登录页 ==================== */
-/* ===== 登录页：去除所有动画效果 ===== */
-body:not(.logged-in),
-body:not(.logged-in)::before,
-body:not(.logged-in)::after {
-  animation: none !important;
-}
-body:not(.logged-in) #login-page,
-body:not(.logged-in) #login-page *,
-body:not(.logged-in) #login-page::before,
-body:not(.logged-in) #login-page::after {
-  animation: none !important;
-  transition: none !important;
-}
+/* 120fps 全局动画已恢复，仅去除 body 背景流动动画以保持静态渐变 */
 
 #login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #7ec8e3 0%, #5db8d4 20%, #8ed5e8 45%, #a8e6cf 75%, #d4f0f8 100%);
+  background: linear-gradient(160deg, #b5e3f5 0%, #89cff0 30%, #a8d8ea 55%, #c5e8f7 80%, #d4f0f8 100%);
   position: relative;
   overflow: hidden;
 }
 #login-page::before {
   display: none;
 }
-/* (float keyframe 已移除 - 登录页不再使用) */
+/* ===== Canvas 粒子画布 ===== */
+#login-particles-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
 
-/* ===== 漂浮爱心云 ===== */
-.login-cloud {
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: center;
+/* ===== SVG 动态爱心云 ===== */
+.login-cloud-wrapper {
+  position: relative;
+  width: 280px;
+  height: 155px;
+  margin: 0 auto 6px;
+  z-index: 2;
+  animation: cloudFloat 6s ease-in-out infinite;
 }
-.login-cloud img {
-  width: 180px;
-  height: auto;
-  animation: cloudFloat 3s ease-in-out infinite;
-  filter: drop-shadow(0 4px 12px rgba(236,72,153,0.25));
+.login-cloud-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
+.cloud-body-glow {
+  animation: cloudGlowBreathe 4s ease-in-out infinite;
+}
+.login-cloud-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 3;
+}
+.cloud-love {
+  display: block;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 26px;
+  font-style: italic;
+  font-weight: 600;
+  color: #d63384;
+  text-shadow: 0 1px 4px rgba(214,51,132,0.3);
+  line-height: 1.2;
+}
+.cloud-love .cloud-heart {
+  color: #ff4088;
+  font-style: normal;
+  display: inline-block;
+  animation: heartPulse 1.5s ease-in-out infinite;
+}
+.cloud-label {
+  display: block;
+  font-size: 11px;
+  color: #c2185b;
+  letter-spacing: 1.5px;
+  margin-top: 1px;
+  font-weight: 500;
+}
+.login-cloud-star {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  font-size: 16px;
+  z-index: 4;
+  animation: starBlink 3s step-end infinite;
+  filter: drop-shadow(0 0 3px rgba(255,215,0,0.6));
+}
+
+/* 云朵浮动 - 海风轻吹 */
 @keyframes cloudFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  25%      { transform: translateY(-8px) scale(1.02); }
-  50%      { transform: translateY(-4px) scale(1); }
-  75%      { transform: translateY(-10px) scale(1.01); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+/* 光晕呼吸 */
+@keyframes cloudGlowBreathe {
+  0%, 100% { opacity: 0.88; }
+  50% { opacity: 1; }
+}
+/* 爱心微动 */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+/* 星星闪烁 - 2s亮1s暗 */
+@keyframes starBlink {
+  0%, 66% { opacity: 1; }
+  66.1%, 100% { opacity: 0.15; }
 }
 
+/* ===== 登录容器 ===== */
 .login-container {
   background: transparent;
   border-radius: 24px;
@@ -773,36 +831,40 @@ body:not(.logged-in) #login-page::after {
   gap: 20px;
   margin-bottom: 24px;
 }
+/* 清透冰感毛玻璃头像框 - 高通透低模糊 */
 .login-avatar {
   cursor: pointer;
-  padding: 20px 36px;
-  border-radius: 20px;
-  border: 2.5px solid rgba(255,255,255,0.7);
-  transition: all 0.3s ease;
-  background: transparent;
+  padding: 22px 38px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(160, 215, 240, 0.45);
+  box-shadow: 0 0 12px rgba(160, 215, 240, 0.15);
   position: relative;
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
 }
 .login-avatar::after {
   display: none;
 }
 .login-avatar:hover {
-  border-color: #fff;
-  transform: translateY(-5px) scale(1.06);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12), 0 0 20px rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(160, 215, 240, 0.7);
+  box-shadow: 0 0 20px rgba(160, 215, 240, 0.35), 0 0 40px rgba(160, 215, 240, 0.12);
+  transform: translateY(-3px);
 }
-/* (已移除 goldenBorderShine - 不再使用) */
 .login-avatar:active {
-  transform: scale(0.95);
+  transform: scale(0.97);
 }
-.login-avatar span { font-size: 56px; display: block; filter: saturate(1.4) brightness(1.15) drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-.login-avatar p { font-size: 16px; color: #1e293b; margin-top: 6px; font-weight: 700; }
+.login-avatar span { font-size: 56px; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06)); }
+.login-avatar p { font-size: 16px; color: #334155; margin-top: 6px; font-weight: 700; }
 
-/* 头像选中态 - 鲜艳醒目 */
+/* 头像选中态 - 微提亮 */
 .login-avatar.avatar-golden {
-  border-color: #fff !important;
-  background: transparent !important;
-  transform: scale(1.08);
-  box-shadow: 0 0 24px rgba(255,255,255,0.4), 0 8px 28px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(160, 215, 240, 0.55) !important;
+  transform: scale(1.04);
+  box-shadow: 0 0 18px rgba(160, 215, 240, 0.3);
 }
 
 /* 两个头像都禁用点击 */
@@ -813,11 +875,10 @@ body:not(.logged-in) #login-page::after {
 
 .login-click-hint {
   font-size: 17px;
-  color: #0369a1;
+  color: #0284c7;
   font-weight: 700;
   margin-bottom: 18px;
-  text-shadow: 0 1px 4px rgba(3,105,161,0.2);
-  opacity: 1 !important;
+  text-shadow: 0 1px 6px rgba(2,132,199,0.15);
 }
 
 /* 微信风格气泡框：提示文字下方、头像上方，max-height 展开 */

@@ -311,12 +311,7 @@ async function doLogin(user) {
       bubble.classList.add('message');
       if (bubbleMsg) bubbleMsg.textContent = randomMsg;
 
-      // 0.6秒后金边+头像烟花
-      setTimeout(() => {
-        const avatar = document.querySelector('.login-avatar[data-user="' + currentUser + '"]');
-        if (avatar) avatar.classList.add('avatar-golden');
-        spawnAvatarFireworks(currentUser);
-      }, 600);
+      // 头像选中态已标记
 
       // 2.2秒后气泡消失
       setTimeout(() => {
@@ -325,257 +320,26 @@ async function doLogin(user) {
         }
       }, 2200);
 
-      // 2.5秒后全屏烟花 + 进入大厅
+      // 2.5秒后进入大厅
       setTimeout(() => {
-        spawnFireworksAllScreen();
-
-        setTimeout(() => {
-          const loginPage = document.getElementById('login-page');
-          if (loginPage) loginPage.classList.add('hidden');
-          const app = document.getElementById('app');
-          if (app) app.classList.remove('hidden');
-          // 🔥 关键：给 body 添加 logged-in 类，触发内联 CSS 页面切换
-          document.body.classList.add('logged-in');
-          // 启动海洋粒子系统（登录后才显示）
-          if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
-          // 同时显示顶部栏和底部导航
-          const topBar = document.querySelector('.top-bar');
-          if (topBar) topBar.style.display = '';
-          const bottomNav = document.querySelector('.bottom-nav');
-          if (bottomNav) bottomNav.style.display = '';
-          initApp();
-          showToast('欢迎回来，' + myName + '！💕');
-          window._loginInProgress = false;
-        }, 1200);
+        const loginPage = document.getElementById('login-page');
+        if (loginPage) loginPage.classList.add('hidden');
+        const app = document.getElementById('app');
+        if (app) app.classList.remove('hidden');
+        document.body.classList.add('logged-in');
+        if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
+        const topBar = document.querySelector('.top-bar');
+        if (topBar) topBar.style.display = '';
+        const bottomNav = document.querySelector('.bottom-nav');
+        if (bottomNav) bottomNav.style.display = '';
+        initApp();
+        showToast('欢迎回来，' + myName + '！💕');
+        window._loginInProgress = false;
       }, 2500);
     }, 1000);
   }
 }
 
-// ==================== 全屏烟花粒子 ====================
-function spawnFireworksAllScreen() {
-  const loginPage = document.getElementById('login-page');
-  if (!loginPage) return;
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99;';
-  canvas.width = loginPage.offsetWidth;
-  canvas.height = loginPage.offsetHeight;
-  loginPage.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  const particles = [];
-  const colors = ['#fbbf24','#f59e0b','#fcd34d','#fef08a','#f97316','#3b82f6','#1d4ed8','#ffffff'];
-
-  // 生成多个烟花爆炸点
-  for (let burst = 0; burst < 12; burst++) {
-    const cx = Math.random() * canvas.width;
-    const cy = Math.random() * canvas.height * 0.6;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const count = 40 + Math.floor(Math.random() * 30);
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 1.5 + Math.random() * 4;
-      const life = 0.8 + Math.random() * 1.5;
-      particles.push({
-        x: cx, y: cy,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        life: life,
-        maxLife: life,
-        color: color,
-        size: 1.5 + Math.random() * 3,
-        gravity: 0.02 + Math.random() * 0.03
-      });
-    }
-  }
-
-  let animId;
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let alive = false;
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += p.gravity;
-      p.life -= 0.016;
-      if (p.life > 0) {
-        alive = true;
-        const alpha = p.life / p.maxLife;
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * alpha + 0.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-    if (alive) {
-      animId = requestAnimationFrame(animate);
-    } else {
-      canvas.remove();
-    }
-  }
-  animate();
-}
-
-// 头像周围烟花
-function spawnAvatarFireworks(user) {
-  const avatar = document.querySelector('.login-avatar[data-user="' + user + '"]');
-  if (!avatar) return;
-  const rect = avatar.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-  const colors = ['#fbbf24','#f59e0b','#fcd34d','#fef08a','#fff7ed','#ff6b8a','#ff4081'];
-
-  for (let i = 0; i < 30; i++) {
-    const p = document.createElement('div');
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 40 + Math.random() * 120;
-    p.style.cssText = `
-      position:fixed; left:${cx}px; top:${cy}px;
-      width:${3+Math.random()*6}px; height:${3+Math.random()*6}px;
-      background:${colors[i%colors.length]};
-      border-radius:50%;
-      pointer-events:none; z-index:9999;
-      transition:all ${0.6+Math.random()*0.8}s ease-out;
-    `;
-    document.body.appendChild(p);
-    requestAnimationFrame(() => {
-      p.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`;
-      p.style.opacity = '0';
-    });
-    setTimeout(() => { if(p.parentNode) p.remove(); }, 2000);
-  }
-}
-
-// ==================== 心形灰飞烟灭粒子（灭霸效果） ====================
-function spawnHeartDust(heartEl, dustContainer) {
-  if (!heartEl || !dustContainer) return;
-
-  const heartRect = heartEl.getBoundingClientRect();
-  const cx = heartRect.left + heartRect.width / 2;
-  const cy = heartRect.top + heartRect.height / 2;
-
-  const heartColors = [
-    '#ff1744', '#ff4081', '#d500f9', '#448aff', '#ff6d00',
-    '#f50057', '#FF5252', '#FF4081', '#E040FB', '#448AFF',
-    '#FF6D00', '#FFD600', '#FF80AB', '#EA80FC',
-  ];
-
-  const particleCount = 80;
-
-  for (let i = 0; i < particleCount; i++) {
-    const p = document.createElement('div');
-
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 60 + Math.random() * 200;
-    const dx = Math.cos(angle) * dist;
-    const dy = Math.sin(angle) * dist - 40 - Math.random() * 80;
-
-    p.style.cssText = `
-      position: fixed;
-      left: ${cx}px;
-      top: ${cy}px;
-      width: ${3 + Math.random() * 8}px;
-      height: ${3 + Math.random() * 8}px;
-      background: ${heartColors[Math.floor(Math.random() * heartColors.length)]};
-      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-      opacity: 1;
-      box-shadow: 0 0 ${4 + Math.random() * 6}px currentColor;
-      transition: all ${0.8 + Math.random() * 1.2}s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
-      z-index: 25;
-    `;
-
-    dustContainer.appendChild(p);
-
-    requestAnimationFrame(() => {
-      p.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg)`;
-      p.style.opacity = '0';
-      p.style.width = '2px';
-      p.style.height = '2px';
-    });
-
-    setTimeout(() => {
-      if (p.parentNode) p.remove();
-    }, 2500);
-  }
-}
-
-// ==================== 全屏烟花系统 ====================
-function spawnFullscreenFireworks() {
-  const container = document.getElementById('fullscreen-fireworks');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const colors = [
-    '#ff1744','#ff6d00','#ffd600','#00e676','#00b0ff','#d500f9',
-    '#ff4081','#ffab00','#76ff03','#40c4ff','#b388ff','#ff80ab',
-    '#ff5252','#ffc107','#69f0ae','#448aff','#e040fb','#ff8a80',
-    '#f50057','#ff9100','#aeea00','#00e5ff','#7c4dff','#ff5580'
-  ];
-
-  // 多轮烟花爆发：0s, 0.6s, 1.2s, 1.8s
-  const burstTimes = [0, 600, 1200, 1800];
-  const burstCounts = [3, 4, 5, 4]; // 每轮烟花数量
-
-  burstTimes.forEach((delay, round) => {
-    const count = burstCounts[round];
-    for (let b = 0; b < count; b++) {
-      setTimeout(() => {
-        spawnSingleBurst(container, colors);
-      }, delay + b * 100);
-    }
-  });
-}
-
-function spawnSingleBurst(container, colors) {
-  // 随机烟花中心位置
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const cx = vw * (0.15 + Math.random() * 0.7);
-  const cy = vh * (0.1 + Math.random() * 0.6);
-
-  // 每朵烟花 30~50 个粒子
-  const particleCount = 30 + Math.floor(Math.random() * 20);
-  const burstSize = 100 + Math.random() * 200; // 爆炸半径
-
-  for (let i = 0; i < particleCount; i++) {
-    const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
-    const dist = burstSize * (0.6 + Math.random() * 0.4);
-    const dx = Math.cos(angle) * dist;
-    const dy = Math.sin(angle) * dist;
-
-    const size = 4 + Math.random() * 8;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-
-    // 部分粒子使用条纹样式
-    const useStreak = Math.random() > 0.6;
-    const el = document.createElement('span');
-    if (useStreak) {
-      el.className = 'fw-streak';
-      el.style.width = '3px';
-      el.style.height = (10 + Math.random() * 14) + 'px';
-      el.style.setProperty('--rot', (Math.random() * 360) + 'deg');
-    } else {
-      el.className = 'fw-full';
-      el.style.width = size + 'px';
-      el.style.height = size + 'px';
-    }
-    el.style.left = cx + 'px';
-    el.style.top = cy + 'px';
-    el.style.background = color;
-    el.style.animationDelay = (Math.random() * 0.15) + 's';
-    el.style.animationDuration = (0.8 + Math.random() * 0.8) + 's';
-    el.style.setProperty('--dx', dx + 'px');
-    el.style.setProperty('--dy', dy + 'px');
-    el.style.boxShadow = '0 0 ' + (4 + Math.random() * 6) + 'px ' + color;
-
-    container.appendChild(el);
-
-    // 粒子动画结束后自动清理
-    setTimeout(() => { if (el.parentNode) el.remove(); }, 2000);
-  }
-}
 
 function doLogout() {
   if (confirm('确定要退出登录吗？')) {
