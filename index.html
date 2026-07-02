@@ -32,7 +32,7 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=6.8">
+    <link rel="stylesheet" href="css/style.css?v=7.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
@@ -720,9 +720,25 @@ window.doLogin = window.doLogin || function(user) {
       });
     });
   }
-/* Service Worker 已移除 — sw.js 不再部署，避免 404 错误和缓存干扰
- * 待后端重部署后可恢复
- */
+/* ============================================================
+   核弹级 SW 清除：注册清理 SW → 清除所有旧缓存 → SW 自杀
+   解决正常模式下浏览器被旧 SW 缓存锁死的问题
+   ============================================================ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js?v=' + Date.now())
+    .then(function(reg) {
+      console.log('[SW-Cleanup] 清理 SW 已注册，即将自动清除缓存并注销');
+      reg.addEventListener('updatefound', function() {
+        reg.installing.addEventListener('statechange', function() {
+          if (this.state === 'activated') {
+            console.log('[SW-Cleanup] ✅ 缓存已清除，SW 已永久注销。刷新页面生效');
+            setTimeout(function() { location.reload(true); }, 500);
+          }
+        });
+      });
+    })
+    .catch(function(err) { console.log('[SW-Cleanup] 注册状态:', err.message); });
+}
 
 // 检测离线/在线状态
 window.addEventListener('online', function() {
@@ -896,99 +912,6 @@ function showOfflineNotice() {
   </div>
 </div>
 
-<!-- ==================== 2.0上线情书（小而精致） ==================== -->
-<div id="v2-letter-overlay" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;animation:fadeIn 0.5s ease;">
-  <div style="max-width:500px;width:85%;background:white;border-radius:20px;padding:35px 30px;box-shadow:0 20px 60px rgba(0,0,0,0.4);position:relative;animation:slideUp 0.6s ease;max-height:80vh;overflow-y:auto;">
-    <!-- 关闭按钮（明显可见） -->
-    <button onclick="closeV2Letter()" style="position:absolute;top:15px;right:15px;width:35px;height:35px;border-radius:50%;border:2px solid #ff4444;background:white;font-size:18px;color:#ff4444;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;font-weight:bold;" onmouseover="this.style.background='#ff4444';this.style.color='white';" onmouseout="this.style.background='white';this.style.color='#ff4444';" title="关闭">✕</button>
-    
-    <!-- 标题 -->
-    <div style="text-align:center;margin-bottom:20px;">
-      <div style="font-size:50px;margin-bottom:10px;">💌</div>
-      <h2 style="color:#0d1117;font-size:24px;margin:0;font-weight:700;">致我最爱的鼠鼠</h2>
-      <p style="color:#666;margin-top:5px;font-size:13px;">—— 2.0 版本上线纪念</p>
-    </div>
-    
-    <!-- 信件内容 -->
-    <div style="color:#0d1117;font-size:14px;line-height:1.8;padding:0 5px;">
-      <p style="margin-bottom:15px;font-size:16px;color:#2e86c1;font-weight:600;">亲爱的鼠鼠：</p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;">今天，我们的恋爱官网 2.0 正式上线了！</p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;">但我想告诉你，这不仅仅是一个版本的更新，更是我对你满满的爱意的见证。从 1.0 到 2.0，从简单的页面到如今完整的功能，每一个按钮、每一行代码、每一个动画，都藏着我想对你说的话。</p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;">在这个网站上，你可以看到：</p>
-      
-      <p style="margin-left:2em;margin-bottom:10px;color:#2e86c1;font-size:13px;">
-        ✈️ 纸飞机 —— 带着我的思念飞向你<br>
-        💬 聊天室 —— 即使不在身边，也能随时对话<br>
-        🌤️ 天气联动 —— 关心你那边的阴晴冷暖<br>
-        🎁 礼物推荐 —— 想给你最好的惊喜<br>
-        🎮 情侣打卡 —— 一起完成我们的小目标<br>
-        📅 日历纪念 —— 记录每一个重要的日子
-      </p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;font-size:13px;">每一项功能，都是我想更靠近你一点点的方式。每一次点击，都是我们在数字世界里的甜蜜互动。</p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;font-size:13px;">有人说，程序员不懂浪漫。但我想证明，代码也可以很温柔。当我写下每一行代码的时候，脑海里想的都是你看到这些功能时开心的样子。</p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;font-size:13px;">2.0 不是终点，而是我们爱情数字化的新起点。未来还会有 3.0、4.0……每一个版本，都会记录我们爱情的新篇章。</p>
-      
-      <p style="text-indent:2em;margin-bottom:10px;font-size:16px;color:#e74c3c;font-weight:600;">鼠鼠，我爱你，不止在今天，而是在每一个我们相处的日子里。</p>
-      
-      <p style="text-align:right;margin-top:20px;color:#2e86c1;font-weight:600;font-size:14px;">
-        永远爱你的，<br>
-        笔笔 🐱
-      </p>
-      
-      <p style="text-align:right;color:#999;font-size:12px;">
-        2026年6月29日<br>
-        恋爱官网 2.0 上线之日
-      </p>
-    </div>
-    
-    <!-- 底部装饰 -->
-    <div style="text-align:center;margin-top:20px;font-size:25px;opacity:0.6;">
-      💕 💕 💕
-    </div>
-  </div>
-</div>
-
-<style>
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes slideUp {
-  from { transform: translateY(50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-</style>
-
-<script>
-// 显示2.0情书
-function showV2Letter() {
-  var overlay = document.getElementById('v2-letter-overlay');
-  if (overlay) {
-    overlay.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-// 关闭2.0情书
-function closeV2Letter() {
-  var overlay = document.getElementById('v2-letter-overlay');
-  if (overlay) {
-    overlay.style.animation = 'fadeIn 0.5s ease reverse';
-    setTimeout(function() {
-      overlay.classList.add('hidden');
-      document.body.style.overflow = '';
-      localStorage.setItem('v2_letter_seen', 'true');
-    }, 500);
-  }
-}
-
-</script>
 
 <!-- ==================== 主应用 ==================== -->
 <div id="app" class="hidden">
@@ -2661,21 +2584,12 @@ function closeV2Letter() {
 <div class="season-particles" id="season-particles"></div>
 
 <!-- 二十四节气全屏动画（位于body顶层，不受#app影响） -->
-<div id="solar-term-overlay" class="hidden">
-  <canvas id="solar-term-canvas"></canvas>
-  <div class="solar-term-stage">
-    <div class="solar-term-3d" id="solar-term-text">夏至</div>
-    <div class="solar-term-sub" id="solar-term-sub">Summer Solstice</div>
-    <div class="solar-term-desc" id="solar-term-desc">日长之至，万物繁茂</div>
-  </div>
-</div>
-
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '9.1';
+const _CB = '10.0';
 /* config.js removed - v5 auto-detects */
 document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/app-main-v9.js?v='+_CB+'"><\/script>');
