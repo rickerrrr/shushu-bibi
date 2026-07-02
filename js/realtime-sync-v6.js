@@ -1,5 +1,5 @@
 /**
- * 实时同步模块 v6.0 — WebSocket 真实时 + 多通道降级
+ * 实时同步模块 v6.1 — WebSocket 已禁用(无可用后端) + localStorage 模式
  * 
  * 🚀 v6 升级：Cloudflare Workers WebSocket = QQ/微信级别实时同步
  * 
@@ -22,7 +22,8 @@
     DATA_PATH: 'data',
     
     // WebSocket 配置（Cloudflare Worker 后端）
-    WS_URL: 'wss://love-cloud-do.2813721763.workers.dev',
+    // 暂时置空：原 wss://love-cloud-do.2813721763.workers.dev 已废弃
+    WS_URL: '',
     
     // 降级参数
     POLL_INTERVAL: 15000,       // WebSocket断开后才用轮询，间隔放长
@@ -77,14 +78,17 @@
   // ========== WebSocket URL 持久化 ==========
   function getWsUrl() {
     const saved = localStorage.getItem('ws_url');
-    // 仅清理旧的 shushu-bibii-online-status Worker URL（已废弃）
-    if (saved && saved.includes('shushu-bibii-online-status')) {
+    // 清理所有已废弃的 Worker URL（love-cloud-do / workers.dev 等）
+    if (saved && (saved.includes('love-cloud-do') || saved.includes('workers.dev') || saved.includes('shushu-bibii'))) {
       localStorage.removeItem('ws_url');
-      console.log('Cleaned old Worker URL, using current default');
+      console.log('Cleaned deprecated Worker URL, using current default');
       return CONFIG.WS_URL;
     }
-    if (saved) return saved;
-    return CONFIG.WS_URL;
+    if (!saved || !saved.startsWith('wss://')) {
+      // 无有效 WebSocket，返回空字符串（模块自动降级）
+      return CONFIG.WS_URL;
+    }
+    return saved;
   }
   
   function setWsUrl(url) {
@@ -118,8 +122,8 @@
   
   // ========== 初始化 ==========
   function init() {
-    console.log('%c💕 实时同步模块 v6.0 启动中...', 'color: #ff6b9d; font-size: 14px; font-weight: bold');
-    console.log('%c🚀 新特性：WebSocket 真实时！延迟 50-150ms', 'color: #4ecdc4; font-weight: bold');
+    console.log('%c💕 实时同步模块 v6.1 启动中...', 'color: #ff6b9d; font-size: 14px; font-weight: bold');
+    console.log('%c⚙️ WebSocket 已禁用，使用 localStorage 本地模式', 'color: #ffe66d; font-weight: bold');
     
     state.currentUser = detectCurrentUser();
     
@@ -171,7 +175,7 @@
   function connectWebSocket() {
     const wsUrl = getWsUrl();
     if (!wsUrl || wsUrl.includes('YOUR_SUBDOMAIN')) {
-      console.log('⚠️ WebSocket URL 未配置');
+      console.log('⚠️ WebSocket URL 未配置，跳过连接');
       return;
     }
     
@@ -191,7 +195,21 @@
     try {
       state.ws = new WebSocket(fullUrl);
       
+      // ⏱ 连接超时保护（5秒内连不上则放弃，避免页面卡顿）
+      var connectTimeout = setTimeout(function() {
+        if (state.ws && state.ws.readyState !== WebSocket.OPEN) {
+          console.warn('⏱ WebSocket 连接超时（5秒），关闭并降级');
+          try { state.ws.close(); } catch (e) {}
+          state.ws = null;
+          state.wsConnected = false;
+          updateWsIndicator(false);
+          startPolling();
+          scheduleReconnect();
+        }
+      }, 5000);
+      
       state.ws.onopen = function() {
+        clearTimeout(connectTimeout);
         console.log('%c✅ WebSocket 已连接！延迟 50-150ms', 'color: #4ecdc4; font-weight: bold');
         state.wsConnected = true;
         state.wsReconnectAttempts = 0;
