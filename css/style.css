@@ -879,25 +879,29 @@ body {
   position: relative;
   overflow: visible;
   transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-  animation: avatarFloatWithCloud 6s ease-in-out infinite;
+  animation: avatarSeaFloat 4s ease-in-out infinite;
 }
 .login-avatar:nth-child(2) {
-  animation-name: avatarFloatWithCloud2;
-  animation-duration: 6s;
-  animation-delay: -0.6s;
+  animation-name: avatarSeaFloat2;
+  animation-duration: 4.7s;
+  animation-delay: -1.5s;
 }
 .login-avatar::after {
   display: none;
 }
 
 /* ====== 头像海面浮动动画 ====== */
-@keyframes avatarFloatWithCloud {
+@keyframes avatarSeaFloat {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-7px) rotate(0.5deg); }
+  25% { transform: translateY(-7px) rotate(0.8deg); }
+  50% { transform: translateY(-3px) rotate(-0.3deg); }
+  75% { transform: translateY(-8px) rotate(-0.6deg); }
 }
-@keyframes avatarFloatWithCloud2 {
+@keyframes avatarSeaFloat2 {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-7px) rotate(-0.5deg); }
+  20% { transform: translateY(-5px) rotate(-0.7deg); }
+  50% { transform: translateY(-9px) rotate(0.5deg); }
+  80% { transform: translateY(-4px) rotate(0.3deg); }
 }
 
 /* ====== 海浪环绕边框特效 ====== */
@@ -1240,28 +1244,6 @@ body {
   background: linear-gradient(135deg, var(--blue-200), var(--blue-100));
   transform: scale(1.15);
   box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
-}
-
-/* 聊天室小按钮（放在节气动画旁边） */
-.btn-chat {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1.5px solid #7dd3fc;
-  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: all 0.2s;
-  line-height: 1;
-}
-.btn-chat:hover {
-  background: linear-gradient(135deg, #bae6fd, #7dd3fc);
-  transform: scale(1.15);
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
 }
 
 /* AI工具箱小按钮 */
@@ -4009,7 +3991,6 @@ body.season-winter .quote-season-badge {
   .adventure-quests { grid-template-columns: 1fr; }
 }
 
-
 /* ==================== 情绪天气台 ==================== */
 .mood-container { max-width: 700px; margin: 0 auto; }
 .mood-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
@@ -4409,7 +4390,6 @@ body.season-winter .quote-season-badge {
   .sticky-grid { grid-template-columns: repeat(2, 1fr); }
   .sticky-picker-card { width: 95%; max-height: 90vh; }
 }
-
 
 /* ==================== 城市便利贴 ==================== */
 .sticky-add-bar {
@@ -6290,8 +6270,6 @@ button[style*="f43f5e"] {
   color: #3b82f6 !important;
 }
 
-
-
 /* ===== 在线状态按钮优化样式 ===== */
 .btn-online {
   position: relative;
@@ -6371,7 +6349,6 @@ button[style*="f43f5e"] {
   }
 }
 
-
 /* ===== 底部导航手机端优化 ===== */
 @media (max-width: 768px) {
   #bottom-nav {
@@ -6442,272 +6419,29 @@ button[style*="f43f5e"] {
   }
 }
 
-/* ========== 聊天室 v2.0 样式 ========== */
-
 /* 回复预览 */
-.chatroom-reply-preview {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  background: rgba(59, 130, 246, 0.1);
-  border-left: 3px solid #3b82f6;
-  margin: 0 12px;
-}
-
-.chatroom-reply-content {
-  flex: 1;
-}
-
-.chatroom-reply-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: #3b82f6;
-}
-
-.chatroom-reply-text {
-  font-size: 12px;
-  color: #666;
-  margin-left: 8px;
-}
-
-.chatroom-reply-cancel {
-  background: none;
-  border: none;
-  color: #999;
-  cursor: pointer;
-  font-size: 16px;
-}
 
 /* 编辑预览 */
-.chatroom-edit-preview {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  background: rgba(251, 191, 36, 0.1);
-  border-left: 3px solid #fbb024;
-  margin: 0 12px;
-}
-
-.chatroom-edit-label {
-  flex: 1;
-  font-size: 12px;
-  color: #f59e0b;
-  font-weight: 600;
-}
-
-.chatroom-edit-cancel {
-  background: none;
-  border: none;
-  color: #999;
-  cursor: pointer;
-  font-size: 16px;
-}
 
 /* 搜索栏 */
-.chatroom-search {
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.02);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-#chatroom-search-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.chatroom-search-results {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-top: 8px;
-}
-
-.chatroom-search-result {
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.chatroom-search-result:hover {
-  background: rgba(59, 130, 246, 0.1);
-}
 
 /* 反应选择器 */
-.chatroom-reaction-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 8px;
-  background: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.chatroom-reaction-btn {
-  background: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-size: 20px;
-  transition: all 0.2s;
-}
-
-.chatroom-reaction-btn:hover {
-  background: rgba(59, 130, 246, 0.1);
-  transform: scale(1.2);
-}
 
 /* 消息反应 */
-.chatroom-msg-reactions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.chatroom-msg-reaction {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  padding: 2px 6px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.chatroom-msg-reaction.active {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: #3b82f6;
-}
-
-.chatroom-msg-reaction:hover {
-  transform: scale(1.1);
-}
 
 /* 回复引用 */
-.chatroom-msg-reply {
-  background: rgba(0, 0, 0, 0.05);
-  border-left: 3px solid #3b82f6;
-  padding: 4px 8px;
-  margin-bottom: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.chatroom-msg-reply-name {
-  font-size: 11px;
-  font-weight: 600;
-  color: #3b82f6;
-  margin-right: 6px;
-}
-
-.chatroom-msg-reply-text {
-  font-size: 11px;
-  color: #666;
-}
 
 /* 消息菜单 */
-.chatroom-msg-menu {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  padding: 4px;
-  z-index: 10000;
-  min-width: 120px;
-}
-
-.chatroom-msg-menu button {
-  display: block;
-  width: 100%;
-  padding: 8px 12px;
-  border: none;
-  background: none;
-  text-align: left;
-  font-size: 13px;
-  cursor: pointer;
-  border-radius: 4px;
-  color: #333;
-}
-
-.chatroom-msg-menu button:hover {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-}
 
 /* 已删除消息 */
-.chatroom-msg-deleted {
-  font-style: italic;
-  color: #999;
-  font-size: 13px;
-}
 
 /* 已编辑标记 */
-.chatroom-msg-edited {
-  font-size: 11px;
-  color: #999;
-  margin-left: 4px;
-}
 
 /* 图片消息 */
-.chatroom-msg-image {
-  max-width: 200px;
-  max-height: 200px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 4px 0;
-}
 
 /* 贴纸面板 */
-.chatroom-sticker-panel {
-  position: absolute;
-  bottom: 60px;
-  left: 12px;
-  right: 12px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-  padding: 12px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.chatroom-sticker-header {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.chatroom-sticker-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.chatroom-sticker-item {
-  background: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-
-.chatroom-sticker-item:hover {
-  background: rgba(59, 130, 246, 0.1);
-  transform: scale(1.1);
-}
 
 /* 消息高亮 */
-.chatroom-msg-highlight {
-  animation: highlightMsg 2s ease;
-}
 
 @keyframes highlightMsg {
   0%, 100% { background: transparent; }
@@ -6715,124 +6449,20 @@ button[style*="f43f5e"] {
 }
 
 /* 头部按钮 */
-.chatroom-header-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.chatroom-header-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
 
 /* 输入区域按钮 */
-.chatroom-input-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.chatroom-input-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
 
 /* ========== 消息反应功能样式 ========== */
 
 /* 消息容器 */
-.chatroom-msg {
-  position: relative;
-}
 
 /* 反应容器 */
-.chatroom-msg-reactions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
-  margin-bottom: 2px;
-}
 
 /* 单个反应 */
-.chatroom-msg-reaction {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  padding: 2px 6px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-block;
-}
-
-.chatroom-msg-reaction:hover {
-  transform: scale(1.1);
-  background: rgba(59, 130, 246, 0.1);
-}
-
-.chatroom-msg-reaction.active {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: #3b82f6;
-  color: #3b82f6;
-}
 
 /* 反应选择器 */
-.reaction-picker {
-  position: fixed;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  padding: 8px 12px;
-  display: flex;
-  gap: 4px;
-  z-index: 10000;
-  animation: fadeInScale 0.2s ease;
-}
-
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.reaction-picker-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.reaction-picker-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-  transform: scale(1.3);
-}
 
 /* 双击提示 */
-.chatroom-msg-doubleclick-hint {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  pointer-events: none;
-  animation: fadeOut 1s ease 0.5s forwards;
-}
 
 @keyframes fadeOut {
   to {
@@ -6844,48 +6474,8 @@ button[style*="f43f5e"] {
 /* ========== 语音消息功能样式 ========== */
 
 /* 语音按钮 */
-.chatroom-voice-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.chatroom-voice-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.chatroom-voice-btn:active {
-  transform: scale(0.95);
-}
 
 /* 语音消息容器 */
-.chatroom-msg-voice {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  cursor: pointer;
-  min-width: 120px;
-  transition: all 0.2s;
-}
-
-.chatroom-msg-voice:hover {
-  background: rgba(0, 0, 0, 0.08);
-}
-
-.chatroom-msg-mine .chatroom-msg-voice {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.chatroom-msg-mine .chatroom-msg-voice:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
 
 /* 播放图标 */
 .voice-play-icon {
@@ -6898,10 +6488,6 @@ button[style*="f43f5e"] {
   font-size: 13px;
   color: #666;
   flex-shrink: 0;
-}
-
-.chatroom-msg-mine .voice-duration {
-  color: rgba(255, 255, 255, 0.9);
 }
 
 /* 波形动画 */
@@ -6921,10 +6507,6 @@ button[style*="f43f5e"] {
   animation: voiceWave 0.8s ease-in-out infinite;
 }
 
-.chatroom-msg-mine .voice-waveform span {
-  background: white;
-}
-
 .voice-waveform span:nth-child(1) { height: 8px; animation-delay: 0s; }
 .voice-waveform span:nth-child(2) { height: 12px; animation-delay: 0.1s; }
 .voice-waveform span:nth-child(3) { height: 16px; animation-delay: 0.2s; }
@@ -6937,22 +6519,6 @@ button[style*="f43f5e"] {
 }
 
 /* 正在录制提示 */
-.chatroom-recording-indicator {
-  position: absolute;
-  bottom: 70px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #ef4444;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-  animation: pulse 1.5s ease-in-out infinite;
-}
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -6975,160 +6541,36 @@ button[style*="f43f5e"] {
 /* ========== 消息搜索功能样式 ========== */
 
 /* 搜索按钮容器 */
-.chatroom-header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
 /* 搜索按钮 */
-.chatroom-header-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.chatroom-header-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
 
 /* 搜索容器 */
-.chatroom-search {
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.02);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
 
 /* 搜索输入框 */
-#chatroom-search-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s;
-}
-
-#chatroom-search-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
 
 /* 搜索结果容器 */
-.chatroom-search-results {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-top: 8px;
-}
 
 /* 搜索结果项 */
-.chatroom-search-result {
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-}
-
-.chatroom-search-result:hover {
-  background: rgba(102, 126, 234, 0.1);
-}
-
-.chatroom-search-result-from {
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.chatroom-search-result-text {
-  font-size: 13px;
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
 
 /* 搜索高亮 */
-.chatroom-search-highlight {
-  background: #fbbf24;
-  padding: 0 2px;
-  border-radius: 2px;
-  font-weight: 600;
-}
 
 /* 搜索信息 */
-.chatroom-search-info {
-  font-size: 12px;
-  color: #6b7280;
-  padding: 4px 8px;
-  margin-bottom: 4px;
-}
 
 /* 无搜索结果 */
-.chatroom-search-no-results {
-  font-size: 13px;
-  color: #9ca3af;
-  text-align: center;
-  padding: 16px;
-}
 
 /* ========== 消息格式化样式 ========== */
 
 /* 粗体 */
-.chatroom-msg-text strong {
-  font-weight: 700;
-}
 
 /* 斜体 */
-.chatroom-msg-text em {
-  font-style: italic;
-}
 
 /* 下划线 */
-.chatroom-msg-text u {
-  text-decoration: underline;
-}
 
 /* 代码 */
-.chatroom-msg-text code {
-  background: rgba(0, 0, 0, 0.05);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-}
-
-.chatroom-msg-mine .chatroom-msg-text code {
-  background: rgba(255, 255, 255, 0.2);
-}
 
 /* 链接 */
-.chatroom-msg-link {
-  color: #667eea;
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.chatroom-msg-link:hover {
-  text-decoration: underline;
-}
-
-.chatroom-msg-mine .chatroom-msg-link {
-  color: white;
-  text-decoration: underline;
-}
 
 /* 消息高亮（搜索跳转） */
-.chatroom-msg-highlight {
-  animation: highlightMsg 2s ease;
-}
 
 @keyframes highlightMsg {
   0%, 100% { background: transparent; }
@@ -7138,77 +6580,25 @@ button[style*="f43f5e"] {
 /* ========== 手机端适配优化 ========== */
 
 @media (max-width: 480px) {
-  .chatroom-panel {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-  }
   
-  .chatroom-header {
-    padding: 12px 16px;
-    min-height: 60px;
-  }
   
-  .chatroom-partner-avatar {
-    font-size: 28px;
-  }
   
-  .chatroom-partner-name {
-    font-size: 15px;
-  }
   
-  .chatroom-msg-bubble {
-    max-width: 85%;
-    padding: 8px 12px;
-  }
   
-  .chatroom-input-bar {
-    padding: 8px 12px;
-  }
   
-  .chatroom-input {
-    font-size: 16px; /* 防止iOS自动缩放 */
-  }
   
-  .chatroom-voice-btn,
-  .chatroom-emoji-btn,
-  .chatroom-send-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
   
   /* 语音消息移动端优化 */
-  .chatroom-msg-voice {
-    min-width: 100px;
-    padding: 6px 10px;
-  }
   
   .voice-duration {
     font-size: 12px;
   }
   
   /* 搜索移动端优化 */
-  .chatroom-search {
-    padding: 8px;
-  }
   
-  #chatroom-search-input {
-    font-size: 16px; /* 防止iOS自动缩放 */
-  }
 }
 
 @media (max-width: 360px) {
-  .chatroom-panel {
-    width: 100vw;
-  }
   
-  .chatroom-msg-bubble {
-    max-width: 90%;
-    padding: 6px 10px;
-  }
   
-  .chatroom-input-bar {
-    padding: 6px 8px;
-  }
 }
