@@ -879,29 +879,25 @@ body {
   position: relative;
   overflow: visible;
   transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-  animation: avatarSeaFloat 4s ease-in-out infinite;
+  animation: avatarFloatWithCloud 6s ease-in-out infinite;
 }
 .login-avatar:nth-child(2) {
-  animation-name: avatarSeaFloat2;
-  animation-duration: 4.7s;
-  animation-delay: -1.5s;
+  animation-name: avatarFloatWithCloud2;
+  animation-duration: 6s;
+  animation-delay: -0.6s;
 }
 .login-avatar::after {
   display: none;
 }
 
 /* ====== 头像海面浮动动画 ====== */
-@keyframes avatarSeaFloat {
+@keyframes avatarFloatWithCloud {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-7px) rotate(0.8deg); }
-  50% { transform: translateY(-3px) rotate(-0.3deg); }
-  75% { transform: translateY(-8px) rotate(-0.6deg); }
+  50% { transform: translateY(-7px) rotate(0.5deg); }
 }
-@keyframes avatarSeaFloat2 {
+@keyframes avatarFloatWithCloud2 {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  20% { transform: translateY(-5px) rotate(-0.7deg); }
-  50% { transform: translateY(-9px) rotate(0.5deg); }
-  80% { transform: translateY(-4px) rotate(0.3deg); }
+  50% { transform: translateY(-7px) rotate(-0.5deg); }
 }
 
 /* ====== 海浪环绕边框特效 ====== */
