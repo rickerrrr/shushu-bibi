@@ -727,7 +727,10 @@ body {
   height: 155px;
   margin: 0 auto 6px;
   z-index: 2;
-  animation: cloudFloat 6s ease-in-out infinite;
+  animation: cloudFloat6s 6s ease-in-out infinite,
+             cloudSway 7s ease-in-out infinite,
+             cloudScaleBreathe 5s ease-in-out infinite;
+  transform-origin: center center;
 }
 .login-cloud-svg {
   width: 100%;
@@ -735,7 +738,15 @@ body {
   display: block;
 }
 .cloud-body-glow {
-  animation: cloudGlowBreathe 4s ease-in-out infinite;
+  animation: cloudGlowBreathe 4s ease-in-out infinite,
+             cloudInnerShift 6s ease-in-out infinite;
+}
+/* 内部层次错位移动 */
+@keyframes cloudInnerShift {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(2px) translateY(-1px); }
+  50% { transform: translateX(-1px) translateY(2px); }
+  75% { transform: translateX(-2px) translateY(-1px); }
 }
 .login-cloud-text {
   position: absolute;
@@ -745,6 +756,7 @@ body {
   text-align: center;
   pointer-events: none;
   z-index: 3;
+  animation: loveTextBounce 3s ease-in-out infinite;
 }
 .cloud-love {
   display: block;
@@ -780,25 +792,48 @@ body {
   filter: drop-shadow(0 0 3px rgba(255,215,0,0.6));
 }
 
-/* 云朵浮动 - 海风轻吹 */
-@keyframes cloudFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+/* ====== 云朵全方位动画系统 ====== */
+/* 主浮动 - 轻柔上下 */
+@keyframes cloudFloat6s {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-7px) scale(1.01); }
 }
-/* 光晕呼吸 */
+/* 左右摇摆 - 海风吹拂 */
+@keyframes cloudSway {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(1.2deg); }
+  75% { transform: translateY(-4px) rotate(-1deg); }
+}
+/* 缩放呼吸 - 悠然舒展 */
+@keyframes cloudScaleBreathe {
+  0%, 100% { transform: scale(1) scaleX(1); }
+  33% { transform: scale(1.03) scaleX(1.02); }
+  66% { transform: scale(0.98) scaleX(0.99); }
+}
+/* 光晕呼吸 + 微旋转 */
 @keyframes cloudGlowBreathe {
-  0%, 100% { opacity: 0.88; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.85; filter: url(#cloudOuterGlow) brightness(1); }
+  33% { opacity: 0.95; filter: url(#cloudOuterGlow) brightness(1.08); }
+  66% { opacity: 1; filter: url(#cloudOuterGlow) brightness(1.05); }
 }
 /* 爱心微动 */
 @keyframes heartPulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.12); }
 }
-/* 星星闪烁 - 2s亮1s暗 */
+/* 星星闪烁 + 弹跳 */
 @keyframes starBlink {
-  0%, 66% { opacity: 1; }
-  66.1%, 100% { opacity: 0.15; }
+  0%, 50% { opacity: 1; transform: scale(1) rotate(0deg); }
+  55% { opacity: 0.3; transform: scale(0.7) rotate(-15deg); }
+  60%, 90% { opacity: 1; transform: scale(1.1) rotate(10deg); }
+  95%, 100% { opacity: 0.2; transform: scale(0.8) rotate(-10deg); }
+}
+/* love文字微弹跳 */
+@keyframes loveTextBounce {
+  0%, 100% { transform: translate(-50%, -52%) scaleY(1); }
+  25% { transform: translate(-50%, -54%) scaleY(1.05); }
+  50% { transform: translate(-50%, -50%) scaleY(0.97); }
+  75% { transform: translate(-50%, -53%) scaleY(1.03); }
 }
 
 /* ===== 登录容器 ===== */
@@ -842,16 +877,130 @@ body {
   border: 1px solid rgba(160, 215, 240, 0.45);
   box-shadow: 0 0 12px rgba(160, 215, 240, 0.15);
   position: relative;
-  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+  overflow: visible;
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  animation: avatarSeaFloat 4s ease-in-out infinite;
+}
+.login-avatar:nth-child(2) {
+  animation-name: avatarSeaFloat2;
+  animation-duration: 4.7s;
+  animation-delay: -1.5s;
 }
 .login-avatar::after {
   display: none;
 }
+
+/* ====== 头像海面浮动动画 ====== */
+@keyframes avatarSeaFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-7px) rotate(0.8deg); }
+  50% { transform: translateY(-3px) rotate(-0.3deg); }
+  75% { transform: translateY(-8px) rotate(-0.6deg); }
+}
+@keyframes avatarSeaFloat2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  20% { transform: translateY(-5px) rotate(-0.7deg); }
+  50% { transform: translateY(-9px) rotate(0.5deg); }
+  80% { transform: translateY(-4px) rotate(0.3deg); }
+}
+
+/* ====== 海浪环绕边框特效 ====== */
+.avatar-wave-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 25px;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.85;
+  background: conic-gradient(
+    from var(--wave-a, 0deg),
+    transparent 0%,
+    rgba(64, 180, 255, 0.5) 15%,
+    rgba(100, 210, 255, 0.85) 30%,
+    rgba(180, 240, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.8) 65%,
+    rgba(180, 240, 255, 0.9) 80%,
+    rgba(80, 190, 255, 0.7) 95%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 3px;
+  animation: waveSpinFwd 3.5s linear infinite;
+  filter: blur(0.3px);
+}
+.avatar-wave-ring-2 {
+  position: absolute;
+  inset: -5px;
+  border-radius: 27px;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.5;
+  background: conic-gradient(
+    from var(--wave-b, 120deg),
+    transparent 0%,
+    rgba(40, 150, 230, 0.3) 20%,
+    rgba(80, 190, 255, 0.55) 45%,
+    rgba(140, 220, 255, 0.65) 70%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 4px;
+  animation: waveSpinRev 5s linear infinite;
+  filter: blur(0.8px);
+}
+
+@keyframes waveSpinFwd {
+  0%   { --wave-a: 0deg; }
+  100% { --wave-a: 360deg; }
+}
+@keyframes waveSpinRev {
+  0%   { --wave-b: 120deg; }
+  100% { --wave-b: -240deg; }
+}
+
+/* Emoji表情微弹跳 */
+.login-avatar .avatar-face {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06));
+  font-size: 56px;
+  animation: emojiBobble 2.5s ease-in-out infinite;
+}
+.login-avatar:nth-child(2) .avatar-face {
+  animation-delay: -1s;
+  animation-duration: 3s;
+}
+@keyframes emojiBobble {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%      { transform: scale(1.08) translateY(-3px); }
+}
+
 .login-avatar:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(160, 215, 240, 0.7);
-  box-shadow: 0 0 20px rgba(160, 215, 240, 0.35), 0 0 40px rgba(160, 215, 240, 0.12);
-  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(100, 200, 255, 0.85);
+  box-shadow: 0 0 25px rgba(100, 200, 255, 0.45), 0 0 50px rgba(100, 200, 255, 0.18);
+  animation-play-state: paused;
+}
+.login-avatar:hover .avatar-wave-ring {
+  animation-duration: 1.5s;
+  opacity: 1;
+}
+.login-avatar:hover .avatar-wave-ring-2 {
+  animation-duration: 2s;
+  opacity: 0.9;
 }
 .login-avatar:active {
   transform: scale(0.97);
@@ -861,10 +1010,16 @@ body {
 
 /* 头像选中态 - 微提亮 */
 .login-avatar.avatar-golden {
-  background: rgba(255, 255, 255, 0.18) !important;
-  border-color: rgba(160, 215, 240, 0.55) !important;
-  transform: scale(1.04);
-  box-shadow: 0 0 18px rgba(160, 215, 240, 0.3);
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(100, 200, 255, 0.75) !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(100, 200, 255, 0.4), 0 0 50px rgba(100, 200, 255, 0.15);
+  animation-play-state: paused;
+}
+.login-avatar.avatar-golden .avatar-wave-ring,
+.login-avatar.avatar-golden .avatar-wave-ring-2 {
+  opacity: 1;
+  animation-duration: 2s;
 }
 
 /* 两个头像都禁用点击 */
