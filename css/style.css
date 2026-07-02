@@ -32,51 +32,45 @@
   --radius-sm: 10px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* 四季动态皮肤变量（默认夏季深蓝海洋） */
-  --season-bg1: #0c3d5c;
-  --season-bg2: #084c6e;
-  --season-bg3: #006994;
-  --season-accent: #0ea5e9;
-  --season-accent2: #38bdf8;
-  --season-particle: '🫧';
-  --season-hero-grad: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%);
-  --season-nav-grad: linear-gradient(135deg, rgba(12,61,92,0.97), rgba(8,76,110,0.98));
-  --season-card-glow: rgba(0,105,148,0.25);
+  /* 四季动态皮肤变量（默认夏季浅色海洋） */
+  --season-bg1: #7ec8e3;
+  --season-bg2: #5db8d4;
+  --season-bg3: #8ed5e8;
+  --season-accent: #5bc0de;
+  --season-accent2: #a8e6cf;
+  --season-particle: '\0001f30a';
+  --season-hero-grad: linear-gradient(160deg, #7ec8e3 0%, #5db8d4 25%, #8ed5e8 50%, #a8e6cf 80%, #d4f0f8 100%);
+  --season-nav-grad: linear-gradient(135deg, rgba(126,200,227,0.97), rgba(93,184,212,0.98));
+  --season-card-glow: rgba(91,192,222,0.20);
 }
 
-/* ==================== 夏季皮肤（深蓝海洋背景）==================== */
+/* ==================== 夏季皮肤（浅色海洋·海岛椰风）==================== */
 body.season-summer {
-  --season-bg1: #0c3d5c;
-  --season-bg2: #084c6e;
-  --season-bg3: #006994;
-  --season-accent: #0ea5e9;
-  --season-accent2: #38bdf8;
-  --season-hero-grad: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%);
-  --season-nav-grad: linear-gradient(135deg, rgba(12,61,92,0.97), rgba(8,76,110,0.98));
-  --season-card-glow: rgba(0,105,148,0.25);
-  --bg: #0a1628;
-  --bg-card: rgba(255,255,255,0.92);
+  --season-bg1: #7ec8e3;
+  --season-bg2: #5db8d4;
+  --season-bg3: #8ed5e8;
+  --season-accent: #5bc0de;
+  --season-accent2: #a8e6cf;
+  --season-hero-grad: linear-gradient(160deg, #7ec8e3 0%, #5db8d4 25%, #8ed5e8 50%, #a8e6cf 80%, #d4f0f8 100%);
+  --season-nav-grad: linear-gradient(135deg, rgba(126,200,227,0.97), rgba(93,184,212,0.98));
+  --season-card-glow: rgba(91,192,222,0.20);
+  --bg: #d4f0f8;
+  --bg-card: rgba(255,255,255,0.88);
   --text: #1e293b;
   --text-light: #475569;
-  --border: rgba(59,130,246,0.2);
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --border: rgba(91,192,222,0.25);
+  --shadow: 0 2px 12px rgba(91,192,222,0.12);
+  --shadow-lg: 0 8px 30px rgba(91,192,222,0.18);
 }
 
-/* 深蓝海洋背景（覆盖所有其他样式） */
+/* 浅色海洋·海岛椰风背景（覆盖所有其他样式） */
 body.season-summer {
-  background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 20%, #006994 45%, #0ea5e9 75%, #38bdf8 100%) !important;
+  background: linear-gradient(160deg, #7ec8e3 0%, #5db8d4 20%, #8ed5e8 45%, #a8e6cf 75%, #d4f0f8 100%) !important;
   background-size: 200% 200% !important;
   animation: deepOceanFlow 15s ease infinite !important;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-}
-
-/* 移除海洋动画和伪元素 */
-body.season-summer::before,
-body.season-summer::after {
-  display: none !important;
 }
 
 /* 海洋渐变动画 */
@@ -86,7 +80,7 @@ body.season-summer::after {
   100% { background-position: 0% 50%; }
 }
 
-/* 海浪层1 */
+/* 海浪层1 - 光学光影 */
 body::before {
   content: '';
   position: fixed;
@@ -95,9 +89,10 @@ body::before {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(79,172,254,0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 50%, rgba(0,242,254,0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(79,172,254,0.2) 0%, transparent 50%);
+    radial-gradient(ellipse at 15% 40%, rgba(168,230,207,0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 30%, rgba(91,192,222,0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(212,240,248,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 80%, rgba(251,191,36,0.08) 0%, transparent 40%);
   animation: waveMove 20s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
@@ -109,7 +104,7 @@ body::before {
   66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
-/* 海浪层2 - 气泡效果 */
+/* 海浪层2 - 气泡上升效果 */
 body::after {
   content: '';
   position: fixed;
@@ -118,13 +113,18 @@ body::after {
   width: 100%;
   height: 200%;
   background-image: 
-    radial-gradient(2px 2px at 100px 200px, rgba(255,255,255,0.3), transparent),
-    radial-gradient(2px 2px at 300px 400px, rgba(255,255,255,0.2), transparent),
-    radial-gradient(3px 3px at 500px 100px, rgba(255,255,255,0.3), transparent),
-    radial-gradient(2px 2px at 700px 300px, rgba(255,255,255,0.2), transparent),
-    radial-gradient(2px 2px at 900px 500px, rgba(255,255,255,0.3), transparent);
-  background-size: 200px 200px;
-  animation: bubbleFloat 30s linear infinite;
+    radial-gradient(2px 2px at 60px 300px, rgba(255,255,255,0.45), transparent),
+    radial-gradient(3px 3px at 180px 500px, rgba(255,255,255,0.35), transparent),
+    radial-gradient(2px 2px at 320px 150px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(4px 4px at 450px 400px, rgba(255,255,255,0.3), transparent),
+    radial-gradient(2px 2px at 580px 250px, rgba(255,255,255,0.45), transparent),
+    radial-gradient(3px 3px at 720px 550px, rgba(255,255,255,0.35), transparent),
+    radial-gradient(2px 2px at 850px 100px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(4px 4px at 950px 350px, rgba(255,255,255,0.3), transparent),
+    radial-gradient(2px 2px at 1050px 500px, rgba(255,255,255,0.35), transparent),
+    radial-gradient(3px 3px at 1150px 200px, rgba(255,255,255,0.4), transparent);
+  background-size: 250px 250px;
+  animation: bubbleFloat 25s linear infinite;
   pointer-events: none;
   z-index: 0;
 }
@@ -132,6 +132,30 @@ body::after {
 @keyframes bubbleFloat {
   from { transform: translateY(0); }
   to { transform: translateY(50%); }
+}
+
+/* 海岛椰风光学层 */
+body.season-summer::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    /* 阳光洒落 */
+    radial-gradient(ellipse at 20% 0%, rgba(251,191,36,0.1) 0%, transparent 45%),
+    radial-gradient(ellipse at 60% 0%, rgba(255,255,255,0.12) 0%, transparent 40%),
+    /* 水面反光 */
+    radial-gradient(ellipse at 30% 90%, rgba(168,230,207,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 85%, rgba(91,192,222,0.12) 0%, transparent 45%);
+  animation: sunlightShimmer 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes sunlightShimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 /* 确保内容在背景之上 */
@@ -202,7 +226,7 @@ body.season-winter .hero-banner {
 }
 
 body.season-summer #login-page {
-  background: linear-gradient(160deg, #0a3d62 0%, #1565c0 40%, #0288d1 70%, #80deea 100%);
+  background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 40%, #7dd3e8 70%, #d4f0f8 100%);
 }
 body.season-autumn #login-page {
   background: linear-gradient(135deg, #7c2d12 0%, #b45309 40%, #f97316 75%, #fbbf24 100%);
@@ -212,21 +236,21 @@ body.season-winter #login-page {
 }
 
 /* 导航栏季节色 */
-body.season-summer .bottom-nav { background: var(--season-nav-grad); border-top-color: #bae6fd; }
+body.season-summer .bottom-nav { background: linear-gradient(135deg, rgba(126,200,227,0.95), rgba(212,240,248,0.97)); border-top-color: rgba(91,192,222,0.25); }
 body.season-autumn .bottom-nav { background: var(--season-nav-grad); border-top-color: #fed7aa; }
 body.season-winter .bottom-nav { background: var(--season-nav-grad); border-top-color: #c7d2fe; }
 
-body.season-summer .nav-item.active { color: #0ea5e9; }
+body.season-summer .nav-item.active { color: #3a8fb7; }
 body.season-autumn .nav-item.active { color: #f97316; }
 body.season-winter .nav-item.active { color: #3b82f6; }
 
 /* 按钮季节色 */
-body.season-summer .btn-primary { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+body.season-summer .btn-primary { background: linear-gradient(135deg, #5bc0de, #a8e6cf); }
 body.season-autumn .btn-primary { background: linear-gradient(135deg, #f97316, #fbbf24); }
 body.season-winter .btn-primary { background: linear-gradient(135deg, #3b82f6, #818cf8); }
 
-body.season-summer .counter-block { background: #ffffff; border-color: rgba(56,189,248,0.15); }
-body.season-summer .counter-block span { color: #0288d1; }
+body.season-summer .counter-block { background: rgba(255,255,255,0.7); border-color: rgba(91,192,222,0.2); }
+body.season-summer .counter-block span { color: #1a6b8a; }
 body.season-summer .counter-block small { color: #475569; }
 
 body.season-autumn .counter-block { background: #ffffff; border-color: rgba(251,191,36,0.15); }
@@ -260,11 +284,11 @@ body.season-spring .counter-block small { color: #475569; }
   max-width: 260px;
   border-radius: 16px;
   position: relative;
-  background: rgba(255,255,255,0.45);
-  backdrop-filter: blur(30px) saturate(1.4);
-  -webkit-backdrop-filter: blur(30px) saturate(1.4);
-  border: 0.5px solid rgba(255,255,255,0.6);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6);
+  background: rgba(240,248,252,0.35);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 0.5px solid rgba(91,192,222,0.25);
+  box-shadow: 0 8px 32px rgba(91,192,222,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -282,12 +306,12 @@ body.season-spring .counter-block small { color: #475569; }
   -webkit-backdrop-filter: blur(20px);
 }
 
-.season-summer .calendar-header { background: rgba(14,165,233,0.5); color: #0369a1; }
+.season-summer .calendar-header { background: rgba(91,192,222,0.35); color: #1a6b8a; }
 .season-spring .calendar-header { background: rgba(59,130,246,0.5); color: #1d4ed8; }
 .season-autumn .calendar-header { background: rgba(249,115,22,0.5); color: #c2410c; }
 .season-winter .calendar-header { background: rgba(99,102,241,0.5); color: #4338ca; }
 
-body.season-summer .calendar-header { background: rgba(14,165,233,0.5); color: #0369a1; }
+body.season-summer .calendar-header { background: rgba(91,192,222,0.35); color: #1a6b8a; }
 body.season-autumn .calendar-header { background: rgba(249,115,22,0.5); color: #c2410c; }
 body.season-winter .calendar-header { background: rgba(99,102,241,0.5); color: #4338ca; }
 body.season-spring .calendar-header { background: rgba(59,130,246,0.5); color: #1d4ed8; }
@@ -345,7 +369,7 @@ body.season-spring .calendar-header { background: rgba(59,130,246,0.5); color: #
   font-weight: 700;
   transform: scale(1.08);
 }
-body.season-summer .cal-day.today { background: #0ea5e9; }
+body.season-summer .cal-day.today { background: #5bc0de; }
 body.season-autumn .cal-day.today { background: #f97316; }
 body.season-winter .cal-day.today { background: #3b82f6; }
 body.season-spring .cal-day.today { background: #3b82f6; }
@@ -394,11 +418,11 @@ body.season-spring .cal-day.today { background: #3b82f6; }
   max-width: 260px;
   border-radius: 16px;
   position: relative;
-  background: rgba(255,255,255,0.45);
-  backdrop-filter: blur(30px) saturate(1.4);
-  -webkit-backdrop-filter: blur(30px) saturate(1.4);
-  border: 0.5px solid rgba(255,255,255,0.6);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6);
+  background: rgba(240,248,252,0.35);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 0.5px solid rgba(91,192,222,0.25);
+  box-shadow: 0 8px 32px rgba(91,192,222,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
   display: flex;
   flex-direction: column;
 }
@@ -419,7 +443,7 @@ body.season-spring .cal-day.today { background: #3b82f6; }
 .weather-city:hover { color: var(--blue-500); }
 .weather-update { font-size: 9px; color: var(--text-lighter); font-weight: 400; }
 
-body.season-summer .weather-header { background: rgba(14,165,233,0.35); color: #0369a1; }
+body.season-summer .weather-header { background: rgba(91,192,222,0.28); color: #1a6b8a; }
 body.season-spring .weather-header { background: rgba(59,130,246,0.35); color: #1d4ed8; }
 body.season-autumn .weather-header { background: rgba(249,115,22,0.35); color: #c2410c; }
 body.season-winter .weather-header { background: rgba(99,102,241,0.35); color: #4338ca; }
@@ -678,7 +702,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%);
+  background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%);
   position: relative;
   overflow: hidden;
 }
@@ -689,7 +713,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(96,165,250,0.1) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(91,192,222,0.12) 0%, transparent 60%);
   animation: float 8s ease-in-out infinite;
 }
 @keyframes float {
@@ -698,11 +722,12 @@ body {
 }
 
 .login-container {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
   border-radius: 24px;
   padding: 48px 40px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 40px rgba(91,192,222,0.2), 0 0 0 1px rgba(255,255,255,0.6);
   text-align: center;
   max-width: 420px;
   width: 90%;
@@ -730,17 +755,39 @@ body {
 }
 .login-avatar {
   cursor: pointer;
-  padding: 16px 28px;
-  border-radius: 16px;
-  border: 2px solid var(--blue-200);
-  transition: all 0.3s ease;
-  background: var(--blue-50);
+  padding: 18px 30px;
+  border-radius: 18px;
+  border: 2px solid rgba(91,192,222,0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+}
+.login-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24, #fcd34d, #fbbf24);
+  background-size: 300% 300%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: goldenBorderShine 3s linear infinite;
+}
+.login-avatar:hover::after {
+  opacity: 0.8;
 }
 .login-avatar:hover {
-  border-color: var(--blue-400);
-  background: var(--blue-100);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(59,130,246,0.2);
+  border-color: #fbbf24;
+  background: rgba(255,255,255,0.75);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 0 30px rgba(251,191,36,0.5), 0 0 60px rgba(245,158,11,0.25), 0 12px 30px rgba(91,192,222,0.2);
+}
+@keyframes goldenBorderShine {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 .login-avatar:active {
   transform: scale(0.95);
@@ -748,18 +795,31 @@ body {
 .login-avatar span { font-size: 36px; display: block; }
 .login-avatar p { font-size: 14px; color: var(--text); margin-top: 4px; font-weight: 600; }
 
-/* 头像金边闪耀 */
+/* 头像金边闪耀 - 选中态：金光璀璨包裹 */
 .login-avatar.avatar-golden {
   border-color: #fbbf24 !important;
-  background: #fff7ed !important;
-  box-shadow: 0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.3), 0 0 80px rgba(245,158,11,0.2);
-  animation: avatarGoldenPulse 0.6s ease-in-out 3;
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 30px rgba(251,191,36,0.7), 0 0 60px rgba(245,158,11,0.4), 0 0 100px rgba(251,191,36,0.2);
+  animation: avatarGoldenPulse 0.8s ease-in-out infinite;
   transform: scale(1.08);
   pointer-events: none;
 }
+.login-avatar.avatar-golden::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #fcd34d, #f59e0b, #fbbf24);
+  background-size: 300% 300%;
+  z-index: -1;
+  opacity: 0.9;
+  animation: goldenBorderShine 2s linear infinite;
+}
 @keyframes avatarGoldenPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.3); }
-  50%      { box-shadow: 0 0 40px rgba(251,191,36,0.9), 0 0 80px rgba(245,158,11,0.5), 0 0 120px rgba(245,158,11,0.2); }
+  0%, 100% { box-shadow: 0 0 30px rgba(251,191,36,0.6), 0 0 60px rgba(245,158,11,0.3), 0 0 100px rgba(251,191,36,0.15); }
+  50%      { box-shadow: 0 0 50px rgba(251,191,36,0.95), 0 0 90px rgba(245,158,11,0.5), 0 0 140px rgba(251,191,36,0.3); }
 }
 
 /* 两个头像都禁用点击 */

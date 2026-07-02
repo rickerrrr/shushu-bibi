@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <title>鼠鼠 & 笔笔 · 恋爱官网</title>
-<meta name="theme-color" content="#3b82f6">
+<meta name="theme-color" content="#5bc0de">
 <meta name="description" content="鼠鼠和笔笔的专属恋爱官网，记录往后每一天的相处、约会与成长">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -32,25 +32,25 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=7.0">
+    <link rel="stylesheet" href="css/style.css?v=7.1">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
     <style>
-        /* ========== 深蓝海洋主题（用户确认的正确颜色）========== */
+        /* ========== 浅色海洋·海岛椰风主题 ========== */
         body {
-            background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 20%, #006994 45%, #0ea5e9 75%, #38bdf8 100%) !important;
+            background: linear-gradient(160deg, #7ec8e3 0%, #5db8d4 20%, #8ed5e8 45%, #a8e6cf 75%, #d4f0f8 100%) !important;
             background-size: 200% 200% !important;
             animation: oceanGradient 15s ease infinite !important;
             min-height: 100vh !important;
-            color: #e8f4f8 !important;
+            color: #1a3a4a !important;
         }
 
-        /* 登录页 - 深蓝海洋渐变 */
+        /* 登录页 - 浅色海洋渐变 */
         #login-page {
             display: flex !important;
             visibility: visible !important;
-            background: linear-gradient(160deg, #0c3d5c 0%, #084c6e 25%, #006994 50%, #0ea5e9 80%, #38bdf8 100%) !important;
+            background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%) !important;
         }
 
         /* 登录前隐藏主内容和导航栏 */
@@ -154,11 +154,7 @@ window.doLogin = window.doLogin || function(user) {
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* 海洋背景 */
-        body {
-            background: linear-gradient(135deg, #87CEEB 0%, #5dade2 25%, #3498db 50%, #2e86c1 75%, #1b4f72 100%) !important;
-            background-attachment: fixed !important;
-        }
+        /* 海洋背景 - 由上面季节主题统一控制 */
         
         /* 新模块默认折叠 */
         #weather-section-pro,
@@ -684,13 +680,13 @@ window.doLogin = window.doLogin || function(user) {
 <!-- 紧急缓存清理 - v4.0 全面核弹级清理 -->
 <script>
 (function forceClearCache() {
-  var APP_VER = '4.0';
+  var APP_VER = '4.1';
   console.log('%c [v4.0] 全面核弹级缓存清理启动...', 'color: #ff6b6b; font-weight: bold; font-size: 14px');
 
   // 检测版本不一致 → 强制清缓存重载
   var storedVer = localStorage.getItem('_app_ver');
   if (storedVer && storedVer !== APP_VER) {
-    console.log('%c [v4.0] 检测到旧版本(' + storedVer + ') → 立即升级到 ' + APP_VER + '，全面清理', 'color: red; font-weight: bold');
+    console.log('%c [v4.1] 检测到旧版本(' + storedVer + ') → 立即升级到 ' + APP_VER + '，全面清理', 'color: red; font-weight: bold');
 
     // 1. 清理 Cache API (Service Worker 缓存)
     if ('caches' in window) {
@@ -3887,6 +3883,7 @@ document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
 })();
 </script>
 <script src="js/theme-switcher.js?v=3.0"></script>
+<script src="js/ocean-particles-v1.js?v=4.1"></script>
 <script src="js/milestone-v2.js?v=3.0"></script>
 <script src="js/epic-features-v1.js?v=6.0"></script>
 <script src="js/enhanced-features-v1.js?v=3.0"></script>
