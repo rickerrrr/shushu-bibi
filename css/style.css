@@ -55,12 +55,12 @@ body.season-summer {
   --season-nav-grad: linear-gradient(135deg, rgba(12,61,92,0.97), rgba(8,76,110,0.98));
   --season-card-glow: rgba(0,105,148,0.25);
   --bg: #0a1628;
-  --bg-card: rgba(14,30,50,0.85);
-  --text: #e8f4f8;
-  --text-light: rgba(232,244,248,0.75);
-  --border: rgba(14,165,233,0.3);
-  --shadow: 0 2px 12px rgba(0,105,148,0.2);
-  --shadow-lg: 0 8px 30px rgba(0,105,148,0.35);
+  --bg-card: rgba(255,255,255,0.92);
+  --text: #1e293b;
+  --text-light: #475569;
+  --border: rgba(59,130,246,0.2);
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 /* 深蓝海洋背景（覆盖所有其他样式） */
