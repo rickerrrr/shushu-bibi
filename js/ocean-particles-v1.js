@@ -229,8 +229,8 @@
   // ==================== 暴露API ====================
   window.OceanParticles = { init, start, stop, destroy, resize };
 
-  // 自动启动（仅夏季）
-  if (document.body.classList.contains('season-summer')) {
+  // 自动启动（仅夏季 + 仅登录后）
+  if (document.body.classList.contains('season-summer') && document.body.classList.contains('logged-in')) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {

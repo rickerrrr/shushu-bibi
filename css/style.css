@@ -697,28 +697,51 @@ body {
 .hidden { display: none !important; }
 
 /* ==================== 登录页 ==================== */
+/* ===== 登录页：去除所有动画效果 ===== */
+body:not(.logged-in),
+body:not(.logged-in)::before,
+body:not(.logged-in)::after {
+  animation: none !important;
+}
+body:not(.logged-in) #login-page,
+body:not(.logged-in) #login-page *,
+body:not(.logged-in) #login-page::before,
+body:not(.logged-in) #login-page::after {
+  animation: none !important;
+  transition: none !important;
+}
+
 #login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%);
+  background: linear-gradient(160deg, #7ec8e3 0%, #5db8d4 20%, #8ed5e8 45%, #a8e6cf 75%, #d4f0f8 100%);
   position: relative;
   overflow: hidden;
 }
 #login-page::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(91,192,222,0.12) 0%, transparent 60%);
-  animation: float 8s ease-in-out infinite;
+  display: none;
 }
-@keyframes float {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-30px, 20px); }
+/* (float keyframe 已移除 - 登录页不再使用) */
+
+/* ===== 漂浮爱心云 ===== */
+.login-cloud {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+.login-cloud img {
+  width: 180px;
+  height: auto;
+  animation: cloudFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(236,72,153,0.25));
+}
+@keyframes cloudFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25%      { transform: translateY(-8px) scale(1.02); }
+  50%      { transform: translateY(-4px) scale(1); }
+  75%      { transform: translateY(-10px) scale(1.01); }
 }
 
 .login-container {

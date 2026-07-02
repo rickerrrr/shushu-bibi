@@ -336,6 +336,8 @@ async function doLogin(user) {
           if (app) app.classList.remove('hidden');
           // 🔥 关键：给 body 添加 logged-in 类，触发内联 CSS 页面切换
           document.body.classList.add('logged-in');
+          // 启动海洋粒子系统（登录后才显示）
+          if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
           // 同时显示顶部栏和底部导航
           const topBar = document.querySelector('.top-bar');
           if (topBar) topBar.style.display = '';
