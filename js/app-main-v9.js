@@ -338,12 +338,12 @@ async function doLogin(user) {
           showToast('欢迎回来，' + myName + '！💕');
           window._loginInProgress = false;
           
-          // 💌 显示2.0情书（只显示一次）
-          setTimeout(function() {
-            if (typeof showV2Letter === 'function' && !localStorage.getItem('v2_letter_seen')) {
-              showV2Letter();
-            }
-          }, 1500);
+          // 💌 2.0情书已禁用（旧版上线纪念，不应再出现）
+          // setTimeout(function() {
+          //   if (typeof showV2Letter === 'function' && !localStorage.getItem('v2_letter_seen')) {
+          //     showV2Letter();
+          //   }
+          // }, 1500);
         }, 1200);
       }, 2500);
     }, 1000);
@@ -662,7 +662,7 @@ function initApp() {
   renderAllModules();
   switchPage('home');
   autoSignIn();
-  triggerSolarTerm();
+  // triggerSolarTerm();  /* 已禁用：节气动画全屏覆盖无关闭按钮，阻塞登录 */
   initLoveQuotes();
   initNotifications();
 }
