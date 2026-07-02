@@ -334,6 +334,13 @@ async function doLogin(user) {
           if (loginPage) loginPage.classList.add('hidden');
           const app = document.getElementById('app');
           if (app) app.classList.remove('hidden');
+          // 🔥 关键：给 body 添加 logged-in 类，触发内联 CSS 页面切换
+          document.body.classList.add('logged-in');
+          // 同时显示顶部栏和底部导航
+          const topBar = document.querySelector('.top-bar');
+          if (topBar) topBar.style.display = '';
+          const bottomNav = document.querySelector('.bottom-nav');
+          if (bottomNav) bottomNav.style.display = '';
           initApp();
           showToast('欢迎回来，' + myName + '！💕');
           window._loginInProgress = false;
@@ -571,6 +578,7 @@ function spawnSingleBurst(container, colors) {
 function doLogout() {
   if (confirm('确定要退出登录吗？')) {
     currentUser = null;
+    document.body.classList.remove('logged-in');
     document.getElementById('app').classList.add('hidden');
     document.getElementById('login-page').classList.remove('hidden');
     if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }

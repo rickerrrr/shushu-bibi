@@ -681,27 +681,76 @@ window.doLogin = window.doLogin || function(user) {
 </head>
 <body>
 
-<!-- 紧急缓存清理 -->
+<!-- 紧急缓存清理 - v4.0 全面核弹级清理 -->
 <script>
 (function forceClearCache() {
-  var APP_VER = '3.3';
-  console.log('%c v=20260702 强制清理旧缓存...', 'color: cyan; font-weight: bold');
+  var APP_VER = '4.0';
+  console.log('%c [v4.0] 全面核弹级缓存清理启动...', 'color: #ff6b6b; font-weight: bold; font-size: 14px');
 
   // 检测版本不一致 → 强制清缓存重载
   var storedVer = localStorage.getItem('_app_ver');
   if (storedVer && storedVer !== APP_VER) {
-    console.log('%c 检测到旧版本(' + storedVer + ') → 立即升级到 ' + APP_VER, 'color: red; font-weight: bold');
+    console.log('%c [v4.0] 检测到旧版本(' + storedVer + ') → 立即升级到 ' + APP_VER + '，全面清理', 'color: red; font-weight: bold');
+
+    // 1. 清理 Cache API (Service Worker 缓存)
     if ('caches' in window) {
       caches.keys().then(function(names) {
-        names.forEach(function(name) { caches.delete(name); });
+        names.forEach(function(name) {
+          console.log('[Cache] 删除 SW 缓存:', name);
+          caches.delete(name);
+        });
       });
     }
-    localStorage.setItem('_app_ver', APP_VER);
+
+    // 2. 清理所有 IndexedDB 数据库
+    if ('indexedDB' in window) {
+      var idbReq = indexedDB.databases ? indexedDB.databases() : Promise.resolve([]);
+      idbReq.then(function(dbs) {
+        (dbs || []).forEach(function(db) {
+          console.log('[Cache] 删除 IndexedDB:', db.name);
+          indexedDB.deleteDatabase(db.name);
+        });
+      });
+    }
+
+    // 3. 清理 sessionStorage
     sessionStorage.clear();
-    location.reload(true);
+    console.log('[Cache] sessionStorage 已清空');
+
+    // 4. 清理所有 localStorage 中非永久性数据（保留有用数据）
+    var keysToRemove = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      // 只保留必要的配置项
+      if (key !== '_theme' && key !== '_app_ver') {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(function(key) {
+      console.log('[Cache] 删除 localStorage:', key);
+      localStorage.removeItem(key);
+    });
+
+    // 5. 注销所有 Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        regs.forEach(function(reg) {
+          console.log('[Cache] 注销 SW:', reg.scope);
+          reg.unregister();
+        });
+      });
+    }
+
+    // 保存新版本号并重载
+    localStorage.setItem('_app_ver', APP_VER);
+    console.log('%c [v4.0] ✅ 全部缓存已清理，即将刷新页面...', 'color: green; font-weight: bold');
+    setTimeout(function() { location.reload(true); }, 300);
     return;
   }
   localStorage.setItem('_app_ver', APP_VER);
+
+  // 每次加载也执行基础清理
+  console.log('%c [v4.0] 版本一致，执行日常缓存维护...', 'color: cyan; font-weight: bold');
 
   // 🔥 强制清除所有 Service Worker 和缓存（避免旧版 JS 干扰）
   if ('serviceWorker' in navigator) {
