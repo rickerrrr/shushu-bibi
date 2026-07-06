@@ -232,18 +232,94 @@ function showToast(msg) {
 
 function formatCurrency(n) { return '¥' + Number(n).toFixed(2); }
 
-// ==================== 登录系统（共享账号自动登录版） ====================
+// ==================== 登录系统（独立账号密码登录） ====================
 
-// 共享账号（两人共用一个 Supabase Auth 账号，点击头像自动登录）
-// 在 Supabase Auth 中手动创建此账号：
-//   Email: couple@shushu-bibi.cn
-//   Password: ShushuBibi2026!
-const AUTH_ACCOUNTS = {
-  shushu: { email: 'couple@shushu-bibi.cn', password: 'ShushuBibi2026!' },
-  bibi:   { email: 'couple@shushu-bibi.cn', password: 'ShushuBibi2026!' }
-};
+// 角色邮箱映射来自 supabase-core.js (window.ROLE_EMAILS)
+// 密码由用户在登录页输入，不硬编码
 
-async function doLogin(user) {
+// 当前等待登录的角色
+let pendingLoginRole = null;
+
+/**
+ * 显示密码输入弹窗
+ * @param {string} role - 'shushu' | 'bibi'
+ */
+function showPasswordPrompt(role) {
+  if (window._loginInProgress) return;
+  pendingLoginRole = role;
+
+  const overlay = document.getElementById('password-prompt-overlay');
+  const avatar = document.getElementById('pp-avatar');
+  const title = document.getElementById('pp-title');
+  const input = document.getElementById('pp-input');
+  const error = document.getElementById('pp-error');
+  const confirmBtn = document.getElementById('pp-confirm');
+
+  if (!overlay) return;
+
+  // 设置弹窗内容
+  avatar.textContent = role === 'shushu' ? '🐹' : '🐱';
+  title.textContent = (role === 'shushu' ? '鼠鼠' : '笔笔') + '登录';
+  input.value = '';
+  error.textContent = '';
+  confirmBtn.disabled = false;
+  confirmBtn.textContent = '登录';
+
+  // 显示弹窗
+  overlay.classList.add('show');
+
+  // 自动聚焦输入框
+  setTimeout(() => input.focus(), 300);
+
+  // 回车键提交
+  input.onkeydown = function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submitPassword();
+    }
+  };
+}
+
+/**
+ * 关闭密码弹窗
+ */
+function closePasswordPrompt() {
+  const overlay = document.getElementById('password-prompt-overlay');
+  if (overlay) overlay.classList.remove('show');
+  pendingLoginRole = null;
+}
+
+/**
+ * 提交密码并登录
+ */
+async function submitPassword() {
+  if (!pendingLoginRole) return;
+
+  const input = document.getElementById('pp-input');
+  const error = document.getElementById('pp-error');
+  const confirmBtn = document.getElementById('pp-confirm');
+
+  const password = input.value.trim();
+  if (!password) {
+    error.textContent = '请输入密码';
+    input.focus();
+    return;
+  }
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '登录中...';
+  error.textContent = '';
+
+  // 关闭弹窗
+  const overlay = document.getElementById('password-prompt-overlay');
+  if (overlay) overlay.classList.remove('show');
+
+  // 调用登录
+  await doLogin(pendingLoginRole, password);
+  pendingLoginRole = null;
+}
+
+async function doLogin(user, password) {
   if (window._loginInProgress) return;
   window._loginInProgress = true;
   currentUser = user || 'shushu';
@@ -259,24 +335,35 @@ async function doLogin(user) {
   const hint = document.getElementById('login-click-hint');
   if (hint) hint.style.display = 'none';
 
-  // 🔥 Supabase Auth 登录
-  const credentials = AUTH_ACCOUNTS[currentUser];
-  console.log(`[Auth] 尝试登录: ${currentUser} (${credentials.email})`);
+  // Supabase Auth 登录（真实密码认证）
+  const email = window.ROLE_EMAILS && window.ROLE_EMAILS[currentUser];
+  if (!email) {
+    showToast('登录配置错误：找不到邮箱');
+    window._loginInProgress = false;
+    if (avatars) avatars.classList.remove('all-disabled');
+    return;
+  }
+
+  console.log(`[Auth] 尝试登录: ${currentUser} (${email})`);
 
   try {
-    const result = await authSignIn(credentials.email, credentials.password, currentUser);
+    const result = await authSignIn(email, password, currentUser);
     if (!result.success) {
       console.error('[Auth] 登录失败:', result.error);
       showToast('登录失败：' + result.error);
       window._loginInProgress = false;
       if (avatars) avatars.classList.remove('all-disabled');
+      if (hint) hint.style.display = '';
       return;
     }
     console.log(`[Auth] ✅ 登录成功: ${currentUser}`);
   } catch (e) {
     console.error('[Auth] 登录异常:', e);
-    // 如果 Supabase 不可用，降级为本地模式
-    console.log('[Auth] Supabase 不可用，使用本地模式');
+    showToast('登录异常：' + e.message);
+    window._loginInProgress = false;
+    if (avatars) avatars.classList.remove('all-disabled');
+    if (hint) hint.style.display = '';
+    return;
   }
 
   // 消息列表（对方发给点击者）
@@ -343,16 +430,77 @@ async function doLogin(user) {
 
 function doLogout() {
   if (confirm('确定要退出登录吗？')) {
-    currentUser = null;
-    document.body.classList.remove('logged-in');
-    document.getElementById('app').classList.add('hidden');
-    document.getElementById('login-page').classList.remove('hidden');
-    if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
+    // 调用 Supabase Auth 登出
+    if (typeof authSignOut === 'function') {
+      authSignOut().then(() => {
+        currentUser = null;
+        document.body.classList.remove('logged-in');
+        document.getElementById('app').classList.add('hidden');
+        document.getElementById('login-page').classList.remove('hidden');
+        if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
+        // 重新显示提示文字
+        const hint = document.getElementById('login-click-hint');
+        if (hint) hint.style.display = '';
+        // 重新启用头像
+        const avatars = document.getElementById('login-avatars');
+        if (avatars) avatars.classList.remove('all-disabled');
+      });
+    } else {
+      currentUser = null;
+      document.body.classList.remove('logged-in');
+      document.getElementById('app').classList.add('hidden');
+      document.getElementById('login-page').classList.remove('hidden');
+      if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
+    }
+  }
+}
+
+// ==================== Session 恢复（页面刷新后自动登录）====================
+async function tryRestoreSession() {
+  try {
+    // 等待 Supabase 初始化
+    if (typeof initSupabase === 'function') {
+      await initSupabase();
+    }
+
+    // 尝试恢复 session
+    if (typeof restoreSession === 'function') {
+      const user = await restoreSession();
+      if (user) {
+        console.log('[Auth] ✅ Session 恢复成功，跳过登录页:', user.role);
+        currentUser = user.role;
+
+        // 隐藏登录页，显示应用
+        const loginPage = document.getElementById('login-page');
+        if (loginPage) loginPage.classList.add('hidden');
+        const app = document.getElementById('app');
+        if (app) app.classList.remove('hidden');
+        document.body.classList.add('logged-in');
+        if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
+        const topBar = document.querySelector('.top-bar');
+        if (topBar) topBar.style.display = '';
+        const bottomNav = document.querySelector('.bottom-nav');
+        if (bottomNav) bottomNav.style.display = '';
+
+        // 初始化应用
+        initApp();
+        showToast('欢迎回来，' + (user.role === 'shushu' ? '鼠鼠' : '笔笔') + '！💕');
+        return true;
+      }
+    }
+    console.log('[Auth] 无有效 session，显示登录页');
+    return false;
+  } catch (e) {
+    console.error('[Auth] Session 恢复失败:', e.message);
+    return false;
   }
 }
 
 // 登录页头像切换
 document.addEventListener('DOMContentLoaded', () => {
+  // 尝试恢复已有 session（页面刷新后自动登录）
+  tryRestoreSession();
+
   document.querySelectorAll('.login-avatar').forEach(av => {
     av.addEventListener('click', () => {
       document.querySelectorAll('.login-avatar').forEach(a => a.classList.remove('active'));

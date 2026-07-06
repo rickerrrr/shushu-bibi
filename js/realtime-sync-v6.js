@@ -144,14 +144,6 @@
 
   // ==================== 公开 API ====================
 
-  window.switchUser = function(user) {
-    if (user === 'shushu' || user === 'bibi') {
-      localStorage.setItem('currentUser', user);
-      state.currentUser = user;
-      console.log('切换用户：', user === 'shushu' ? '鼠鼠' : '笔笔');
-    }
-  };
-
   window.getSyncState = function() {
     return {
       mode: 'local',
@@ -170,7 +162,6 @@
   window.RealtimeSync = {
     getState: function() { return state; },
     getSyncState: window.getSyncState,
-    switchUser: window.switchUser,
     sendMessage: window.sendChatMessage,
     sendWall: window.sendWallMessage,
   };

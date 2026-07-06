@@ -881,15 +881,6 @@
     });
   };
   
-  window.switchUser = function(user) {
-    if (user === 'shushu' || user === 'bibi') {
-      localStorage.setItem('currentUser', user);
-      state.currentUser = user;
-      showToast(`🔑 切换为：${user === 'shushu' ? '🐭鼠鼠' : '🐱笔笔'}`);
-      updateOnlineStatus();
-    }
-  };
-  
   // ========== 启动 ==========
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => setTimeout(init, 2000));
@@ -901,7 +892,6 @@
   window.RealtimeSync = {
     getState: () => state,
     forceSync: window.forceSyncAll,
-    switchUser: window.switchUser,
     sendMessage: window.sendChatMessage,
     sendWall: window.sendWallMessage,
   };

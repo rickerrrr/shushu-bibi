@@ -610,18 +610,30 @@ function showOfflineNotice() {
         </div>
       </div>
       <div class="login-avatars" id="login-avatars">
-        <div class="login-avatar" data-user="shushu" onclick="doLogin('shushu')">
+        <div class="login-avatar" data-user="shushu" onclick="showPasswordPrompt('shushu')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-shushu">🐹</span><p>鼠鼠</p>
         </div>
-        <div class="login-avatar" data-user="bibi" onclick="doLogin('bibi')">
+        <div class="login-avatar" data-user="bibi" onclick="showPasswordPrompt('bibi')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-bibi">🐱</span><p>笔笔</p>
         </div>
       </div>
     </div>
+    <!-- 密码输入弹窗 -->
+    <div class="password-prompt-overlay" id="password-prompt-overlay">
+      <div class="password-prompt-box">
+        <div class="password-prompt-avatar" id="pp-avatar">🐹</div>
+        <h3 class="password-prompt-title" id="pp-title">鼠鼠登录</h3>
+        <input type="password" class="password-input" id="pp-input" placeholder="请输入密码" autocomplete="current-password" />
+        <p class="password-error" id="pp-error"></p>
+        <div class="password-prompt-buttons">
+          <button class="pp-cancel" onclick="closePasswordPrompt()">取消</button>
+          <button class="pp-confirm" id="pp-confirm" onclick="submitPassword()">登录</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2413,9 +2425,10 @@ function showOfflineNotice() {
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '11.0';
+const _CB = '12.0';
 /* config.js removed - v5 auto-detects */
 document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/device-fingerprint.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/app-main-v9.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/realtime-sync-v6.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/app-modules-v15.js?v='+_CB+'"><\/script>');
@@ -3661,7 +3674,7 @@ document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
 
 })();
 </script>
-<script src="js/ocean-daycycle-v1.js?v=1.0"></script>
+<script src="js/ocean-daycycle-v1.js?v=1.1"></script>
 <script src="js/theme-switcher.js?v=3.0"></script>
 <script src="js/milestone-v2.js?v=3.0"></script>
 <script src="js/epic-features-v1.js?v=6.0"></script>

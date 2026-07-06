@@ -152,6 +152,21 @@ initSky();
 function drawSky(pd,t){
   var ctx=ctxSky;ctx.clearRect(0,0,W,H);
   var p=pd.phase;var sa=p.starAlpha;
+
+  /* sun / moon — ALWAYS draw (was hidden at noon when starAlpha=0) */
+  var cyclePos=(Date.now()%(CYCLE_DURATION*4))/(CYCLE_DURATION*4);
+  var smAngle=cyclePos*Math.PI*2-Math.PI/2;
+  sunMoon.x=W*0.5+Math.cos(smAngle)*W*0.35;
+  sunMoon.y=H*SEA_Y*0.5+Math.sin(smAngle)*H*SEA_Y*0.4;
+  var isNight=pd.idx===3;
+  var glowR=sunMoon.r*4;
+  var glow=ctx.createRadialGradient(sunMoon.x,sunMoon.y,0,sunMoon.x,sunMoon.y,glowR);
+  glow.addColorStop(0,rgbStr(p.sunGlowR,p.sunGlowG,p.sunGlowB,0.25));glow.addColorStop(1,rgbStr(p.sunGlowR,p.sunGlowG,p.sunGlowB,0));
+  ctx.fillStyle=glow;ctx.beginPath();ctx.arc(sunMoon.x,sunMoon.y,glowR,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=isNight?'rgba(220,230,255,1)':'rgba(255,245,200,1)';
+  ctx.beginPath();ctx.arc(sunMoon.x,sunMoon.y,sunMoon.r,0,Math.PI*2);ctx.fill();
+
+  /* stars / galaxy / meteors — only when visible */
   if(sa<0.01)return;
   if(sa>0.3){
     var galGrad=ctx.createRadialGradient(W*0.5,H*0.18,0,W*0.5,H*0.18,W*0.5);
@@ -172,18 +187,6 @@ function drawSky(pd,t){
     for(var j=0;j<m.trail.length;j++){var tp=m.trail[j];var ta=(j/m.trail.length)*m.life*sa;ctx.fillStyle='rgba(255,255,240,'+ta+')';ctx.beginPath();ctx.arc(tp.x,tp.y,1.5*(j/m.trail.length),0,Math.PI*2);ctx.fill()}
     ctx.fillStyle='rgba(255,255,255,'+(m.life*sa)+')';ctx.beginPath();ctx.arc(m.x,m.y,2,0,Math.PI*2);ctx.fill();
   }
-  /* sun / moon */
-  var cyclePos=(Date.now()%(CYCLE_DURATION*4))/(CYCLE_DURATION*4);
-  var smAngle=cyclePos*Math.PI*2-Math.PI/2;
-  sunMoon.x=W*0.5+Math.cos(smAngle)*W*0.35;
-  sunMoon.y=H*SEA_Y*0.5+Math.sin(smAngle)*H*SEA_Y*0.4;
-  var isNight=pd.idx===3;
-  var glowR=sunMoon.r*4;
-  var glow=ctx.createRadialGradient(sunMoon.x,sunMoon.y,0,sunMoon.x,sunMoon.y,glowR);
-  glow.addColorStop(0,rgbStr(p.sunGlowR,p.sunGlowG,p.sunGlowB,0.25));glow.addColorStop(1,rgbStr(p.sunGlowR,p.sunGlowG,p.sunGlowB,0));
-  ctx.fillStyle=glow;ctx.beginPath();ctx.arc(sunMoon.x,sunMoon.y,glowR,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle=isNight?'rgba(220,230,255,1)':'rgba(255,245,200,1)';
-  ctx.beginPath();ctx.arc(sunMoon.x,sunMoon.y,sunMoon.r,0,Math.PI*2);ctx.fill();
 }
 
 /* ===== Sea surface layer (wave highlights + caustics, no opaque fill) ===== */
