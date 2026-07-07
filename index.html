@@ -610,28 +610,15 @@ function showOfflineNotice() {
         </div>
       </div>
       <div class="login-avatars" id="login-avatars">
-        <div class="login-avatar" data-user="shushu" onclick="showPasswordPrompt('shushu')">
+        <div class="login-avatar" data-user="shushu" onclick="doLogin('shushu')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-shushu">🐹</span><p>鼠鼠</p>
         </div>
-        <div class="login-avatar" data-user="bibi" onclick="showPasswordPrompt('bibi')">
+        <div class="login-avatar" data-user="bibi" onclick="doLogin('bibi')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-bibi">🐱</span><p>笔笔</p>
-        </div>
-      </div>
-    </div>
-    <!-- 密码输入弹窗 -->
-    <div class="password-prompt-overlay" id="password-prompt-overlay">
-      <div class="password-prompt-box">
-        <div class="password-prompt-avatar" id="pp-avatar">🐹</div>
-        <h3 class="password-prompt-title" id="pp-title">鼠鼠登录</h3>
-        <input type="password" class="password-input" id="pp-input" placeholder="请输入密码" autocomplete="current-password" />
-        <p class="password-error" id="pp-error"></p>
-        <div class="password-prompt-buttons">
-          <button class="pp-cancel" onclick="closePasswordPrompt()">取消</button>
-          <button class="pp-confirm" id="pp-confirm" onclick="submitPassword()">登录</button>
         </div>
       </div>
     </div>

@@ -232,94 +232,9 @@ function showToast(msg) {
 
 function formatCurrency(n) { return '¥' + Number(n).toFixed(2); }
 
-// ==================== 登录系统（独立账号密码登录） ====================
+// ==================== 登录系统（直接点击登录） ====================
 
-// 角色邮箱映射来自 supabase-core.js (window.ROLE_EMAILS)
-// 密码由用户在登录页输入，不硬编码
-
-// 当前等待登录的角色
-let pendingLoginRole = null;
-
-/**
- * 显示密码输入弹窗
- * @param {string} role - 'shushu' | 'bibi'
- */
-function showPasswordPrompt(role) {
-  if (window._loginInProgress) return;
-  pendingLoginRole = role;
-
-  const overlay = document.getElementById('password-prompt-overlay');
-  const avatar = document.getElementById('pp-avatar');
-  const title = document.getElementById('pp-title');
-  const input = document.getElementById('pp-input');
-  const error = document.getElementById('pp-error');
-  const confirmBtn = document.getElementById('pp-confirm');
-
-  if (!overlay) return;
-
-  // 设置弹窗内容
-  avatar.textContent = role === 'shushu' ? '🐹' : '🐱';
-  title.textContent = (role === 'shushu' ? '鼠鼠' : '笔笔') + '登录';
-  input.value = '';
-  error.textContent = '';
-  confirmBtn.disabled = false;
-  confirmBtn.textContent = '登录';
-
-  // 显示弹窗
-  overlay.classList.add('show');
-
-  // 自动聚焦输入框
-  setTimeout(() => input.focus(), 300);
-
-  // 回车键提交
-  input.onkeydown = function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      submitPassword();
-    }
-  };
-}
-
-/**
- * 关闭密码弹窗
- */
-function closePasswordPrompt() {
-  const overlay = document.getElementById('password-prompt-overlay');
-  if (overlay) overlay.classList.remove('show');
-  pendingLoginRole = null;
-}
-
-/**
- * 提交密码并登录
- */
-async function submitPassword() {
-  if (!pendingLoginRole) return;
-
-  const input = document.getElementById('pp-input');
-  const error = document.getElementById('pp-error');
-  const confirmBtn = document.getElementById('pp-confirm');
-
-  const password = input.value.trim();
-  if (!password) {
-    error.textContent = '请输入密码';
-    input.focus();
-    return;
-  }
-
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = '登录中...';
-  error.textContent = '';
-
-  // 关闭弹窗
-  const overlay = document.getElementById('password-prompt-overlay');
-  if (overlay) overlay.classList.remove('show');
-
-  // 调用登录
-  await doLogin(pendingLoginRole, password);
-  pendingLoginRole = null;
-}
-
-async function doLogin(user, password) {
+async function doLogin(user) {
   if (window._loginInProgress) return;
   window._loginInProgress = true;
   currentUser = user || 'shushu';
@@ -335,36 +250,7 @@ async function doLogin(user, password) {
   const hint = document.getElementById('login-click-hint');
   if (hint) hint.style.display = 'none';
 
-  // Supabase Auth 登录（真实密码认证）
-  const email = window.ROLE_EMAILS && window.ROLE_EMAILS[currentUser];
-  if (!email) {
-    showToast('登录配置错误：找不到邮箱');
-    window._loginInProgress = false;
-    if (avatars) avatars.classList.remove('all-disabled');
-    return;
-  }
-
-  console.log(`[Auth] 尝试登录: ${currentUser} (${email})`);
-
-  try {
-    const result = await authSignIn(email, password, currentUser);
-    if (!result.success) {
-      console.error('[Auth] 登录失败:', result.error);
-      showToast('登录失败：' + result.error);
-      window._loginInProgress = false;
-      if (avatars) avatars.classList.remove('all-disabled');
-      if (hint) hint.style.display = '';
-      return;
-    }
-    console.log(`[Auth] ✅ 登录成功: ${currentUser}`);
-  } catch (e) {
-    console.error('[Auth] 登录异常:', e);
-    showToast('登录异常：' + e.message);
-    window._loginInProgress = false;
-    if (avatars) avatars.classList.remove('all-disabled');
-    if (hint) hint.style.display = '';
-    return;
-  }
+  console.log(`[Auth] 直接登录: ${currentUser} (${myName})`);
 
   // 消息列表（对方发给点击者）
   const messages = {
