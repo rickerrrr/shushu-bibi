@@ -22,7 +22,7 @@ var PHASES = [
     skyTop:'#FFD4AA',skyMid:'#FFE0C8',skyBot:'#FFECDD',
     seaTop:'#FFE8D0',seaShallow:'#D4E8EE',seaMid:'#90CCDE',seaDeep:'#58ADD0',seaBot:'#4090B8',
     underTop:'#7AC8E0',underMid:'#5AB0D0',underBot:'#3A98B8',
-    starAlpha:0.08,particleHue:[35,55],particleSat:45,
+    starAlpha:0.35,particleHue:[35,55],particleSat:45,
     sunColor:'#FFE4A0',sunGlowR:255,sunGlowG:210,sunGlowB:130,
     causticR:255,causticG:235,causticB:190,
     reflectAlpha:0.45,shaftAlpha:0.14
@@ -32,7 +32,7 @@ var PHASES = [
     skyTop:'#5CB8E8',skyMid:'#85D4F4',skyBot:'#B8ECFA',
     seaTop:'#B8ECFA',seaShallow:'#68C8F0',seaMid:'#38AAF0',seaDeep:'#1A90DF',seaBot:'#1078C8',
     underTop:'#48B0E0',underMid:'#3098D0',underBot:'#1080C0',
-    starAlpha:0,particleHue:[195,215],particleSat:55,
+    starAlpha:0.3,particleHue:[195,215],particleSat:55,
     sunColor:'#FFF8DC',sunGlowR:255,sunGlowG:252,sunGlowB:210,
     causticR:230,causticG:250,causticB:255,
     reflectAlpha:0.5,shaftAlpha:0.17
@@ -42,7 +42,7 @@ var PHASES = [
     skyTop:'#E87D30',skyMid:'#FF9848',skyBot:'#FFCC88',
     seaTop:'#FFCC80',seaShallow:'#FFAB65',seaMid:'#E88838',seaDeep:'#C86420',seaBot:'#A04810',
     underTop:'#D07048',underMid:'#B05838',underBot:'#904028',
-    starAlpha:0.12,particleHue:[20,40],particleSat:65,
+    starAlpha:0.45,particleHue:[20,40],particleSat:65,
     sunColor:'#FF9040',sunGlowR:255,sunGlowG:140,sunGlowB:60,
     causticR:255,causticG:200,causticB:120,
     reflectAlpha:0.4,shaftAlpha:0.15
@@ -166,11 +166,11 @@ function drawSky(pd,t){
   ctx.fillStyle=isNight?'rgba(220,230,255,1)':'rgba(255,245,200,1)';
   ctx.beginPath();ctx.arc(sunMoon.x,sunMoon.y,sunMoon.r,0,Math.PI*2);ctx.fill();
 
-  /* stars / galaxy / meteors — only when visible */
-  if(sa<0.01)return;
-  if(sa>0.3){
+  /* stars / galaxy / meteors — ALWAYS draw in every phase, never skip */
+  sa=Math.max(sa,0.2); /* minimum visibility floor */
+  {
     var galGrad=ctx.createRadialGradient(W*0.5,H*0.18,0,W*0.5,H*0.18,W*0.5);
-    galGrad.addColorStop(0,'rgba(100,120,200,'+(sa*0.08)+')');galGrad.addColorStop(0.5,'rgba(80,100,180,'+(sa*0.04)+')');galGrad.addColorStop(1,'rgba(0,0,0,0)');
+    galGrad.addColorStop(0,'rgba(100,120,200,'+(sa*0.12)+')');galGrad.addColorStop(0.5,'rgba(80,100,180,'+(sa*0.06)+')');galGrad.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=galGrad;ctx.fillRect(0,0,W,H*SEA_Y);
     for(var i=0;i<galaxyStars.length;i++){var gs=galaxyStars[i];var a=sa*(0.3+0.7*Math.abs(Math.sin(t*0.008+gs.twPhase)));ctx.fillStyle='rgba(200,220,255,'+a+')';ctx.beginPath();ctx.arc(gs.x,gs.y,gs.size,0,Math.PI*2);ctx.fill()}
   }
@@ -179,7 +179,7 @@ function drawSky(pd,t){
     if(s.size>1.2){var grad=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.size*4);grad.addColorStop(0,'rgba(200,220,255,'+(alpha*0.5)+')');grad.addColorStop(1,'rgba(200,220,255,0)');ctx.fillStyle=grad;ctx.beginPath();ctx.arc(s.x,s.y,s.size*4,0,Math.PI*2);ctx.fill()}
     ctx.fillStyle='rgba(255,255,255,'+alpha+')';ctx.beginPath();ctx.arc(s.x,s.y,s.size,0,Math.PI*2);ctx.fill();
   }
-  if(Math.random()<0.003){meteors.push({x:Math.random()*W*0.6,y:Math.random()*H*0.15,vx:Math.random()*3+4,vy:Math.random()*2+2,life:1,trail:[]})}
+  if(Math.random()<0.008){meteors.push({x:Math.random()*W*0.6,y:Math.random()*H*0.15,vx:Math.random()*3+4,vy:Math.random()*2+2,life:1,trail:[]})}
   for(var i=meteors.length-1;i>=0;i--){
     var m=meteors[i];m.trail.push({x:m.x,y:m.y});if(m.trail.length>12)m.trail.shift();
     m.x+=m.vx;m.y+=m.vy;m.life-=0.015;
