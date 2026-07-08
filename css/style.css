@@ -1256,8 +1256,8 @@ body {
   font-size: 15px;
   white-space: nowrap;
 }
-.nick-shushu { color: #0ea5e9; text-shadow: 0 0 10px rgba(14,165,233,0.5); }
-.nick-bibi { color: #f59e0b; text-shadow: 0 0 10px rgba(245,158,11,0.5); }
+.nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0 14px rgba(0,212,255,0.7); }
+.nick-bibi { color: #ffd700; font-weight: 800; text-shadow: 0 0 14px rgba(255,215,0,0.7); }
 .nick-and { color: var(--text-lighter); }
 
 /* 节气动画小按钮 */
@@ -6439,12 +6439,12 @@ body.user-bibi {
 }
 
 /* shushu 专属配色 */
-body.user-shushu .nick-shushu { font-weight: 800; color: #0ea5e9; text-shadow: 0 0 12px rgba(14,165,233,0.6); }
-body.user-shushu .nick-bibi { font-weight: 400; opacity: 0.5; color: #f59e0b; text-shadow: none; }
+body.user-shushu .nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0 16px rgba(0,212,255,0.8); }
+body.user-shushu .nick-bibi { color: #ffd700; font-weight: 800; text-shadow: 0 0 14px rgba(255,215,0,0.6); }
 
 /* bibi 专属配色 */
-body.user-bibi .nick-bibi { font-weight: 800; color: #f59e0b; text-shadow: 0 0 12px rgba(245,158,11,0.6); }
-body.user-bibi .nick-shushu { font-weight: 400; opacity: 0.5; color: #0ea5e9; text-shadow: none; }
+body.user-bibi .nick-bibi { color: #ffd700; font-weight: 800; text-shadow: 0 0 16px rgba(255,215,0,0.8); }
+body.user-bibi .nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0 14px rgba(0,212,255,0.6); }
 
 /* 移动端自标识适配 */
 @media (max-width: 768px) {
