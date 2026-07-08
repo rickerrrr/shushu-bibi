@@ -295,7 +295,6 @@ function tryRestoreSession() {
       const bottomNav = document.querySelector('.bottom-nav');
       if (bottomNav) bottomNav.style.display = '';
       initApp();
-      showToast('欢迎回来，' + (saved === 'shushu' ? '鼠鼠' : '笔笔') + '！💕');
       return true;
     }
     console.log('[Auth] 无有效 session，显示登录页');
