@@ -32,12 +32,12 @@
   const IDENTITIES = {
     shushu: {
       emoji: '🐹', name: '鼠鼠', nickColor: '#0284c7',
-      cssClass: 'user-shushu', selfIndicator: false,   // shushu 无右上角自标识
+      cssClass: 'user-shushu', selfIndicator: false,   // 无自标识
       bgTint: 'rgba(2,132,199,0.04)', accentColor: '#0284c7'
     },
     bibi: {
       emoji: '🐱', name: '笔笔', nickColor: '#e8d44d',
-      cssClass: 'user-bibi', selfIndicator: true,       // bibi 右上角"笔笔在线"
+      cssClass: 'user-bibi', selfIndicator: false,       // 无自标识
       bgTint: 'rgba(232,212,77,0.04)', accentColor: '#e8d44d'
     }
   };
