@@ -1256,8 +1256,8 @@ body {
   font-size: 15px;
   white-space: nowrap;
 }
-.nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0 14px rgba(0,212,255,0.7); }
-.nick-bibi { color: #ffd700; font-weight: 800; text-shadow: 0 0 14px rgba(255,215,0,0.7); }
+.nick-shushu { color: #00d4ff; text-shadow: 0 0 14px rgba(0,212,255,0.7); }
+.nick-bibi { color: #ffd700; text-shadow: 0 0 14px rgba(255,215,0,0.7); }
 .nick-and { color: var(--text-lighter); }
 
 /* 节气动画小按钮 */
@@ -1633,7 +1633,7 @@ body {
   }
 }
 @keyframes pulsate { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-.hero-date { color: #0a0a0a; font-size: 14px; margin-top: 4px; }
+.hero-date { color: rgba(255,255,255,0.85); font-size: 14px; margin-top: 4px; }
 
 .hero-counter {
   display: flex;
@@ -1712,7 +1712,7 @@ body {
 .greeting-user {
   font-size: 14px;
   font-weight: 600;
-  color: #0a0a0a;
+  color: var(--blue-500);
   background: rgba(59,130,246,0.1);
   padding: 4px 12px;
   border-radius: 20px;
@@ -6306,6 +6306,127 @@ button[style*="f43f5e"] {
   color: #3b82f6 !important;
 }
 
+/* ===== 在线状态按钮优化样式 ===== */
+.btn-online {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-online:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-online:active {
+  transform: translateY(0);
+}
+
+/* 在线状态指示灯 */
+.btn-online .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px #4ade80;
+  animation: pulse-dot 2s infinite;
+}
+
+.btn-online .status-dot.offline {
+  background: #9ca3af;
+  box-shadow: none;
+  animation: none;
+}
+
+.btn-online .status-dot.away {
+  background: #fbbf24;
+  box-shadow: 0 0 6px #fbbf24;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 对方在线/离线的样式 */
+.btn-online.other-online {
+  background: rgba(74, 222, 128, 0.18);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.btn-online.other-offline {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(148, 163, 184, 0.20);
+}
+
+.btn-online.other-online .status-dot {
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80, 0 0 16px #4ade80;
+}
+
+/* 按钮文字 */
+.btn-online .status-text {
+  white-space: nowrap;
+}
+
+/* 响应式：手机端缩小 */
+@media (max-width: 768px) {
+  .btn-online {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
+/* ===== 身份系统 — 本机在线自标识 ===== */
+.self-online-indicator {
+  position: fixed;
+  top: 10px;
+  right: 16px;
+  z-index: 9998;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #e8d44d;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  animation: fadeInDown 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.self-indicator-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px #4ade80;
+  animation: pulse-dot 2s infinite;
+}
+
 /* ===== 身份系统 — body 主题类 ===== */
 body.user-shushu {
   --identity-accent: #0284c7;
@@ -6318,12 +6439,20 @@ body.user-bibi {
 }
 
 /* shushu 专属配色 */
-body.user-shushu .nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0 16px rgba(0,212,255,0.8); }
-body.user-shushu .nick-bibi { color: #ffd700; font-weight: 800; text-shadow: 0 0 14px rgba(255,215,0,0.6); }
+body.user-shushu .nick-shushu { font-weight: 800; color: #00d4ff; text-shadow: 0 0 16px rgba(0,212,255,0.8); }
+body.user-shushu .nick-bibi { font-weight: 800; color: #ffd700; text-shadow: 0 0 14px rgba(255,215,0,0.7); }
 
 /* bibi 专属配色 */
-body.user-bibi .nick-bibi { color: #ffd700; font-weight: 800; text-shadow: 0 0 16px rgba(255,215,0,0.8); }
-body.user-bibi .nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0 14px rgba(0,212,255,0.6); }
+body.user-bibi .nick-bibi { font-weight: 800; color: #ffd700; text-shadow: 0 0 16px rgba(255,215,0,0.8); }
+body.user-bibi .nick-shushu { font-weight: 800; color: #00d4ff; text-shadow: 0 0 14px rgba(0,212,255,0.7); }
+
+/* 移动端自标识适配 */
+@media (max-width: 768px) {
+  .self-online-indicator {
+    top: 8px; right: 10px;
+    font-size: 11px;
+    padding: 4px 10px;
+  }
 }
 
 /* ===== 底部导航手机端优化 ===== */
@@ -6587,6 +6716,43 @@ body.user-bibi .nick-shushu { color: #00d4ff; font-weight: 800; text-shadow: 0 0
 .login-container h1 {
   color: #0a0a0a;
   text-shadow: 0 2px 8px rgba(255,255,255,0.3);
+}
+
+
+/* ==================== 本机在线状态指示器（bibi专属） ==================== */
+.self-online-indicator {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 20px;
+  border: 1px solid rgba(232,212,77,0.4);
+  box-shadow: 0 2px 12px rgba(232,212,77,0.2);
+  font-size: 13px;
+  font-weight: 600;
+  color: #0a0a0a;
+  animation: fadeInDown 0.4s ease;
+}
+
+.self-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e8d44d;
+  box-shadow: 0 0 6px rgba(232,212,77,0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
 }
 
 @keyframes fadeInDown {

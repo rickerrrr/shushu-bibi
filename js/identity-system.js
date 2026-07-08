@@ -32,12 +32,12 @@
   const IDENTITIES = {
     shushu: {
       emoji: '🐹', name: '鼠鼠', nickColor: '#0284c7',
-      cssClass: 'user-shushu',
+      cssClass: 'user-shushu', selfIndicator: false,   // shushu 无右上角自标识
       bgTint: 'rgba(2,132,199,0.04)', accentColor: '#0284c7'
     },
     bibi: {
       emoji: '🐱', name: '笔笔', nickColor: '#e8d44d',
-      cssClass: 'user-bibi',
+      cssClass: 'user-bibi', selfIndicator: true,       // bibi 右上角"笔笔在线"
       bgTint: 'rgba(232,212,77,0.04)', accentColor: '#e8d44d'
     }
   };
@@ -97,6 +97,7 @@
 
     // 清除 UI 主题
     document.body.classList.remove('user-shushu', 'user-bibi');
+    hideSelfIndicator();
 
     console.log('[Identity] 身份已清除');
   }
@@ -204,7 +205,6 @@
 
   /**
    * 更新页面上的对方在线状态显示
-   * （btn-online 已从 top-bar 移除，保留状态缓存逻辑）
    */
   function updatePartnerStatus() {
     const user = getIdentity();
@@ -212,6 +212,39 @@
 
     const status = getPartnerStatus();
     if (!status) return;
+
+    const btn = document.getElementById('btn-online');
+    if (!btn) return;
+
+    // 更新按钮内容 — 仅显示对方
+    const dot = btn.querySelector('.status-dot');
+    const text = btn.querySelector('.status-text');
+
+    if (dot) {
+      dot.className = 'status-dot';
+      if (status.status === 'online') {
+        dot.classList.add('online');
+      } else {
+        dot.classList.add('offline');
+      }
+    }
+
+    if (text) {
+      if (status.status === 'online') {
+        text.textContent = status.emoji + ' ' + status.name + ' 在线';
+      } else {
+        text.textContent = status.emoji + ' ' + status.name + ' 离线';
+      }
+    }
+
+    // 更新按钮样式
+    if (status.status === 'online') {
+      btn.classList.add('other-online');
+      btn.classList.remove('other-offline');
+    } else {
+      btn.classList.add('other-offline');
+      btn.classList.remove('other-online');
+    }
 
     // 保存到本地缓存（减少闪烁）
     try {
@@ -222,6 +255,53 @@
         cachedAt: Date.now()
       }));
     } catch (e) {}
+  }
+
+  /**
+   * 更新右上角本机在线标识
+   */
+  function updateSelfIndicator() {
+    const user = getIdentity();
+    const identity = user ? IDENTITIES[user] : null;
+
+    // 登录页不显示任何在线状态
+    const loginPage = document.getElementById('login-page');
+    if (loginPage && !loginPage.classList.contains('hidden')) {
+      hideSelfIndicator();
+      return;
+    }
+
+    if (!identity || !identity.selfIndicator) {
+      hideSelfIndicator();
+      return;
+    }
+
+    // bibi 专属：右上角显示"笔笔在线"
+    let el = document.getElementById('self-online-indicator');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'self-online-indicator';
+      el.className = 'self-online-indicator';
+      el.innerHTML = '<span class="self-indicator-dot"></span><span class="self-indicator-text"></span>';
+
+      // 插入到 body 末尾（固定定位）
+      document.body.appendChild(el);
+    }
+
+    const text = el.querySelector('.self-indicator-text');
+    if (text) {
+      text.textContent = identity.emoji + ' ' + identity.name + '在线';
+    }
+
+    el.style.display = 'flex';
+  }
+
+  /**
+   * 隐藏右上角本机在线标识
+   */
+  function hideSelfIndicator() {
+    const el = document.getElementById('self-online-indicator');
+    if (el) el.style.display = 'none';
   }
 
   // ── UI 主题 ──────────────────────────────────────────────────
@@ -250,6 +330,9 @@
 
     // 更新问候语、昵称等
     updateIdentityUI();
+
+    // 更新自标识
+    updateSelfIndicator();
 
     console.log('[Identity] 主题应用:', identity.name, identity.cssClass);
   }
@@ -412,9 +495,12 @@
       showToast('⚠️ 该账号已在其他设备登录，当前会话已下线');
     }
 
-    // 返回登录页：移除 pre-logged-in 让 CSS 默认显示登录页
-    document.documentElement.classList.remove('pre-logged-in');
+    // 返回登录页
     document.body.classList.remove('logged-in');
+    const app = document.getElementById('app');
+    if (app) app.classList.add('hidden');
+    const loginPage = document.getElementById('login-page');
+    if (loginPage) loginPage.classList.remove('hidden');
   }
 
   // ── 初始化 ──────────────────────────────────────────────────
@@ -452,6 +538,7 @@
     clearIdentity,
     getPartnerStatus,
     updatePartnerStatus,
+    updateSelfIndicator,
     applyTheme,
     startSync,
     stopSync,

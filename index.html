@@ -32,22 +32,10 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=14.0">
+    <link rel="stylesheet" href="css/style.css?v=11.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
+    <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
-
-    <!-- 同步判断登录状态：页面渲染前决定显示哪个页面，杜绝空白/闪白 -->
-    <script>
-    (function() {
-      try {
-        var saved = localStorage.getItem('currentUser');
-        if (saved === 'shushu' || saved === 'bibi') {
-          document.documentElement.classList.add('pre-logged-in');
-        }
-      } catch(e) {}
-    })();
-    </script>
-
     <style>
         /* ========== 浅色海洋·海岛椰风主题 ========== */
         body {
@@ -58,42 +46,35 @@ window.doLogin = window.doLogin || function(user) {
             color: #0a0a0a !important;
         }
 
-        /* 默认：未登录时显示登录页，隐藏主应用 */
+        /* 登录页 - 浅色海洋渐变 */
         #login-page {
             display: flex !important;
             visibility: visible !important;
+            background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%) !important;
         }
-        #app, .bottom-nav, #top-bar {
+
+        /* 登录前隐藏主内容和导航栏 */
+        body:not(.logged-in) #app,
+        body:not(.logged-in) .bottom-nav,
+        body:not(.logged-in) .top-bar {
             display: none !important;
             visibility: hidden !important;
         }
 
-        /* 登录页背景 */
-        #login-page {
-            background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%) !important;
+        /* 登录后显示内容 */
+        body.logged-in #app {
+            display: block !important;
+            visibility: visible !important;
         }
-
-        /* 已登录（同步 JS 预判断 / JS 加载后正式设置） */
-        html.pre-logged-in #login-page,
+        
+        /* 登录后隐藏登录页面 */
         body.logged-in #login-page {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
             pointer-events: none !important;
         }
-        html.pre-logged-in #app,
-        body.logged-in #app {
-            display: block !important;
-            visibility: visible !important;
-        }
-        html.pre-logged-in #top-bar,
-        html.pre-logged-in .bottom-nav,
-        body.logged-in #top-bar,
-        body.logged-in .bottom-nav {
-            display: flex !important;
-            visibility: visible !important;
-        }
-
+        
         @keyframes oceanGradient {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -433,7 +414,7 @@ window.doLogin = window.doLogin || function(user) {
 <!-- 紧急缓存清理 - v4.0 全面核弹级清理 -->
 <script>
 (function forceClearCache() {
-  var APP_VER = '6.10';
+  var APP_VER = '6.1';
   console.log('%c [v4.0] 全面核弹级缓存清理启动...', 'color: #ff6b6b; font-weight: bold; font-size: 14px');
 
   // 检测版本不一致 → 强制清缓存重载
@@ -768,6 +749,10 @@ function showOfflineNotice() {
       <span class="nick-bibi">🐱 笔笔</span>
     </div>
     <div class="top-right">
+      <button class="btn-online other-offline" id="btn-online" onclick="toggleOnlineStatus()" title="对方在线状态">
+        <span class="status-dot offline"></span>
+        <span class="status-text">--</span>
+      </button>
       <button class="btn-toolbox" onclick="toggleToolbox()" title="AI工具箱">🛠️</button>
       <button class="btn-settings" onclick="showSettings()" title="设置">⚙️</button>
       <button class="btn-logout" onclick="doLogout()">🚪</button>
@@ -1044,7 +1029,7 @@ function showOfflineNotice() {
         <p>鼠鼠&笔笔专属恋爱官网，于2026年06月23日正式成立。</p>
         <p>全站遵循《情侣约会正式公约》执行所有行程与财务结算，记录往后每一天的相处、约会与成长，永久留存二人所有美好回忆。</p>
         <p class="statement-heart">💞</p>
-        <p style="font-size:10px;color:#0a0a0a;margin-top:6px;">v2.0 · 2026-06-28 · 大版本更新 · 全面优化升级</p>
+        <p style="font-size:10px;color:#e2e8f0;margin-top:6px;">v2.0 · 2026-06-28 · 大版本更新 · 全面优化升级</p>
       </div>
     </section>
 
@@ -2422,18 +2407,7 @@ function showOfflineNotice() {
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '18.0';
-
-// ==================== 手术级清理：页面加载第一时间斩杀所有残留 ====================
-(function() {
-  if (sessionStorage.getItem('_sc_done')) return;
-  sessionStorage.setItem('_sc_done', '1');
-  console.log('%c[手术] 切除旧身份残留中...', 'color:red;font-weight:bold');
-  var nuke = ['lc_user','lc_season','_locked_identity','_login_email','_mock_otp_shushu','_mock_otp_bibi','otp_rate_shushu','otp_rate_bibi','otp_window_shushu','otp_window_bibi','currentUser','partner_status_cache','partner_last_seen'];
-  for (var i=0; i<localStorage.length; i++) { var k=localStorage.key(i); if (k.indexOf('_mock_otp')===0||k.indexOf('otp_rate_')===0||k.indexOf('otp_window_')===0||k.indexOf('lc_')===0) nuke.push(k); }
-  nuke.forEach(function(k){ try { localStorage.removeItem(k); console.log('[手术] 已切除: '+k); } catch(e){} });
-})();
-
+const _CB = '16.0';
 /* config.js removed - v5 auto-detects */
 document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/device-fingerprint.js?v='+_CB+'"><\/script>');
@@ -2968,6 +2942,77 @@ document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
 
 })();
 </script>
+<!-- 在线状态指示灯 v2.0 -->
+<div id="online-status-popup" style="display:none;position:fixed;top:50px;right:10px;z-index:10000;background:white;padding:16px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);min-width:200px;">
+  <div style="text-align:center;">
+    <div id="online-status-icon" style="font-size:48px;margin-bottom:8px;">🟢</div>
+    <div id="online-status-text" style="font-size:14px;color:#444;font-weight:600;">在线</div>
+    <div id="online-status-detail" style="font-size:11px;color:#999;margin-top:4px;">最后活动：刚刚</div>
+  </div>
+</div>
+
+<script>
+/* 在线状态弹窗 — 由 identity-system.js 驱动 */
+(function() {
+  window.toggleOnlineStatus = function() {
+    var popup = document.getElementById('online-status-popup');
+    if (popup.style.display === 'none') {
+      popup.style.display = 'block';
+      updatePopup();
+    } else {
+      popup.style.display = 'none';
+    }
+  };
+
+  function timeAgo(ms) {
+    if (!ms || ms < 0) return '暂无记录';
+    if (ms < 60000) return '刚刚';
+    if (ms < 3600000) return Math.floor(ms / 60000) + '分钟前';
+    if (ms < 86400000) return Math.floor(ms / 3600000) + '小时前';
+    return Math.floor(ms / 86400000) + '天前';
+  }
+
+  function updatePopup() {
+    var icon = document.getElementById('online-status-icon');
+    var text = document.getElementById('online-status-text');
+    var detail = document.getElementById('online-status-detail');
+
+    // 从统一身份系统获取对方状态
+    var status = null;
+    if (window.IdentitySystem && window.IdentitySystem.getPartnerStatus) {
+      status = window.IdentitySystem.getPartnerStatus();
+    }
+
+    if (!status) {
+      icon.textContent = '⚫';
+      text.textContent = '等待上线';
+      detail.textContent = '暂无信息';
+      return;
+    }
+
+    if (status.status === 'online') {
+      icon.textContent = '🟢';
+      text.textContent = status.emoji + ' ' + status.name + ' 在线';
+      detail.textContent = '最后活动：刚刚';
+    } else {
+      icon.textContent = '⚫';
+      text.textContent = status.emoji + ' ' + status.name + ' 离线';
+      var ago = status.lastSeen ? timeAgo(Date.now() - status.lastSeen) : '暂无记录';
+      detail.textContent = ago === '暂无记录' ? '等待' + status.name + '上线...' : ago + '前在线';
+    }
+  }
+
+  // 点击其他地方关闭弹窗
+  document.addEventListener('click', function(e) {
+    var popup = document.getElementById('online-status-popup');
+    var btn = document.getElementById('btn-online');
+    if (popup && !popup.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+      popup.style.display = 'none';
+    }
+  });
+})();
+</script>
+
 <!-- 成就系统 v2.0 -->
 <section id="achievements-section" class="main-section hidden">
   <div class="section-header">
