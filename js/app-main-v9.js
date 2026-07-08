@@ -297,10 +297,6 @@ function doLogin(user) {
   if (app) app.classList.remove('hidden');
   document.body.classList.add('logged-in');
   if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
-  const topBar = document.querySelector('.top-bar');
-  if (topBar) topBar.style.display = '';
-  const bottomNav = document.querySelector('.bottom-nav');
-  if (bottomNav) bottomNav.style.display = '';
   initApp();
   showToast('欢迎回来，' + myName + '！💕');
   window._loginInProgress = false;
@@ -310,14 +306,14 @@ function doLogout() {
     if (window.IdentitySystem && window.IdentitySystem.clearIdentity) {
       window.IdentitySystem.clearIdentity();
     }
-    // 清除本地保存的身份，防止刷新后自动登录
     localStorage.removeItem('currentUser');
     currentUser = null;
     document.body.classList.remove('logged-in');
+    // 手动切换：CSS 不会自动检测登出，需要用类操作
     const app = document.getElementById('app');
-    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
+    if (app) app.classList.add('hidden');
     const loginPage = document.getElementById('login-page');
-    if (loginPage) { loginPage.style.display = 'flex'; loginPage.style.visibility = 'visible'; }
+    if (loginPage) loginPage.classList.remove('hidden');
     if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
   }
 }
@@ -333,16 +329,9 @@ function tryRestoreSession() {
       if (window.IdentitySystem && window.IdentitySystem.setIdentity) {
         window.IdentitySystem.setIdentity(currentUser);
       }
-      const loginPage = document.getElementById('login-page');
-      if (loginPage) loginPage.classList.add('hidden');
-      const app = document.getElementById('app');
-      if (app) app.classList.remove('hidden');
+      // CSS pre-logged-in 已处理页面显隐，JS 只负责身份初始化
       document.body.classList.add('logged-in');
       if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
-      const topBar = document.querySelector('.top-bar');
-      if (topBar) topBar.style.display = '';
-      const bottomNav = document.querySelector('.bottom-nav');
-      if (bottomNav) bottomNav.style.display = '';
       initApp();
       window._is_restoring = false;
       return true;
@@ -353,6 +342,7 @@ function tryRestoreSession() {
   } catch (e) {
     window._is_restoring = false;
     console.error('[Auth] Session 恢复失败:', e.message);
+    // 即使失败也不强制显示登录页，CSS pre-logged-in 仍然生效
     return false;
   }
 }
@@ -362,15 +352,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 刷新页面后自动恢复登录（localStorage 有身份时跳过登录页）
   const restored = tryRestoreSession();
 
-  // 没有保存的登录状态 → 手动显示头像登录界面
+  // 没有保存的登录状态 → 信任 CSS 默认行为，不强制操作 DOM
   if (!restored) {
     currentUser = null;
     document.body.classList.remove('logged-in');
-    const app = document.getElementById('app');
-    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
-    const loginPage = document.getElementById('login-page');
-    if (loginPage) { loginPage.style.display = 'flex'; loginPage.style.visibility = 'visible'; }
-    console.log('[Auth] 无 session，显示头像登录界面');
+    console.log('[Auth] 无 session，信任 CSS 默认显示登录页');
   }
 
   initDefaultData();

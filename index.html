@@ -34,7 +34,6 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="shortcut icon" href="/assets/icon-192.png">
     <link rel="stylesheet" href="css/style.css?v=14.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
-    <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
 
     <!-- 同步判断登录状态：页面渲染前决定显示哪个页面，杜绝空白/闪白 -->
@@ -64,7 +63,7 @@ window.doLogin = window.doLogin || function(user) {
             display: flex !important;
             visibility: visible !important;
         }
-        #app, .bottom-nav, .top-bar {
+        #app, .bottom-nav, #top-bar {
             display: none !important;
             visibility: hidden !important;
         }
@@ -87,9 +86,9 @@ window.doLogin = window.doLogin || function(user) {
             display: block !important;
             visibility: visible !important;
         }
-        html.pre-logged-in .top-bar,
+        html.pre-logged-in #top-bar,
         html.pre-logged-in .bottom-nav,
-        body.logged-in .top-bar,
+        body.logged-in #top-bar,
         body.logged-in .bottom-nav {
             display: flex !important;
             visibility: visible !important;
