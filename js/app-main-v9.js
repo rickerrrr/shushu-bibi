@@ -1,5 +1,49 @@
 /* ==================== 鼠鼠&笔笔 恋爱官网 - 核心逻辑 ==================== */
 
+// ==================== 手术级清理：斩断所有历史残留 ====================
+(function surgicalCleanup() {
+  // 只执行一次（用 sessionStorage 标记，每次浏览器会话只清理一次）
+  if (sessionStorage.getItem('_sc_done')) return;
+  sessionStorage.setItem('_sc_done', '1');
+
+  console.log('%c[手术] 正在切除所有旧身份残留...', 'color:red;font-weight:bold');
+
+  // 需要斩杀的 localStorage key 清单（不含 currentUser，它是有用的身份标记！）
+  var killList = [
+    // 旧身份系统残留
+    'lc_user', 'lc_season', '_locked_identity', '_login_email',
+    // OTP 验证码残留
+    '_mock_otp_shushu', '_mock_otp_bibi',
+    'otp_rate_shushu', 'otp_rate_bibi',
+    'otp_window_shushu', 'otp_window_bibi'
+  ];
+
+  // 模糊匹配：杀光所有 _mock_otp_* 和 otp_* 和 lc_*
+  var allKeys = [];
+  for (var i = 0; i < localStorage.length; i++) allKeys.push(localStorage.key(i));
+  allKeys.forEach(function(k) {
+    if (k.indexOf('_mock_otp') === 0 ||
+        k.indexOf('otp_rate_') === 0 ||
+        k.indexOf('otp_window_') === 0 ||
+        k.indexOf('lc_') === 0) {
+      killList.push(k);
+    }
+  });
+
+  // 执行斩杀
+  killList.forEach(function(key) {
+    try {
+      localStorage.removeItem(key);
+      console.log('[手术] 已切除:', key);
+    } catch(e) {}
+  });
+
+  // identity-system 残留清理
+  try { localStorage.removeItem('partner_status_cache'); } catch(e) {}
+  try { localStorage.removeItem('partner_last_seen'); } catch(e) {}
+  console.log('%c[手术] 残留清除完成', 'color:green;font-weight:bold');
+})();
+
 // ==================== 全局配置 ====================
 const SITE_FOUND_DATE = '2026-06-23';
 const DEFAULT_LOVE_START = '2026-05-16'; // 默认相恋日，可修改
@@ -223,6 +267,8 @@ function getDaysUntil(targetDate) {
 }
 
 function showToast(msg) {
+  // 防止在 session 恢复过程中弹出"欢迎回来"提示
+  if (window._is_restoring && msg.indexOf('欢迎回来') !== -1) return;
   const t = document.createElement('div');
   t.className = 'toast';
   t.textContent = msg;
@@ -276,6 +322,7 @@ function doLogout() {
 
 // ==================== Session 恢复（页面刷新后自动登录）====================
 function tryRestoreSession() {
+  window._is_restoring = true;
   try {
     const saved = localStorage.getItem('currentUser');
     if (saved && (saved === 'shushu' || saved === 'bibi')) {
@@ -295,11 +342,14 @@ function tryRestoreSession() {
       const bottomNav = document.querySelector('.bottom-nav');
       if (bottomNav) bottomNav.style.display = '';
       initApp();
+      window._is_restoring = false;
       return true;
     }
+    window._is_restoring = false;
     console.log('[Auth] 无有效 session，显示登录页');
     return false;
   } catch (e) {
+    window._is_restoring = false;
     console.error('[Auth] Session 恢复失败:', e.message);
     return false;
   }

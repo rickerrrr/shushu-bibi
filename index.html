@@ -32,7 +32,7 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=10.0">
+    <link rel="stylesheet" href="css/style.css?v=11.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
@@ -414,7 +414,7 @@ window.doLogin = window.doLogin || function(user) {
 <!-- 紧急缓存清理 - v4.0 全面核弹级清理 -->
 <script>
 (function forceClearCache() {
-  var APP_VER = '6.1';
+  var APP_VER = '6.5';
   console.log('%c [v4.0] 全面核弹级缓存清理启动...', 'color: #ff6b6b; font-weight: bold; font-size: 14px');
 
   // 检测版本不一致 → 强制清缓存重载
@@ -2407,7 +2407,18 @@ function showOfflineNotice() {
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '15.0';
+const _CB = '16.0';
+
+// ==================== 手术级清理：页面加载第一时间斩杀所有残留 ====================
+(function() {
+  if (sessionStorage.getItem('_sc_done')) return;
+  sessionStorage.setItem('_sc_done', '1');
+  console.log('%c[手术] 切除旧身份残留中...', 'color:red;font-weight:bold');
+  var nuke = ['lc_user','lc_season','_locked_identity','_login_email','_mock_otp_shushu','_mock_otp_bibi','otp_rate_shushu','otp_rate_bibi','otp_window_shushu','otp_window_bibi','currentUser','partner_status_cache','partner_last_seen'];
+  for (var i=0; i<localStorage.length; i++) { var k=localStorage.key(i); if (k.indexOf('_mock_otp')===0||k.indexOf('otp_rate_')===0||k.indexOf('otp_window_')===0||k.indexOf('lc_')===0) nuke.push(k); }
+  nuke.forEach(function(k){ try { localStorage.removeItem(k); console.log('[手术] 已切除: '+k); } catch(e){} });
+})();
+
 /* config.js removed - v5 auto-detects */
 document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/device-fingerprint.js?v='+_CB+'"><\/script>');
