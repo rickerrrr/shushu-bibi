@@ -37,7 +37,7 @@
     },
     bibi: {
       emoji: '🐱', name: '笔笔', nickColor: '#e8d44d',
-      cssClass: 'user-bibi', selfIndicator: false,       // 无自标识
+      cssClass: 'user-bibi', selfIndicator: true,       // 显示"笔笔在线"徽章
       bgTint: 'rgba(232,212,77,0.04)', accentColor: '#e8d44d'
     }
   };
@@ -258,49 +258,34 @@
   }
 
   /**
-   * 更新右上角本机在线标识
+   * 更新本机在线状态徽章（在 top-right 区域内）
    */
   function updateSelfIndicator() {
     const user = getIdentity();
     const identity = user ? IDENTITIES[user] : null;
 
-    // 登录页不显示任何在线状态
-    const loginPage = document.getElementById('login-page');
-    if (loginPage && !loginPage.classList.contains('hidden')) {
-      hideSelfIndicator();
-      return;
-    }
-
+    // 未登录 / 不需要自标识 → 隐藏
     if (!identity || !identity.selfIndicator) {
       hideSelfIndicator();
       return;
     }
 
-    // bibi 专属：右上角显示"笔笔在线"
-    let el = document.getElementById('self-online-indicator');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'self-online-indicator';
-      el.className = 'self-online-indicator';
-      el.innerHTML = '<span class="self-indicator-dot"></span><span class="self-indicator-text"></span>';
-
-      // 插入到 body 末尾（固定定位）
-      document.body.appendChild(el);
-    }
+    const el = document.getElementById('self-online-badge');
+    if (!el) return;
 
     const text = el.querySelector('.self-indicator-text');
     if (text) {
       text.textContent = identity.emoji + ' ' + identity.name + '在线';
     }
 
-    el.style.display = 'flex';
+    el.style.display = 'inline-flex';
   }
 
   /**
-   * 隐藏右上角本机在线标识
+   * 隐藏本机在线状态徽章
    */
   function hideSelfIndicator() {
-    const el = document.getElementById('self-online-indicator');
+    const el = document.getElementById('self-online-badge');
     if (el) el.style.display = 'none';
   }
 
