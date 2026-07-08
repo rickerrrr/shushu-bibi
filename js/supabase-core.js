@@ -35,8 +35,8 @@ const SB_SUBSCRIPTIONS = {};
 // ── 账号映射（角色 → 邮箱）───────────────────────────────────────
 // 注意: 密码不在代码中硬编码，由用户在登录页输入
 const ROLE_EMAILS = {
-  shushu: 'shushu@shushu-bibi.cn',
-  bibi:   'bibi@shushu-bibi.cn'
+  shushu: '2782896110@qq.com',
+  bibi:   '2813721763@qq.com'
 };
 
 /* ================================================================

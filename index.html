@@ -32,7 +32,7 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=8.4">
+    <link rel="stylesheet" href="css/style.css?v=9.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
@@ -43,7 +43,7 @@ window.doLogin = window.doLogin || function(user) {
             background-size: 200% 200% !important;
             animation: oceanGradient 15s ease infinite !important;
             min-height: 100vh !important;
-            color: #1a3a4a !important;
+            color: #0a0a0a !important;
         }
 
         /* 登录页 - 浅色海洋渐变 */
@@ -94,7 +94,7 @@ window.doLogin = window.doLogin || function(user) {
             background: rgba(255,255,255,0.75);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            color: #374151;
+            color: #0a0a0a;
             font-size: 16px;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -133,7 +133,7 @@ window.doLogin = window.doLogin || function(user) {
             background: none;
             text-align: left;
             font-size: 13px;
-            color: #333;
+            color: #0a0a0a;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -414,7 +414,7 @@ window.doLogin = window.doLogin || function(user) {
 <!-- 紧急缓存清理 - v4.0 全面核弹级清理 -->
 <script>
 (function forceClearCache() {
-  var APP_VER = '5.3';
+  var APP_VER = '6.0';
   console.log('%c [v4.0] 全面核弹级缓存清理启动...', 'color: #ff6b6b; font-weight: bold; font-size: 14px');
 
   // 检测版本不一致 → 强制清缓存重载
@@ -599,32 +599,51 @@ function showOfflineNotice() {
     <div class="login-heart">🐹💕🐱</div>
     <h1>鼠鼠 & 笔笔</h1>
     <p class="login-subtitle">专属恋爱官网 · 仅限二人访问</p>
-    <div class="login-form">
-      <p class="login-click-hint" id="login-click-hint">👇 点击头像，欢迎进入恋爱空间！</p>
-      <!-- 微信风格气泡框：提示文字和头像之间 -->
-      <div class="chat-bubble-wrapper" id="chat-bubble-wrapper">
-        <div class="chat-bubble" id="chat-bubble">
-          <div class="bubble-msg" id="bubble-msg"></div>
-          <div class="bubble-typing-dots" id="bubble-typing-dots">...</div>
-          <div class="bubble-arrow"></div>
-        </div>
-      </div>
+
+    <!-- 登录表单区域 -->
+    <div class="login-form" id="login-form">
+      <p class="login-click-hint" id="login-click-hint">👇 请先选择你的身份</p>
+
+      <!-- 身份选择头像 -->
       <div class="login-avatars" id="login-avatars">
-        <div class="login-avatar" data-user="shushu" onclick="doLogin('shushu')">
+        <div class="login-avatar" data-user="shushu" id="avatar-shushu" onclick="selectIdentity('shushu')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-shushu">🐹</span><p>鼠鼠</p>
         </div>
-        <div class="login-avatar" data-user="bibi" onclick="doLogin('bibi')">
+        <div class="login-avatar" data-user="bibi" id="avatar-bibi" onclick="selectIdentity('bibi')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-bibi">🐱</span><p>笔笔</p>
         </div>
       </div>
+
+      <!-- 邮箱与验证码区域（初始隐藏） -->
+      <div class="login-auth-panel hidden" id="login-auth-panel">
+        <div class="auth-identity-badge" id="auth-identity-badge"></div>
+        <div class="auth-email-row">
+          <label>📧 绑定邮箱</label>
+          <input type="text" id="auth-email" class="auth-email-input" readonly value="" />
+        </div>
+        <div class="auth-code-row">
+          <label>🔐 验证码</label>
+          <div class="auth-code-input-group">
+            <input type="text" id="auth-code" class="auth-code-input" placeholder="输入6位验证码" maxlength="6" autocomplete="off" />
+            <button class="btn-send-code" id="btn-send-code" onclick="sendAuthCode()">获取验证码</button>
+          </div>
+          <div class="auth-code-timer" id="auth-code-timer"></div>
+        </div>
+        <div class="auth-actions">
+          <button class="btn-auth-verify" id="btn-auth-verify" onclick="verifyAuthCode()">✅ 验证登录</button>
+          <button class="btn-auth-back" onclick="resetLoginForm()">↩ 重新选择</button>
+        </div>
+        <div class="auth-security-note">
+          🔒 验证码5分钟有效 · 仅发送至绑定邮箱
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
 <!-- ==================== 登录动画覆盖层 ==================== -->
 <div id="love-animation" class="hidden">
   <div class="love-anim-bg">
@@ -754,9 +773,9 @@ function showOfflineNotice() {
       <span class="nick-bibi">🐱 笔笔</span>
     </div>
     <div class="top-right">
-      <button class="btn-online" id="btn-online" onclick="toggleOnlineStatus()" title="在线状态">
-        <span class="status-dot"></span>
-        <span class="status-text">我在线</span>
+      <button class="btn-online other-offline" id="btn-online" onclick="toggleOnlineStatus()" title="对方在线状态">
+        <span class="status-dot offline"></span>
+        <span class="status-text">--</span>
       </button>
       <button class="btn-toolbox" onclick="toggleToolbox()" title="AI工具箱">🛠️</button>
       <button class="btn-settings" onclick="showSettings()" title="设置">⚙️</button>
@@ -2412,10 +2431,11 @@ function showOfflineNotice() {
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '12.0';
+const _CB = '14.0';
 /* config.js removed - v5 auto-detects */
 document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/device-fingerprint.js?v='+_CB+'"><\/script>');
+document.write('<script src="js/identity-system.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/app-main-v9.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/realtime-sync-v6.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/app-modules-v15.js?v='+_CB+'"><\/script>');
@@ -2956,103 +2976,55 @@ document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
 </div>
 
 <script>
+/* 在线状态弹窗 — 由 identity-system.js 驱动 */
 (function() {
-  var isOnline = true;
-  var currentUser = localStorage.getItem('currentUser') || 'shushu';
-  var myNick = currentUser === 'shushu' ? '鼠鼠' : '笔笔';
-  var partnerUser = currentUser === 'shushu' ? 'bibi' : 'shushu';
-  var partnerNick = currentUser === 'shushu' ? '笔笔' : '鼠鼠';
-
   window.toggleOnlineStatus = function() {
     var popup = document.getElementById('online-status-popup');
     if (popup.style.display === 'none') {
       popup.style.display = 'block';
-      updateOnlineStatus();
+      updatePopup();
     } else {
       popup.style.display = 'none';
     }
   };
 
   function timeAgo(ms) {
+    if (!ms || ms < 0) return '暂无记录';
     if (ms < 60000) return '刚刚';
     if (ms < 3600000) return Math.floor(ms / 60000) + '分钟前';
     if (ms < 86400000) return Math.floor(ms / 3600000) + '小时前';
     return Math.floor(ms / 86400000) + '天前';
   }
 
-  function updateOnlineStatus() {
+  function updatePopup() {
     var icon = document.getElementById('online-status-icon');
     var text = document.getElementById('online-status-text');
     var detail = document.getElementById('online-status-detail');
-    var btn = document.getElementById('btn-online');
 
-    // 读取对方心跳数据（来自 v5 同步模块）
-    var partnerKey = 'online_status_' + partnerUser;
-    var partnerRaw = localStorage.getItem(partnerKey);
-    var partnerData = null;
-    try { partnerData = partnerRaw ? JSON.parse(partnerRaw) : null; } catch(e) {}
+    // 从统一身份系统获取对方状态
+    var status = null;
+    if (window.IdentitySystem && window.IdentitySystem.getPartnerStatus) {
+      status = window.IdentitySystem.getPartnerStatus();
+    }
 
-    // 也兼容旧版 partner_last_seen
-    var lastSeen = localStorage.getItem('partner_last_seen');
-
-    if (partnerData && partnerData.lastSeen) {
-      var diff = Date.now() - partnerData.lastSeen;
-      if (diff < 15000) {
-        icon.textContent = '🟢';
-        text.textContent = partnerNick + '在线';
-        detail.textContent = '最后活动：刚刚';
-        btn.innerHTML = '<span class="status-dot"></span>🟢';
-        btn.style.opacity = '1';
-      } else if (diff < 300000) {
-        icon.textContent = '🟡';
-        text.textContent = partnerNick + '离开不久';
-        detail.textContent = '最后活动：' + timeAgo(diff);
-        btn.innerHTML = '<span class="status-dot offline"></span>🟡';
-        btn.style.opacity = '0.7';
-      } else {
-        icon.textContent = '⚫';
-        text.textContent = partnerNick + '最近在线';
-        detail.textContent = '最近在线';
-        btn.innerHTML = '<span class="status-dot offline"></span>⚫';
-        btn.style.opacity = '0.5';
-      }
-    } else if (lastSeen) {
-      var diff2 = new Date() - new Date(lastSeen);
+    if (!status) {
       icon.textContent = '⚫';
-      text.textContent = partnerNick + '最近在线';
-      detail.textContent = timeAgo(diff2) + '前在线';
-      btn.innerHTML = '<span class="status-dot offline"></span>⚫';
-      btn.style.opacity = '0.5';
+      text.textContent = '等待上线';
+      detail.textContent = '暂无信息';
+      return;
+    }
+
+    if (status.status === 'online') {
+      icon.textContent = '🟢';
+      text.textContent = status.emoji + ' ' + status.name + ' 在线';
+      detail.textContent = '最后活动：刚刚';
     } else {
       icon.textContent = '⚫';
-      text.textContent = partnerNick + '还未上线';
-      detail.textContent = '等待' + partnerNick + '上线...';
-      btn.innerHTML = '<span class="status-dot offline"></span>⚫';
-      btn.style.opacity = '0.5';
+      text.textContent = status.emoji + ' ' + status.name + ' 离线';
+      var ago = status.lastSeen ? timeAgo(Date.now() - status.lastSeen) : '暂无记录';
+      detail.textContent = ago === '暂无记录' ? '等待' + status.name + '上线...' : ago + '前在线';
     }
   }
-
-  // 设置自己在线心跳 - 写入 v5 格式
-  function updateMyHeartbeat() {
-    var myKey = 'online_status_' + currentUser;
-    localStorage.setItem(myKey, JSON.stringify({
-      user: currentUser,
-      lastSeen: Date.now(),
-      nickname: myNick
-    }));
-    // 兼容旧版
-    localStorage.setItem('partner_last_seen', new Date().toISOString());
-  }
-
-  updateMyHeartbeat();
-
-  // 每5秒更新一次
-  setInterval(function() {
-    updateMyHeartbeat();
-    if (document.getElementById('online-status-popup').style.display === 'block') {
-      updateOnlineStatus();
-    }
-  }, 5000);
 
   // 点击其他地方关闭弹窗
   document.addEventListener('click', function(e) {
@@ -3062,8 +3034,6 @@ document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
       popup.style.display = 'none';
     }
   });
-
-  console.log('[OnlineStatus] 在线状态已加载  | 当前身份：' + myNick);
 })();
 </script>
 
