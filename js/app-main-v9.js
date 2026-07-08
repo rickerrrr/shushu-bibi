@@ -304,18 +304,18 @@ function tryRestoreSession() {
 
 // 登录页头像切换
 document.addEventListener('DOMContentLoaded', () => {
-  // 尝试恢复已有 session（页面刷新后自动登录）
-  tryRestoreSession();
+  // ❌ 不再自动恢复 session，每次打开都显示头像登录界面
+  // tryRestoreSession();
+
+  // 清除所有登录状态残留，确保从登录页开始
+  currentUser = null;
+  document.body.classList.remove('logged-in');
+  const app = document.getElementById('app');
+  if (app) app.classList.add('hidden');
+  const loginPage = document.getElementById('login-page');
+  if (loginPage) loginPage.classList.remove('hidden');
 
   // 头像点击由 doLogin 处理（在 HTML 的 onclick 中绑定）
-
-  // 回车登录（input 已删除，安全处理）
-  const pwdInput = document.getElementById('login-password');
-  if (pwdInput) {
-    pwdInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') doLogin();
-    });
-  }
 
   initDefaultData();
 });
