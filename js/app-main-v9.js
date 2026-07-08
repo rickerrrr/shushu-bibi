@@ -238,6 +238,8 @@ function doLogin(user) {
   if (window._loginInProgress) return;
   window._loginInProgress = true;
   currentUser = user || 'shushu';
+  // 保存到 localStorage，刷新后自动恢复
+  localStorage.setItem('currentUser', currentUser);
   if (window.IdentitySystem && window.IdentitySystem.setIdentity) {
     window.IdentitySystem.setIdentity(currentUser);
   }
@@ -262,6 +264,8 @@ function doLogout() {
     if (window.IdentitySystem && window.IdentitySystem.clearIdentity) {
       window.IdentitySystem.clearIdentity();
     }
+    // 清除本地保存的身份，防止刷新后自动登录
+    localStorage.removeItem('currentUser');
     currentUser = null;
     document.body.classList.remove('logged-in');
     document.getElementById('app').classList.add('hidden');
@@ -304,18 +308,18 @@ function tryRestoreSession() {
 
 // 登录页头像切换
 document.addEventListener('DOMContentLoaded', () => {
-  // ❌ 不再自动恢复 session，每次打开都显示头像登录界面
-  // tryRestoreSession();
+  // 刷新页面后自动恢复登录（localStorage 有身份时跳过登录页）
+  const restored = tryRestoreSession();
 
-  // 清除所有登录状态残留，确保从登录页开始
-  currentUser = null;
-  document.body.classList.remove('logged-in');
-  const app = document.getElementById('app');
-  if (app) app.classList.add('hidden');
-  const loginPage = document.getElementById('login-page');
-  if (loginPage) loginPage.classList.remove('hidden');
-
-  // 头像点击由 doLogin 处理（在 HTML 的 onclick 中绑定）
+  // 没有保存的登录状态 → 显示头像登录界面
+  if (!restored) {
+    currentUser = null;
+    document.body.classList.remove('logged-in');
+    const app = document.getElementById('app');
+    if (app) app.classList.add('hidden');
+    const loginPage = document.getElementById('login-page');
+    if (loginPage) loginPage.classList.remove('hidden');
+  }
 
   initDefaultData();
 });
