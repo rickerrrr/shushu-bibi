@@ -32,7 +32,7 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=13.0">
+    <link rel="stylesheet" href="css/style.css?v=14.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
@@ -46,34 +46,36 @@ window.doLogin = window.doLogin || function(user) {
             color: #0a0a0a !important;
         }
 
-        /* 登录页 - 浅色海洋渐变 */
-        #login-page {
-            display: flex !important;
-            visibility: visible !important;
-            background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%) !important;
-        }
-
-        /* 登录前隐藏主内容和导航栏 */
-        body:not(.logged-in) #app,
-        body:not(.logged-in) .bottom-nav,
-        body:not(.logged-in) .top-bar {
+        /* 默认全部隐藏——JS 判断后再显示正确页面，杜绝闪白 */
+        #login-page, #app, .bottom-nav, .top-bar {
             display: none !important;
             visibility: hidden !important;
         }
 
-        /* 登录后显示内容 */
+        /* 登录页背景 */
+        #login-page {
+            background: linear-gradient(160deg, #3a8fb7 0%, #5bc0de 25%, #7dd3e8 50%, #a8e6cf 80%, #d4f0f8 100%) !important;
+        }
+
+        /* 登录后显示主应用 */
         body.logged-in #app {
             display: block !important;
             visibility: visible !important;
         }
+        body.logged-in .top-bar,
+        body.logged-in .bottom-nav {
+            display: flex !important;
+            visibility: visible !important;
+        }
         
-        /* 登录后隐藏登录页面 */
+        /* 登录后彻底隐藏登录页 */
         body.logged-in #login-page {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
             pointer-events: none !important;
         }
+        /* 未登录时 JS 手动显示登录页（inline style），CSS 不干预 */
         
         @keyframes oceanGradient {
             0%, 100% { background-position: 0% 50%; }
@@ -2407,7 +2409,7 @@ function showOfflineNotice() {
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '16.0';
+const _CB = '17.0';
 
 // ==================== 手术级清理：页面加载第一时间斩杀所有残留 ====================
 (function() {

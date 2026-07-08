@@ -314,8 +314,10 @@ function doLogout() {
     localStorage.removeItem('currentUser');
     currentUser = null;
     document.body.classList.remove('logged-in');
-    document.getElementById('app').classList.add('hidden');
-    document.getElementById('login-page').classList.remove('hidden');
+    const app = document.getElementById('app');
+    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
+    const loginPage = document.getElementById('login-page');
+    if (loginPage) { loginPage.style.display = 'flex'; loginPage.style.visibility = 'visible'; }
     if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
   }
 }
@@ -360,14 +362,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 刷新页面后自动恢复登录（localStorage 有身份时跳过登录页）
   const restored = tryRestoreSession();
 
-  // 没有保存的登录状态 → 显示头像登录界面
+  // 没有保存的登录状态 → 手动显示头像登录界面
   if (!restored) {
     currentUser = null;
     document.body.classList.remove('logged-in');
     const app = document.getElementById('app');
-    if (app) app.classList.add('hidden');
+    if (app) { app.style.display = 'none'; app.style.visibility = 'hidden'; }
     const loginPage = document.getElementById('login-page');
-    if (loginPage) loginPage.classList.remove('hidden');
+    if (loginPage) { loginPage.style.display = 'flex'; loginPage.style.visibility = 'visible'; }
+    console.log('[Auth] 无 session，显示头像登录界面');
   }
 
   initDefaultData();
