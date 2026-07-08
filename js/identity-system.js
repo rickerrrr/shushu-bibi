@@ -204,6 +204,7 @@
 
   /**
    * 更新页面上的对方在线状态显示
+   * （btn-online 已从 top-bar 移除，保留状态缓存逻辑）
    */
   function updatePartnerStatus() {
     const user = getIdentity();
@@ -211,39 +212,6 @@
 
     const status = getPartnerStatus();
     if (!status) return;
-
-    const btn = document.getElementById('btn-online');
-    if (!btn) return;
-
-    // 更新按钮内容 — 仅显示对方
-    const dot = btn.querySelector('.status-dot');
-    const text = btn.querySelector('.status-text');
-
-    if (dot) {
-      dot.className = 'status-dot';
-      if (status.status === 'online') {
-        dot.classList.add('online');
-      } else {
-        dot.classList.add('offline');
-      }
-    }
-
-    if (text) {
-      if (status.status === 'online') {
-        text.textContent = status.emoji + ' ' + status.name + ' 在线';
-      } else {
-        text.textContent = status.emoji + ' ' + status.name + ' 离线';
-      }
-    }
-
-    // 更新按钮样式
-    if (status.status === 'online') {
-      btn.classList.add('other-online');
-      btn.classList.remove('other-offline');
-    } else {
-      btn.classList.add('other-offline');
-      btn.classList.remove('other-online');
-    }
 
     // 保存到本地缓存（减少闪烁）
     try {

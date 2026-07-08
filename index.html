@@ -768,10 +768,6 @@ function showOfflineNotice() {
       <span class="nick-bibi">🐱 笔笔</span>
     </div>
     <div class="top-right">
-      <button class="btn-online other-offline" id="btn-online" onclick="toggleOnlineStatus()" title="对方在线状态">
-        <span class="status-dot offline"></span>
-        <span class="status-text">--</span>
-      </button>
       <button class="btn-toolbox" onclick="toggleToolbox()" title="AI工具箱">🛠️</button>
       <button class="btn-settings" onclick="showSettings()" title="设置">⚙️</button>
       <button class="btn-logout" onclick="doLogout()">🚪</button>
@@ -2972,77 +2968,6 @@ document.write('<script src="js/paperplane.js?v='+_CB+'"><\/script>');
 
 })();
 </script>
-<!-- 在线状态指示灯 v2.0 -->
-<div id="online-status-popup" style="display:none;position:fixed;top:50px;right:10px;z-index:10000;background:white;padding:16px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);min-width:200px;">
-  <div style="text-align:center;">
-    <div id="online-status-icon" style="font-size:48px;margin-bottom:8px;">🟢</div>
-    <div id="online-status-text" style="font-size:14px;color:#444;font-weight:600;">在线</div>
-    <div id="online-status-detail" style="font-size:11px;color:#999;margin-top:4px;">最后活动：刚刚</div>
-  </div>
-</div>
-
-<script>
-/* 在线状态弹窗 — 由 identity-system.js 驱动 */
-(function() {
-  window.toggleOnlineStatus = function() {
-    var popup = document.getElementById('online-status-popup');
-    if (popup.style.display === 'none') {
-      popup.style.display = 'block';
-      updatePopup();
-    } else {
-      popup.style.display = 'none';
-    }
-  };
-
-  function timeAgo(ms) {
-    if (!ms || ms < 0) return '暂无记录';
-    if (ms < 60000) return '刚刚';
-    if (ms < 3600000) return Math.floor(ms / 60000) + '分钟前';
-    if (ms < 86400000) return Math.floor(ms / 3600000) + '小时前';
-    return Math.floor(ms / 86400000) + '天前';
-  }
-
-  function updatePopup() {
-    var icon = document.getElementById('online-status-icon');
-    var text = document.getElementById('online-status-text');
-    var detail = document.getElementById('online-status-detail');
-
-    // 从统一身份系统获取对方状态
-    var status = null;
-    if (window.IdentitySystem && window.IdentitySystem.getPartnerStatus) {
-      status = window.IdentitySystem.getPartnerStatus();
-    }
-
-    if (!status) {
-      icon.textContent = '⚫';
-      text.textContent = '等待上线';
-      detail.textContent = '暂无信息';
-      return;
-    }
-
-    if (status.status === 'online') {
-      icon.textContent = '🟢';
-      text.textContent = status.emoji + ' ' + status.name + ' 在线';
-      detail.textContent = '最后活动：刚刚';
-    } else {
-      icon.textContent = '⚫';
-      text.textContent = status.emoji + ' ' + status.name + ' 离线';
-      var ago = status.lastSeen ? timeAgo(Date.now() - status.lastSeen) : '暂无记录';
-      detail.textContent = ago === '暂无记录' ? '等待' + status.name + '上线...' : ago + '前在线';
-    }
-  }
-
-  // 点击其他地方关闭弹窗
-  document.addEventListener('click', function(e) {
-    var popup = document.getElementById('online-status-popup');
-    var btn = document.getElementById('btn-online');
-    if (popup && !popup.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-      popup.style.display = 'none';
-    }
-  });
-})();
-</script>
-
 <!-- 成就系统 v2.0 -->
 <section id="achievements-section" class="main-section hidden">
   <div class="section-header">
