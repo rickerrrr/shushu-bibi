@@ -291,10 +291,8 @@ function doLogin(user) {
   }
   const myName = currentUser === 'shushu' ? '鼠鼠' : '笔笔';
   console.log('[Auth] 登录成功:', currentUser, myName);
-  const loginPage = document.getElementById('login-page');
-  if (loginPage) loginPage.classList.add('hidden');
-  const app = document.getElementById('app');
-  if (app) app.classList.remove('hidden');
+  // 添加 pre-logged-in 让 CSS 切换页面（未来刷新时同步脚本也会添加它）
+  document.documentElement.classList.add('pre-logged-in');
   document.body.classList.add('logged-in');
   if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
   initApp();
@@ -308,12 +306,9 @@ function doLogout() {
     }
     localStorage.removeItem('currentUser');
     currentUser = null;
+    // 移除 pre-logged-in，让 CSS 默认显示登录页
+    document.documentElement.classList.remove('pre-logged-in');
     document.body.classList.remove('logged-in');
-    // 手动切换：CSS 不会自动检测登出，需要用类操作
-    const app = document.getElementById('app');
-    if (app) app.classList.add('hidden');
-    const loginPage = document.getElementById('login-page');
-    if (loginPage) loginPage.classList.remove('hidden');
     if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
   }
 }
@@ -342,8 +337,8 @@ function tryRestoreSession() {
   } catch (e) {
     window._is_restoring = false;
     console.error('[Auth] Session 恢复失败:', e.message);
-    // 即使失败也不强制显示登录页，CSS pre-logged-in 仍然生效
-    return false;
+    // 即使 tryRestoreSession 失败也不清除身份——CSS pre-logged-in 仍然控制页面，identity-system 独立管理身份
+    return true;
   }
 }
 

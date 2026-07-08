@@ -32,12 +32,12 @@
   const IDENTITIES = {
     shushu: {
       emoji: '🐹', name: '鼠鼠', nickColor: '#0284c7',
-      cssClass: 'user-shushu', selfIndicator: false,   // 无自标识
+      cssClass: 'user-shushu',
       bgTint: 'rgba(2,132,199,0.04)', accentColor: '#0284c7'
     },
     bibi: {
       emoji: '🐱', name: '笔笔', nickColor: '#e8d44d',
-      cssClass: 'user-bibi', selfIndicator: true,       // 显示"笔笔在线"徽章
+      cssClass: 'user-bibi',
       bgTint: 'rgba(232,212,77,0.04)', accentColor: '#e8d44d'
     }
   };
@@ -97,7 +97,6 @@
 
     // 清除 UI 主题
     document.body.classList.remove('user-shushu', 'user-bibi');
-    hideSelfIndicator();
 
     console.log('[Identity] 身份已清除');
   }
@@ -257,38 +256,6 @@
     } catch (e) {}
   }
 
-  /**
-   * 更新本机在线状态徽章（在 top-right 区域内）
-   */
-  function updateSelfIndicator() {
-    const user = getIdentity();
-    const identity = user ? IDENTITIES[user] : null;
-
-    // 未登录 / 不需要自标识 → 隐藏
-    if (!identity || !identity.selfIndicator) {
-      hideSelfIndicator();
-      return;
-    }
-
-    const el = document.getElementById('self-online-badge');
-    if (!el) return;
-
-    const text = el.querySelector('.self-indicator-text');
-    if (text) {
-      text.textContent = identity.emoji + ' ' + identity.name + '在线';
-    }
-
-    el.style.display = 'inline-flex';
-  }
-
-  /**
-   * 隐藏本机在线状态徽章
-   */
-  function hideSelfIndicator() {
-    const el = document.getElementById('self-online-badge');
-    if (el) el.style.display = 'none';
-  }
-
   // ── UI 主题 ──────────────────────────────────────────────────
 
   /**
@@ -315,9 +282,6 @@
 
     // 更新问候语、昵称等
     updateIdentityUI();
-
-    // 更新自标识
-    updateSelfIndicator();
 
     console.log('[Identity] 主题应用:', identity.name, identity.cssClass);
   }
@@ -480,12 +444,9 @@
       showToast('⚠️ 该账号已在其他设备登录，当前会话已下线');
     }
 
-    // 返回登录页
+    // 返回登录页：移除 pre-logged-in 让 CSS 默认显示登录页
+    document.documentElement.classList.remove('pre-logged-in');
     document.body.classList.remove('logged-in');
-    const app = document.getElementById('app');
-    if (app) app.classList.add('hidden');
-    const loginPage = document.getElementById('login-page');
-    if (loginPage) loginPage.classList.remove('hidden');
   }
 
   // ── 初始化 ──────────────────────────────────────────────────
@@ -523,7 +484,6 @@
     clearIdentity,
     getPartnerStatus,
     updatePartnerStatus,
-    updateSelfIndicator,
     applyTheme,
     startSync,
     stopSync,
