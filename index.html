@@ -32,7 +32,7 @@ window.doLogin = window.doLogin || function(user) {
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
     <link rel="apple-touch-icon" href="/assets/icon-192.png">
     <link rel="shortcut icon" href="/assets/icon-192.png">
-    <link rel="stylesheet" href="css/style.css?v=9.0">
+    <link rel="stylesheet" href="css/style.css?v=10.0">
     <link rel="stylesheet" href="css/windows.css?v=6.6">
     <link rel="stylesheet" href="css/windows.css?v=6.5">
     <link rel="manifest" href="/manifest.json">
@@ -414,7 +414,7 @@ window.doLogin = window.doLogin || function(user) {
 <!-- 紧急缓存清理 - v4.0 全面核弹级清理 -->
 <script>
 (function forceClearCache() {
-  var APP_VER = '6.0';
+  var APP_VER = '6.1';
   console.log('%c [v4.0] 全面核弹级缓存清理启动...', 'color: #ff6b6b; font-weight: bold; font-size: 14px');
 
   // 检测版本不一致 → 强制清缓存重载
@@ -602,43 +602,19 @@ function showOfflineNotice() {
 
     <!-- 登录表单区域 -->
     <div class="login-form" id="login-form">
-      <p class="login-click-hint" id="login-click-hint">👇 请先选择你的身份</p>
+      <p class="login-click-hint" id="login-click-hint">👇 点击头像选择身份</p>
 
       <!-- 身份选择头像 -->
       <div class="login-avatars" id="login-avatars">
-        <div class="login-avatar" data-user="shushu" id="avatar-shushu" onclick="selectIdentity('shushu')">
+        <div class="login-avatar" data-user="shushu" id="avatar-shushu" onclick="doLogin('shushu')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-shushu">🐹</span><p>鼠鼠</p>
         </div>
-        <div class="login-avatar" data-user="bibi" id="avatar-bibi" onclick="selectIdentity('bibi')">
+        <div class="login-avatar" data-user="bibi" id="avatar-bibi" onclick="doLogin('bibi')">
           <div class="avatar-wave-ring"></div>
           <div class="avatar-wave-ring-2"></div>
           <span class="avatar-face" id="face-bibi">🐱</span><p>笔笔</p>
-        </div>
-      </div>
-
-      <!-- 邮箱与验证码区域（初始隐藏） -->
-      <div class="login-auth-panel hidden" id="login-auth-panel">
-        <div class="auth-identity-badge" id="auth-identity-badge"></div>
-        <div class="auth-email-row">
-          <label>📧 绑定邮箱</label>
-          <input type="text" id="auth-email" class="auth-email-input" readonly value="" />
-        </div>
-        <div class="auth-code-row">
-          <label>🔐 验证码</label>
-          <div class="auth-code-input-group">
-            <input type="text" id="auth-code" class="auth-code-input" placeholder="输入6位验证码" maxlength="6" autocomplete="off" />
-            <button class="btn-send-code" id="btn-send-code" onclick="sendAuthCode()">获取验证码</button>
-          </div>
-          <div class="auth-code-timer" id="auth-code-timer"></div>
-        </div>
-        <div class="auth-actions">
-          <button class="btn-auth-verify" id="btn-auth-verify" onclick="verifyAuthCode()">✅ 验证登录</button>
-          <button class="btn-auth-back" onclick="resetLoginForm()">↩ 重新选择</button>
-        </div>
-        <div class="auth-security-note">
-          🔒 验证码5分钟有效 · 仅发送至绑定邮箱
         </div>
       </div>
     </div>
@@ -2431,7 +2407,7 @@ function showOfflineNotice() {
 
 <script>
 // 缓存破坏：用时间戳强制浏览器重新加载（解决GitHub Pages CDN缓存问题）
-const _CB = '14.0';
+const _CB = '15.0';
 /* config.js removed - v5 auto-detects */
 document.write('<script src="js/supabase-core.js?v='+_CB+'"><\/script>');
 document.write('<script src="js/device-fingerprint.js?v='+_CB+'"><\/script>');

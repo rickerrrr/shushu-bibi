@@ -232,173 +232,9 @@ function showToast(msg) {
 
 function formatCurrency(n) { return '¥' + Number(n).toFixed(2); }
 
-// ==================== 双人身份永久绑定登录系统（OTP邮箱验证码） ====================
+// ==================== 双人身份永久绑定登录系统 ====================
 
-const IDENTITY_CONFIG = {
-  shushu: { emoji: '🐹', name: '鼠鼠', email: '2782896110@qq.com' },
-  bibi:   { emoji: '🐱', name: '笔笔', email: '2813721763@qq.com' }
-};
-
-let selectedIdentity = null;
-let _currentCodeExpiry = 0;
-let _codeTimerInterval = null;
-
-function selectIdentity(role) {
-  if (role !== 'shushu' && role !== 'bibi') return;
-  selectedIdentity = role;
-  const cfg = IDENTITY_CONFIG[role];
-
-  document.querySelectorAll('.login-avatar').forEach(av => {
-    av.classList.remove('selected');
-    if (av.dataset.user === role) av.classList.add('selected');
-    else av.classList.add('disabled');
-  });
-
-  const hint = document.getElementById('login-click-hint');
-  if (hint) hint.textContent = cfg.emoji + ' 已选择「' + cfg.name + '」身份，请验证邮箱';
-
-  const panel = document.getElementById('login-auth-panel');
-  if (panel) panel.classList.remove('hidden');
-
-  const badge = document.getElementById('auth-identity-badge');
-  if (badge) {
-    badge.textContent = cfg.emoji + ' ' + cfg.name + ' 专属登录通道';
-    badge.style.background = role === 'shushu' ? 'rgba(2,132,199,0.12)' : 'rgba(232,212,77,0.15)';
-  }
-
-  const emailInput = document.getElementById('auth-email');
-  if (emailInput) emailInput.value = cfg.email;
-
-  const codeInput = document.getElementById('auth-code');
-  if (codeInput) codeInput.value = '';
-
-  const timer = document.getElementById('auth-code-timer');
-  if (timer) timer.textContent = '';
-
-  console.log('[Auth] 身份已选择:', role, cfg.email);
-}
-
-function resetLoginForm() {
-  selectedIdentity = null;
-  document.querySelectorAll('.login-avatar').forEach(av => av.classList.remove('selected', 'disabled'));
-  const panel = document.getElementById('login-auth-panel');
-  if (panel) panel.classList.add('hidden');
-  const hint = document.getElementById('login-click-hint');
-  if (hint) hint.textContent = '👇 请先选择你的身份';
-  const emailInput = document.getElementById('auth-email');
-  if (emailInput) emailInput.value = '';
-  const codeInput = document.getElementById('auth-code');
-  if (codeInput) codeInput.value = '';
-  const btnSend = document.getElementById('btn-send-code');
-  if (btnSend) { btnSend.disabled = false; btnSend.textContent = '获取验证码'; }
-  if (_codeTimerInterval) { clearInterval(_codeTimerInterval); _codeTimerInterval = null; }
-  const timer = document.getElementById('auth-code-timer');
-  if (timer) timer.textContent = '';
-}
-
-async function sendAuthCode() {
-  if (!selectedIdentity) { showToast('请先选择身份头像'); return; }
-  const cfg = IDENTITY_CONFIG[selectedIdentity];
-  const now = Date.now();
-
-  const today = new Date().toDateString();
-  const rateKey = 'otp_rate_' + selectedIdentity + '_' + today;
-  let rateData = { count: 0, firstSend: now };
-  try { const raw = localStorage.getItem(rateKey); if (raw) { const p = JSON.parse(raw); if (p.firstSend && (now - p.firstSend) < 86400000) rateData = p; } } catch(e) {}
-  if (rateData.count >= 8) { showToast('⚠️ 今日验证码次数已用完（24小时上限8条）'); return; }
-
-  const windowKey = 'otp_window_' + selectedIdentity;
-  let windowData = { count: 0, windowStart: now };
-  try { const raw = localStorage.getItem(windowKey); if (raw) { const p = JSON.parse(raw); if (p.windowStart && (now - p.windowStart) < 300000) windowData = p; } } catch(e) {}
-  if (windowData.count >= 3) { const wait = Math.ceil((300000 - (now - windowData.windowStart)) / 1000); showToast('⚠️ 发送太频繁，请' + wait + '秒后再试'); return; }
-
-  if (_currentCodeExpiry > now) { const wait = Math.ceil((_currentCodeExpiry - now) / 1000); showToast('验证码已发送，' + wait + '秒后可重新获取'); return; }
-
-  const btnSend = document.getElementById('btn-send-code');
-  if (btnSend) { btnSend.disabled = true; btnSend.textContent = '发送中...'; }
-
-  try {
-    if (typeof SB_CLIENT !== 'undefined' && SB_CLIENT && SB_CLIENT.auth) {
-      const { error } = await SB_CLIENT.auth.signInWithOtp({ email: cfg.email, options: { shouldCreateUser: false } });
-      if (error) { console.warn('[Auth] Supabase OTP发送失败:', error.message); throw error; }
-      console.log('[Auth] ✅ Supabase OTP 已发送至:', cfg.email);
-      showToast('验证码已发送至 ' + cfg.email + '，请查收邮箱');
-    } else {
-      console.warn('[Auth] Supabase 未初始化，使用本地模拟验证码');
-      const mockCode = String(Math.floor(100000 + Math.random() * 900000));
-      localStorage.setItem('_mock_otp_' + selectedIdentity, JSON.stringify({ code: mockCode, expiry: now + 300000, used: false }));
-      console.log('%c [DEV] 模拟验证码: ' + mockCode, 'color: red; font-size: 16px; font-weight: bold; background: yellow;');
-      showToast('【测试模式】验证码: ' + mockCode + '（5分钟有效）');
-    }
-    rateData.count++; localStorage.setItem(rateKey, JSON.stringify(rateData));
-    windowData.count++; localStorage.setItem(windowKey, JSON.stringify(windowData));
-    _currentCodeExpiry = now + 60000; startCodeTimer(60);
-  } catch (e) {
-    console.error('[Auth] 发送验证码失败:', e.message || e);
-    showToast('发送失败: ' + (e.message || '请检查网络'));
-    if (btnSend) { btnSend.disabled = false; btnSend.textContent = '获取验证码'; }
-  }
-}
-
-function startCodeTimer(seconds) {
-  if (_codeTimerInterval) clearInterval(_codeTimerInterval);
-  const timerEl = document.getElementById('auth-code-timer');
-  const btnSend = document.getElementById('btn-send-code');
-  let remaining = seconds;
-  _codeTimerInterval = setInterval(() => {
-    remaining--;
-    if (remaining <= 0) {
-      clearInterval(_codeTimerInterval); _codeTimerInterval = null; _currentCodeExpiry = 0;
-      if (btnSend) { btnSend.disabled = false; btnSend.textContent = '获取验证码'; }
-      if (timerEl) timerEl.textContent = ''; return;
-    }
-    if (timerEl) timerEl.textContent = remaining + '秒后可重新获取';
-    if (btnSend) btnSend.textContent = remaining + 's';
-  }, 1000);
-  if (timerEl) timerEl.textContent = seconds + '秒后可重新获取';
-}
-
-async function verifyAuthCode() {
-  if (!selectedIdentity) { showToast('请先选择身份头像'); return; }
-  const codeInput = document.getElementById('auth-code');
-  const code = codeInput ? codeInput.value.trim() : '';
-  if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) { showToast('请输入6位数字验证码'); return; }
-
-  const btnVerify = document.getElementById('btn-auth-verify');
-  if (btnVerify) { btnVerify.disabled = true; btnVerify.textContent = '验证中...'; }
-  const cfg = IDENTITY_CONFIG[selectedIdentity];
-
-  try {
-    let verified = false;
-    if (typeof SB_CLIENT !== 'undefined' && SB_CLIENT && SB_CLIENT.auth) {
-      try {
-        const { data, error } = await SB_CLIENT.auth.verifyOtp({ email: cfg.email, token: code, type: 'email' });
-        if (error) console.warn('[Auth] Supabase OTP验证失败:', error.message);
-        else if (data && data.user) { verified = true; console.log('[Auth] ✅ Supabase OTP 验证成功'); }
-      } catch (e) { console.warn('[Auth] Supabase verifyOtp异常:', e.message); }
-    }
-    if (!verified) {
-      const mockRaw = localStorage.getItem('_mock_otp_' + selectedIdentity);
-      if (mockRaw) {
-        const mock = JSON.parse(mockRaw);
-        if (mock.code === code && Date.now() < mock.expiry && !mock.used) {
-          verified = true; mock.used = true;
-          localStorage.setItem('_mock_otp_' + selectedIdentity, JSON.stringify(mock));
-          console.log('[Auth] ✅ 本地模拟验证码验证成功');
-        } else if (mock.used) { showToast('验证码已使用，请重新获取'); if (btnVerify) { btnVerify.disabled = false; btnVerify.textContent = '✅ 验证登录'; } return; }
-        else if (Date.now() >= mock.expiry) { showToast('验证码已过期，请重新获取'); if (btnVerify) { btnVerify.disabled = false; btnVerify.textContent = '✅ 验证登录'; } return; }
-      }
-    }
-    if (!verified) { showToast('验证码错误，请重新输入'); if (btnVerify) { btnVerify.disabled = false; btnVerify.textContent = '✅ 验证登录'; } return; }
-    await doLogin(selectedIdentity);
-  } catch (e) {
-    console.error('[Auth] 验证异常:', e);
-    showToast('验证失败，请重试');
-    if (btnVerify) { btnVerify.disabled = false; btnVerify.textContent = '✅ 验证登录'; }
-  }
-}
-
-async function doLogin(user) {
+function doLogin(user) {
   if (window._loginInProgress) return;
   window._loginInProgress = true;
   currentUser = user || 'shushu';
@@ -406,12 +242,6 @@ async function doLogin(user) {
     window.IdentitySystem.setIdentity(currentUser);
   }
   const myName = currentUser === 'shushu' ? '鼠鼠' : '笔笔';
-  const panel = document.getElementById('login-auth-panel');
-  if (panel) panel.classList.add('hidden');
-  const avatars = document.getElementById('login-avatars');
-  if (avatars) avatars.style.display = 'none';
-  const hint = document.getElementById('login-click-hint');
-  if (hint) hint.style.display = 'none';
   console.log('[Auth] 登录成功:', currentUser, myName);
   const loginPage = document.getElementById('login-page');
   if (loginPage) loginPage.classList.add('hidden');
@@ -429,69 +259,40 @@ async function doLogin(user) {
 }
 function doLogout() {
   if (confirm('确定要退出登录吗？')) {
-    // ✅ 清除身份系统
     if (window.IdentitySystem && window.IdentitySystem.clearIdentity) {
       window.IdentitySystem.clearIdentity();
     }
-
-    // 调用 Supabase Auth 登出
-    if (typeof authSignOut === 'function') {
-      authSignOut().then(() => {
-        currentUser = null;
-        document.body.classList.remove('logged-in');
-        document.getElementById('app').classList.add('hidden');
-        document.getElementById('login-page').classList.remove('hidden');
-        if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
-        resetLoginForm();
-      });
-    } else {
-      currentUser = null;
-      document.body.classList.remove('logged-in');
-      document.getElementById('app').classList.add('hidden');
-      document.getElementById('login-page').classList.remove('hidden');
-      if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
-      resetLoginForm();
-    }
+    currentUser = null;
+    document.body.classList.remove('logged-in');
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('login-page').classList.remove('hidden');
+    if (coolDownInterval) { clearInterval(coolDownInterval); coolDownInterval = null; }
   }
 }
 
 // ==================== Session 恢复（页面刷新后自动登录）====================
-async function tryRestoreSession() {
+function tryRestoreSession() {
   try {
-    // 等待 Supabase 初始化
-    if (typeof initSupabase === 'function') {
-      await initSupabase();
-    }
-
-    // 尝试恢复 session
-    if (typeof restoreSession === 'function') {
-      const user = await restoreSession();
-      if (user) {
-        console.log('[Auth] ✅ Session 恢复成功，跳过登录页:', user.role);
-        currentUser = user.role;
-
-        // ✅ 恢复身份系统
-        if (window.IdentitySystem && window.IdentitySystem.setIdentity) {
-          window.IdentitySystem.setIdentity(currentUser);
-        }
-
-        // 隐藏登录页，显示应用
-        const loginPage = document.getElementById('login-page');
-        if (loginPage) loginPage.classList.add('hidden');
-        const app = document.getElementById('app');
-        if (app) app.classList.remove('hidden');
-        document.body.classList.add('logged-in');
-        if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
-        const topBar = document.querySelector('.top-bar');
-        if (topBar) topBar.style.display = '';
-        const bottomNav = document.querySelector('.bottom-nav');
-        if (bottomNav) bottomNav.style.display = '';
-
-        // 初始化应用
-        initApp();
-        showToast('欢迎回来，' + (user.role === 'shushu' ? '鼠鼠' : '笔笔') + '！💕');
-        return true;
+    const saved = localStorage.getItem('currentUser');
+    if (saved && (saved === 'shushu' || saved === 'bibi')) {
+      console.log('[Auth] 从本地恢复 session:', saved);
+      currentUser = saved;
+      if (window.IdentitySystem && window.IdentitySystem.setIdentity) {
+        window.IdentitySystem.setIdentity(currentUser);
       }
+      const loginPage = document.getElementById('login-page');
+      if (loginPage) loginPage.classList.add('hidden');
+      const app = document.getElementById('app');
+      if (app) app.classList.remove('hidden');
+      document.body.classList.add('logged-in');
+      if (window.OceanParticles && !window.OceanParticles.canvas) window.OceanParticles.init();
+      const topBar = document.querySelector('.top-bar');
+      if (topBar) topBar.style.display = '';
+      const bottomNav = document.querySelector('.bottom-nav');
+      if (bottomNav) bottomNav.style.display = '';
+      initApp();
+      showToast('欢迎回来，' + (saved === 'shushu' ? '鼠鼠' : '笔笔') + '！💕');
+      return true;
     }
     console.log('[Auth] 无有效 session，显示登录页');
     return false;
@@ -506,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 尝试恢复已有 session（页面刷新后自动登录）
   tryRestoreSession();
 
-  // 头像点击由 selectIdentity 处理（在 HTML 的 onclick 中绑定）
+  // 头像点击由 doLogin 处理（在 HTML 的 onclick 中绑定）
 
   // 回车登录（input 已删除，安全处理）
   const pwdInput = document.getElementById('login-password');

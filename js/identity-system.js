@@ -264,6 +264,13 @@
     const user = getIdentity();
     const identity = user ? IDENTITIES[user] : null;
 
+    // 登录页不显示任何在线状态
+    const loginPage = document.getElementById('login-page');
+    if (loginPage && !loginPage.classList.contains('hidden')) {
+      hideSelfIndicator();
+      return;
+    }
+
     if (!identity || !identity.selfIndicator) {
       hideSelfIndicator();
       return;
